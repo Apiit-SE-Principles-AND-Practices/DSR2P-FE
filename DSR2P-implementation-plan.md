@@ -68,7 +68,7 @@ Each phase lists its stories, the main deliverables and the exit criteria. Tick 
 
 **DSR2P-3 — Scaffold & design tokens**
 - [-] **3.1** TypeScript strict, ESLint, Prettier, stylelint and test runner configured in the first commit.
-- [ ] **3.2** `tokens.css` (colour, type, spacing, radius, shadow) and typed `tokens.ts` for breakpoints.
+- [-] **3.2** `tokens.css` (colour, type, spacing, radius, shadow) and typed `tokens.ts` for breakpoints.
 - [ ] **3.3** stylelint rule blocking hard-coded hex values and raw px font sizes.
 - [ ] **3.4** `AppShell` with the single 640px breakpoint decision (`matchMedia` + CSS for first paint) and skip-to-content link.
 - [ ] **3.5** `TopNav` and `BottomTabBar` (`aria-current="page"` on the active tab).
