@@ -1,0 +1,12 @@
+{
+  "extends": "stylelint-config-standard",
+  "ignoreFiles": ["src/styles/tokens.css"],
+  "rules": {
+    "color-no-hex": true,
+    "declaration-property-value-disallowed-list": {
+      "/^(font-size|box-shadow)$/": ["/\\d+px/"]
+    },
+    "no-empty-source": null,
+    "selector-class-pattern": null
+  }
+}
