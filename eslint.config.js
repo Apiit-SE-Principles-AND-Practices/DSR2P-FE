@@ -17,6 +17,7 @@ module.exports = tseslint.config(
     languageOptions: { parserOptions: { projectService: true } },
     processor: angular.processInlineTemplates,
     rules: {
+      '@typescript-eslint/no-extraneous-class': ['error', { allowWithDecorator: true }],
       '@angular-eslint/directive-selector': [
         'error',
         { type: 'attribute', prefix: 'app', style: 'camelCase' },

@@ -1,0 +1,18 @@
+:host {
+  display: block;
+  border-radius: var(--radius-md);
+  background: var(--color-border);
+  animation: pulse 1.2s ease-in-out infinite alternate;
+}
+
+@keyframes pulse {
+  to {
+    opacity: 0.5;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :host {
+    animation: none;
+  }
+}

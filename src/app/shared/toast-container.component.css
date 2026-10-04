@@ -1,0 +1,38 @@
+:host {
+  position: fixed;
+  right: var(--space-4);
+  bottom: calc(var(--hit-area-min) + var(--space-8));
+  left: var(--space-4);
+  z-index: 20;
+  pointer-events: none;
+}
+
+.toast {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  margin-top: var(--space-2);
+  padding: var(--space-2) var(--space-4);
+  border-left: var(--space-1) solid var(--color-primary);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-overlay);
+  pointer-events: auto;
+}
+
+.success {
+  border-left-color: var(--color-success);
+}
+
+.error {
+  border-left-color: var(--color-danger);
+}
+
+@media (width >= 640px) {
+  :host {
+    left: auto;
+    bottom: var(--space-4);
+    width: 24rem;
+  }
+}
