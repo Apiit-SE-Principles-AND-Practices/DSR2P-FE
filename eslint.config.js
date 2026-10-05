@@ -3,8 +3,10 @@ const eslint = require('@eslint/js');
 const tseslint = require('typescript-eslint');
 const angular = require('angular-eslint');
 const prettier = require('eslint-config-prettier');
+const securityConfig = require('./eslint.security');
 
 module.exports = tseslint.config(
+  ...securityConfig,
   {
     files: ['**/*.ts'],
     extends: [
