@@ -19,6 +19,8 @@ module.exports = tseslint.config(
     languageOptions: { parserOptions: { projectService: true } },
     processor: angular.processInlineTemplates,
     rules: {
+      // Angular's static `Validators.required` etc. are safe to pass unbound.
+      '@typescript-eslint/unbound-method': ['error', { ignoreStatic: true }],
       '@typescript-eslint/no-extraneous-class': ['error', { allowWithDecorator: true }],
       '@angular-eslint/directive-selector': [
         'error',
