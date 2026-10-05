@@ -13,6 +13,10 @@ const admin: AuthResult = {
 };
 
 describe('SessionStore', () => {
+  afterEach(() => {
+    document.documentElement.lang = 'en';
+  });
+
   let store: SessionStore;
   let backend: HttpTestingController;
 
@@ -59,6 +63,25 @@ describe('SessionStore', () => {
       );
     expect(error?.status).toBe(401);
     expect(store.isAuthenticated()).toBeFalse();
+  });
+
+  it('applies the saved language of the user when a session starts', () => {
+    login(admin);
+    expect(document.documentElement.lang).toBe('si');
+  });
+
+  it('registers through /auth/register and starts a session', () => {
+    const input = {
+      name: 'Ann',
+      email: 'a@b.lk',
+      password: 'Password123',
+      language: 'ta' as const,
+    };
+    store.register(input).subscribe();
+    const req = backend.expectOne(`${API}/auth/register`);
+    expect(req.request.body).toEqual(input);
+    req.flush(admin);
+    expect(store.isAuthenticated()).toBeTrue();
   });
 
   it('clears everything on logout', () => {

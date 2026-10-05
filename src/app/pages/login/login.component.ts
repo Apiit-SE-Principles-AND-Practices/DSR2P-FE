@@ -1,18 +1,11 @@
-import {
-  afterNextRender,
-  Component,
-  ElementRef,
-  inject,
-  Injector,
-  signal,
-  viewChild,
-} from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { finalize } from 'rxjs';
 import type { ApiError } from '../../core/api.interceptor';
 import { postLoginPath } from '../../core/return-to';
 import { SessionStore } from '../../core/session.store';
+import { FormErrorComponent } from '../../shared/form-error.component';
 
 // Never say which of the two was wrong: no user enumeration.
 const ERRORS: Record<number, string> = {
@@ -22,13 +15,11 @@ const ERRORS: Record<number, string> = {
 
 @Component({
   selector: 'app-login',
-  imports: [ReactiveFormsModule, RouterLink],
+  imports: [ReactiveFormsModule, RouterLink, FormErrorComponent],
   template: `
     <h1>Log in</h1>
     <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
-      <div #errorBox class="form-error" [class.visible]="error()" role="alert" tabindex="-1">
-        {{ error() }}
-      </div>
+      <app-form-error [message]="error()" />
 
       <label class="field">
         Email
@@ -66,9 +57,7 @@ const ERRORS: Record<number, string> = {
 export class LoginComponent {
   private readonly session = inject(SessionStore);
   private readonly router = inject(Router);
-  private readonly injector = inject(Injector);
   private readonly returnTo = inject(ActivatedRoute).snapshot.queryParamMap.get('returnTo');
-  private readonly errorBox = viewChild.required<ElementRef<HTMLElement>>('errorBox');
 
   protected readonly form = inject(NonNullableFormBuilder).group({
     email: ['', [Validators.required, Validators.email]],
@@ -104,12 +93,6 @@ export class LoginComponent {
         error: (e: ApiError) => {
           this.form.controls.password.reset();
           this.error.set(ERRORS[e.status] ?? e.message);
-          afterNextRender(
-            () => {
-              this.errorBox().nativeElement.focus();
-            },
-            { injector: this.injector },
-          );
         },
       });
   }
