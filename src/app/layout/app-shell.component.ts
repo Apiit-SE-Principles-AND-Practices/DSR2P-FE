@@ -6,6 +6,7 @@ import { ErrorFallbackComponent } from '../shared/error-fallback.component';
 import { LoginPromptComponent } from '../shared/login-prompt.component';
 import { ToastContainerComponent } from '../shared/toast-container.component';
 import { BottomTabBarComponent } from './bottom-tab-bar.component';
+import { MobileHeaderComponent } from './mobile-header.component';
 import { TopNavComponent } from './top-nav.component';
 
 /** Owns the single 640px nav decision: exactly one of TopNav / BottomTabBar is ever rendered. */
@@ -14,6 +15,7 @@ import { TopNavComponent } from './top-nav.component';
   imports: [
     RouterOutlet,
     TopNavComponent,
+    MobileHeaderComponent,
     BottomTabBarComponent,
     ErrorFallbackComponent,
     ToastContainerComponent,
@@ -24,6 +26,8 @@ import { TopNavComponent } from './top-nav.component';
     <a class="skip-link" href="#main" (click)="skipToContent($event, main)">Skip to content</a>
     @if (isTablet()) {
       <app-top-nav />
+    } @else {
+      <app-mobile-header />
     }
     <main #main id="main" tabindex="-1">
       @if (errors.failed()) {

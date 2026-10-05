@@ -116,16 +116,16 @@ Each phase lists its stories, the main deliverables and the exit criteria. Tick 
 - [-] **4.6** Tests: BB01, BB02, weak password, success.
 
 **DSR2P-7 — Action gating**
-- [ ] **7.1** `requireAuth` and `requireAdmin` guards applied to the route map.
-- [ ] **7.2** `LoginPrompt` dialog (focus trap, Esc, focus return) and `useRequireLogin` equivalent service.
-- [ ] **7.3** Global `401/403/404/409/5xx` handling in the interceptor (§1.6 of the guide).
-- [ ] **7.4** Tests: Guest Like → prompt with no request; Customer on `/admin` redirected; 403 and 401 handled.
+- [-] **7.1** `requireAuth` and `requireAdmin` guards applied to the route map.
+- [-] **7.2** `LoginPrompt` dialog (focus trap, Esc, focus return) and `useRequireLogin` equivalent service.
+- [-] **7.3** Global `401/403/404/409/5xx` handling in the interceptor (§1.6 of the guide).
+- [-] **7.4** Tests: Guest Like → prompt with no request; Customer on `/admin` redirected; 403 and 401 handled.
 
 **Exit:** a user can register, log in, reload and stay logged in; guards and error handling work.
 
 ### Phase 3 — Browse & search (DSR2P-9, 8, 10, 13, 11, 12)
 
-- [ ] **S.1** `SearchParamsService` as the single owner of search URL params.
+- [-]**S.1** `SearchParamsService` as the single owner of search URL params.
 
 **DSR2P-9 — City selector**
 - [ ] **9.1** `CitySelector` left of search in `TopNav` and the mobile header.

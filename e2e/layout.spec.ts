@@ -12,6 +12,7 @@ for (const [width, topNav, bottomBar] of [
     await page.goto('/');
     await expect(page.locator('app-top-nav')).toHaveCount(topNav);
     await expect(page.locator('app-bottom-tab-bar')).toHaveCount(bottomBar);
+    await expect(page.getByLabel('City')).toHaveCount(1); // the selector is in whichever header is shown
     const overflows = await page.evaluate(
       () => document.documentElement.scrollWidth > window.innerWidth,
     );
