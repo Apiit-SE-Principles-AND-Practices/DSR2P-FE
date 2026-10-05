@@ -1,0 +1,5 @@
+{
+  "*.ts": ["prettier --write", "eslint -c eslint.security.js"],
+  "*.{html,css,json,js}": "prettier --write",
+  "*": "secretlint --maskSecrets"
+}

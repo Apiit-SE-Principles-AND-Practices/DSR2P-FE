@@ -1,0 +1,34 @@
+rules:
+  - id: angular-bound-inner-html
+    message: >
+      Binding [innerHTML]/[outerHTML] renders untrusted HTML. Reviews, replies and menu text must
+      render as plain text (interpolation), never as HTML.
+    severity: ERROR
+    languages: [generic]
+    pattern-regex: '\[(innerHTML|outerHTML)\]'
+    paths:
+      include: ['src/**']
+
+  - id: angular-bypass-security-trust
+    message: bypassSecurityTrust* disables Angular's sanitisation; do not use it.
+    severity: ERROR
+    languages: [typescript]
+    patterns:
+      - pattern: $S.$M(...)
+      - metavariable-regex:
+          metavariable: $M
+          regex: ^bypassSecurityTrust
+
+  - id: auth-secret-in-web-storage
+    message: >
+      Do not keep tokens or passwords in web storage (readable by any XSS). Use an HttpOnly cookie
+      or in-memory state. Form drafts are fine.
+    severity: ERROR
+    languages: [typescript]
+    patterns:
+      - pattern-either:
+          - pattern: localStorage.setItem($K, ...)
+          - pattern: sessionStorage.setItem($K, ...)
+      - metavariable-regex:
+          metavariable: $K
+          regex: (?i).*(token|jwt|password|secret).*
