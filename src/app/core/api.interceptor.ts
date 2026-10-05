@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { catchError, throwError, timeout, TimeoutError } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { ToastService } from '../shared/toast.service';
+import { AppStore } from './app.store';
 import { SessionStore } from './session.store';
 
 /** The one error shape the rest of the app handles (guide §1.5). */
@@ -25,6 +26,9 @@ interface ErrorEnvelope {
 }
 
 export const REQUEST_TIMEOUT_MS = 15_000;
+
+/** Listing and search endpoints are always scoped to the selected city (an explicit `city` wins). */
+const CITY_SCOPED = /^\/restaurants(\/search)?$/;
 
 function toApiError(error: unknown): ApiError {
   if (error instanceof HttpErrorResponse && error.status > 0) {
@@ -57,8 +61,10 @@ export const apiInterceptor: HttpInterceptorFn = (req, next) => {
   const toast = inject(ToastService);
   const router = inject(Router);
   const token = session.token();
+  const scoped = CITY_SCOPED.test(req.url) && !req.params.has('city');
   const request = req.clone({
     url: environment.apiBaseUrl + req.url,
+    params: scoped ? req.params.set('city', inject(AppStore).city()) : req.params,
     setHeaders: {
       'Accept-Language': document.documentElement.lang,
       ...(token && { Authorization: `Bearer ${token}` }),

@@ -95,8 +95,8 @@ describe('SessionStore', () => {
     const http = TestBed.inject(HttpClient);
     login(admin);
 
-    http.get('/restaurants').subscribe();
-    expect(backend.expectOne(`${API}/restaurants`).request.headers.get('Authorization')).toBe(
+    http.get('/health').subscribe();
+    expect(backend.expectOne(`${API}/health`).request.headers.get('Authorization')).toBe(
       'Bearer jwt-123',
     );
 
@@ -106,9 +106,7 @@ describe('SessionStore', () => {
     ).toBeFalse();
 
     store.logout();
-    http.get('/restaurants').subscribe();
-    expect(
-      backend.expectOne(`${API}/restaurants`).request.headers.has('Authorization'),
-    ).toBeFalse();
+    http.get('/health').subscribe();
+    expect(backend.expectOne(`${API}/health`).request.headers.has('Authorization')).toBeFalse();
   });
 });

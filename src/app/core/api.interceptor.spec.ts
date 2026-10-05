@@ -2,8 +2,9 @@ import { HttpClient, provideHttpClient, withInterceptors } from '@angular/common
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { environment } from '../../environments/environment';
-import { Router } from '@angular/router';
+import { provideRouter, Router } from '@angular/router';
 import { ToastService } from '../shared/toast.service';
+import { AppStore } from './app.store';
 import { SessionStore } from './session.store';
 import { apiInterceptor, REQUEST_TIMEOUT_MS, type ApiError } from './api.interceptor';
 
@@ -14,6 +15,7 @@ describe('apiInterceptor', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
+        provideRouter([]),
         provideHttpClient(withInterceptors([apiInterceptor])),
         provideHttpClientTesting(),
       ],
@@ -30,8 +32,8 @@ describe('apiInterceptor', () => {
   }
 
   it('prefixes relative URLs with the base URL and sends Accept-Language', () => {
-    http.get('/restaurants').subscribe();
-    const req = backend.expectOne(`${environment.apiBaseUrl}/restaurants`);
+    http.get('/health').subscribe();
+    const req = backend.expectOne(`${environment.apiBaseUrl}/health`);
     expect(req.request.headers.get('Accept-Language')).toBe(document.documentElement.lang);
   });
 
@@ -77,13 +79,13 @@ describe('apiInterceptor', () => {
   });
 
   it('reports a dropped connection as NETWORK_ERROR', () => {
-    const error = errorOf('/restaurants');
-    backend.expectOne(`${environment.apiBaseUrl}/restaurants`).error(new ProgressEvent('error'));
+    const error = errorOf('/health');
+    backend.expectOne(`${environment.apiBaseUrl}/health`).error(new ProgressEvent('error'));
     expect(error()?.code).toBe('NETWORK_ERROR');
   });
 
   it('reports a request exceeding the timeout as NETWORK_ERROR', fakeAsync(() => {
-    const error = errorOf('/restaurants');
+    const error = errorOf('/health');
     tick(REQUEST_TIMEOUT_MS);
     expect(error()?.code).toBe('NETWORK_ERROR');
   }));
@@ -154,6 +156,31 @@ describe('apiInterceptor', () => {
       });
       expect(toasts()).toEqual([]);
       expect(TestBed.inject(SessionStore).isAuthenticated()).toBeTrue();
+    });
+  });
+
+  describe('city scoping', () => {
+    beforeEach(() => {
+      localStorage.removeItem('city');
+    });
+    afterEach(() => {
+      localStorage.removeItem('city');
+    });
+
+    it('adds the selected city to restaurant listing and search requests', () => {
+      TestBed.inject(AppStore).select('Kandy');
+      http.get('/restaurants').subscribe();
+      http.get('/restaurants/search').subscribe();
+      backend.expectOne(`${environment.apiBaseUrl}/restaurants?city=Kandy`);
+      backend.expectOne(`${environment.apiBaseUrl}/restaurants/search?city=Kandy`);
+    });
+
+    it('keeps an explicit city and leaves other endpoints alone', () => {
+      TestBed.inject(AppStore).select('Kandy');
+      http.get('/restaurants/search', { params: { city: 'Galle' } }).subscribe();
+      http.get('/restaurants/abc').subscribe();
+      backend.expectOne(`${environment.apiBaseUrl}/restaurants/search?city=Galle`);
+      backend.expectOne(`${environment.apiBaseUrl}/restaurants/abc`);
     });
   });
 });

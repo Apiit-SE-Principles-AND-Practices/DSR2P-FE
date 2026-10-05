@@ -1,22 +1,3 @@
-nav {
-  display: flex;
-  align-items: center;
-  gap: var(--space-6);
-  padding: 0 var(--space-6);
-  background: var(--color-surface);
-  box-shadow: var(--shadow-card);
-}
-
-.logo {
-  min-height: var(--hit-area-min);
-  display: flex;
-  align-items: center;
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-bold);
-  color: var(--color-primary);
-  text-decoration: none;
-}
-
 ul {
   display: flex;
   gap: var(--space-2);
