@@ -69,14 +69,14 @@ Each phase lists its stories, the main deliverables and the exit criteria. Tick 
 **DSR2P-3 — Scaffold & design tokens**
 - [-] **3.1** TypeScript strict, ESLint, Prettier, stylelint and test runner configured in the first commit.
 - [-] **3.2** `tokens.css` (colour, type, spacing, radius, shadow) and typed `tokens.ts` for breakpoints.
-- [ ] **3.3** stylelint rule blocking hard-coded hex values and raw px font sizes.
-- [ ] **3.4** `AppShell` with the single 640px breakpoint decision (`matchMedia` + CSS for first paint) and skip-to-content link.
-- [ ] **3.5** `TopNav` and `BottomTabBar` (`aria-current="page"` on the active tab).
-- [ ] **3.6** Primitives: `NotFound`, error fallback, `Spinner`/`Skeleton`, `Toast`, `InlineError`.
-- [ ] **3.7** Environment config (`API_BASE_URL`) and the `HttpClient` interceptor skeleton.
-- [ ] **3.8** Dev-only `/dev/tokens` page (colour pairs, type scale, EN/SI/TA samples), excluded from production builds.
-- [ ] **3.9** WCAG contrast script; CI fails below 4.5:1 for body text.
-- [ ] **3.10** Tests: nav swap at 639px/640px; contrast script unit tests.
+- [-] **3.3** stylelint rule blocking hard-coded hex values and raw px font sizes.
+- [-] **3.4** `AppShell` with the single 640px breakpoint decision (`matchMedia` + CSS for first paint) and skip-to-content link.
+- [-] **3.5** `TopNav` and `BottomTabBar` (`aria-current="page"` on the active tab).
+- [-] **3.6** Primitives: `NotFound`, error fallback, `Spinner`/`Skeleton`, `Toast`, `InlineError`.
+- [-] **3.7** Environment config (`API_BASE_URL`) and the `HttpClient` interceptor skeleton.
+- [-] **3.8** Dev-only `/dev/tokens` page (colour pairs, type scale, EN/SI/TA samples), excluded from production builds.
+- [-] **3.9** WCAG contrast script; CI fails below 4.5:1 for body text.
+- [-] **3.10** Tests: nav swap at 639px/640px; contrast script unit tests.
 
 **DSR2P-28 — Sinhala/Tamil font fallback**
 - [ ] **28.1** Self-host Noto Sans Sinhala and Noto Sans Tamil as WOFF2.
@@ -92,8 +92,8 @@ Each phase lists its stories, the main deliverables and the exit criteria. Tick 
 - [ ] **26.5** Tests: three render, `aria-current` moves, strings swap, form input survives a switch.
 
 **DSR2P-43 groundwork (do now, not later)**
-- [ ] **43.1** Runner, Testing Library (or Angular TestBed helpers), API mocking and Playwright set up.
-- [ ] **43.2** CI runs lint, type-check, tests and the contrast check on every PR; merge blocked on failure.
+- [-] **43.1** Runner, Testing Library (or Angular TestBed helpers), API mocking and Playwright set up.
+- [-] **43.2** CI runs lint, type-check, tests and the contrast check on every PR; merge blocked on failure.
 
 **Exit:** app shell runs, nav swaps at 640px, SI/TA render without tofu, CI green.
 

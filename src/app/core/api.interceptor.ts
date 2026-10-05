@@ -1,25 +1,42 @@
 import { HttpErrorResponse, type HttpInterceptorFn } from '@angular/common/http';
+import { inject } from '@angular/core';
 import { catchError, throwError, timeout, TimeoutError } from 'rxjs';
 import { environment } from '../../environments/environment';
+import { SessionStore } from './session.store';
 
 /** The one error shape the rest of the app handles (guide §1.5). */
 export interface ApiError {
   status: number;
   code: string;
   message: string;
+  /** First server message per form field. */
   fieldErrors?: Record<string, string>;
+}
+
+/** What the backend sends on errors (OpenAPI `Error` / `ValidationError`). */
+interface ErrorEnvelope {
+  error?: {
+    code?: string;
+    message?: string;
+    details?: { fieldErrors?: Record<string, string[]> };
+  };
 }
 
 export const REQUEST_TIMEOUT_MS = 15_000;
 
 function toApiError(error: unknown): ApiError {
   if (error instanceof HttpErrorResponse && error.status > 0) {
-    const body = error.error as Partial<ApiError> | null;
+    const { code, message, details } = (error.error as ErrorEnvelope | null)?.error ?? {};
+    const fieldErrors =
+      details?.fieldErrors &&
+      Object.fromEntries(
+        Object.entries(details.fieldErrors).map(([field, [first]]) => [field, first]),
+      );
     return {
       status: error.status,
-      code: body?.code ?? 'HTTP_ERROR',
-      message: body?.message ?? error.message,
-      fieldErrors: body?.fieldErrors,
+      code: code ?? 'HTTP_ERROR',
+      message: message ?? error.message,
+      fieldErrors,
     };
   }
   const timedOut = error instanceof TimeoutError;
@@ -30,12 +47,17 @@ function toApiError(error: unknown): ApiError {
   };
 }
 
-// Session token / cookie handling is added in DSR2P-5 once the mechanism is agreed.
+/** Only our own API gets the base URL, language and token; absolute URLs pass through untouched. */
 export const apiInterceptor: HttpInterceptorFn = (req, next) => {
-  const url = req.url.startsWith('/') ? environment.apiBaseUrl + req.url : req.url;
+  if (!req.url.startsWith('/')) return next(req);
+
+  const token = inject(SessionStore).token();
   const request = req.clone({
-    url,
-    setHeaders: { 'Accept-Language': document.documentElement.lang },
+    url: environment.apiBaseUrl + req.url,
+    setHeaders: {
+      'Accept-Language': document.documentElement.lang,
+      ...(token && { Authorization: `Bearer ${token}` }),
+    },
   });
   return next(request).pipe(
     timeout(REQUEST_TIMEOUT_MS),
