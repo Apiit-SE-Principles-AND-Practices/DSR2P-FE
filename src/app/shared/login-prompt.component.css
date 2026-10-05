@@ -1,0 +1,23 @@
+dialog {
+  max-width: 24rem;
+  padding: var(--space-6);
+  border: 0;
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  color: var(--color-text);
+  box-shadow: var(--shadow-overlay);
+}
+
+dialog::backdrop {
+  background: rgb(31 26 23 / 50%);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.actions .btn {
+  margin: 0;
+}

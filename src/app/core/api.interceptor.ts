@@ -1,7 +1,9 @@
 import { HttpErrorResponse, type HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
+import { Router } from '@angular/router';
 import { catchError, throwError, timeout, TimeoutError } from 'rxjs';
 import { environment } from '../../environments/environment';
+import { ToastService } from '../shared/toast.service';
 import { SessionStore } from './session.store';
 
 /** The one error shape the rest of the app handles (guide §1.5). */
@@ -51,7 +53,10 @@ function toApiError(error: unknown): ApiError {
 export const apiInterceptor: HttpInterceptorFn = (req, next) => {
   if (!req.url.startsWith('/')) return next(req);
 
-  const token = inject(SessionStore).token();
+  const session = inject(SessionStore);
+  const toast = inject(ToastService);
+  const router = inject(Router);
+  const token = session.token();
   const request = req.clone({
     url: environment.apiBaseUrl + req.url,
     setHeaders: {
@@ -61,6 +66,18 @@ export const apiInterceptor: HttpInterceptorFn = (req, next) => {
   });
   return next(request).pipe(
     timeout(REQUEST_TIMEOUT_MS),
-    catchError((error: unknown) => throwError(() => toApiError(error))),
+    catchError((error: unknown) => {
+      const apiError = toApiError(error);
+      // A 401 while signed in means the session expired. A Guest's 401 (e.g. wrong password) is the form's to show.
+      if (apiError.status === 401 && session.isAuthenticated()) {
+        session.logout();
+        toast.show('Your session has expired. Please log in again.', 'error');
+        void router.navigate(['/login'], { queryParams: { returnTo: router.url } });
+      } else if (apiError.status === 403) {
+        toast.show('You do not have permission to do that.', 'error');
+      }
+      // 404, 409, 5xx and network errors stay with the calling screen: each shows them in its own context.
+      return throwError(() => apiError);
+    }),
   );
 };
