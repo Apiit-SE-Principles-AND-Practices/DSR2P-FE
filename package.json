@@ -36,7 +36,7 @@
     "@angular/compiler-cli": "^19.2.0",
     "@playwright/test": "^1.63.0",
     "@secretlint/secretlint-rule-preset-recommend": "^13.0.7",
-    "@types/jasmine": "~5.1.0",
+    "@types/jasmine": "~7.0.0",
     "angular-eslint": "^19.8.1",
     "eslint": "^9.39.5",
     "eslint-config-prettier": "^10.1.8",
