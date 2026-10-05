@@ -100,12 +100,12 @@ Each phase lists its stories, the main deliverables and the exit criteria. Tick 
 ### Phase 2 — Authentication (DSR2P-5, 4, 7)
 
 **DSR2P-5 — Login**
-- [ ] **5.1** `SessionStore` (`user`, `role`, `isAuthenticated`, `login()`, `logout()`) using the P0.1 mechanism.
-- [ ] **5.2** Rehydrate via `GET /me` in an app initialiser, with a neutral loading shell.
-- [ ] **5.3** `LoginForm`: generic "Email or password is incorrect", password cleared on failure.
-- [ ] **5.4** Role redirect (Admin → `/admin`, Customer → `/`) honouring `returnTo`.
-- [ ] **5.5** Open-redirect guard for `returnTo`; `429` handling.
-- [ ] **5.6** Tests: BB03, BB04, Admin redirect, external `returnTo` ignored, reload keeps session.
+- [-] **5.1** `SessionStore` (`user`, `role`, `isAuthenticated`, `login()`, `logout()`) using the P0.1 mechanism.
+- [-] **5.2** Rehydrate via `GET /me` in an app initialiser, with a neutral loading shell.
+- [-] **5.3** `LoginForm`: generic "Email or password is incorrect", password cleared on failure.
+- [-] **5.4** Role redirect (Admin → `/admin`, Customer → `/`) honouring `returnTo`.
+- [-] **5.5** Open-redirect guard for `returnTo`; `429` handling.
+- [-] **5.6** Tests: BB03, BB04, Admin redirect, external `returnTo` ignored, reload keeps session.
 
 **DSR2P-4 — Registration**
 - [ ] **4.1** `registerSchema` in `shared/validation`.
