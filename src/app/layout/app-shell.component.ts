@@ -3,6 +3,7 @@ import { RouterOutlet } from '@angular/router';
 import { matchesBreakpoint } from '../core/breakpoint';
 import { GlobalErrorHandler } from '../core/global-error-handler';
 import { ErrorFallbackComponent } from '../shared/error-fallback.component';
+import { LoginPromptComponent } from '../shared/login-prompt.component';
 import { ToastContainerComponent } from '../shared/toast-container.component';
 import { BottomTabBarComponent } from './bottom-tab-bar.component';
 import { TopNavComponent } from './top-nav.component';
@@ -16,6 +17,7 @@ import { TopNavComponent } from './top-nav.component';
     BottomTabBarComponent,
     ErrorFallbackComponent,
     ToastContainerComponent,
+    LoginPromptComponent,
   ],
   styleUrl: './app-shell.component.css',
   template: `
@@ -34,6 +36,7 @@ import { TopNavComponent } from './top-nav.component';
       <app-bottom-tab-bar />
     }
     <app-toast-container />
+    <app-login-prompt />
   `,
 })
 export class AppShellComponent {

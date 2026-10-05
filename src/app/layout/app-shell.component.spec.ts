@@ -1,3 +1,4 @@
+import { provideHttpClient } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { GlobalErrorHandler } from '../core/global-error-handler';
@@ -17,7 +18,7 @@ function fakeViewport(initial: boolean) {
 }
 
 function render() {
-  TestBed.configureTestingModule({ providers: [provideRouter([])] });
+  TestBed.configureTestingModule({ providers: [provideRouter([]), provideHttpClient()] });
   const fixture = TestBed.createComponent(AppShellComponent);
   fixture.detectChanges();
   const el = fixture.nativeElement as HTMLElement;

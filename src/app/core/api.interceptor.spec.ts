@@ -2,6 +2,9 @@ import { HttpClient, provideHttpClient, withInterceptors } from '@angular/common
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { environment } from '../../environments/environment';
+import { Router } from '@angular/router';
+import { ToastService } from '../shared/toast.service';
+import { SessionStore } from './session.store';
 import { apiInterceptor, REQUEST_TIMEOUT_MS, type ApiError } from './api.interceptor';
 
 describe('apiInterceptor', () => {
@@ -84,4 +87,73 @@ describe('apiInterceptor', () => {
     tick(REQUEST_TIMEOUT_MS);
     expect(error()?.code).toBe('NETWORK_ERROR');
   }));
+
+  describe('session errors', () => {
+    const signIn = () => {
+      TestBed.inject(SessionStore).start({
+        token: 't',
+        user: { id: '1', name: 'Ann', email: 'a@b.lk', role: 'Customer', language: 'en' },
+      });
+    };
+    const toasts = () =>
+      TestBed.inject(ToastService)
+        .toasts()
+        .map((t) => t.message);
+
+    afterEach(() => {
+      document.documentElement.lang = 'en';
+    });
+
+    it('a 401 while signed in logs out and sends the user to login, returning here afterwards', () => {
+      signIn();
+      const navigate = spyOn(TestBed.inject(Router), 'navigate').and.resolveTo(true);
+      const error = errorOf('/users/me/reviews');
+      backend
+        .expectOne(`${environment.apiBaseUrl}/users/me/reviews`)
+        .flush(
+          { error: { code: 'UNAUTHORIZED', message: 'Not logged in' } },
+          { status: 401, statusText: 'x' },
+        );
+      expect(error()?.status).toBe(401);
+      expect(TestBed.inject(SessionStore).isAuthenticated()).toBeFalse();
+      expect(toasts()).toEqual(['Your session has expired. Please log in again.']);
+      expect(navigate).toHaveBeenCalledWith(['/login'], { queryParams: { returnTo: '/' } });
+    });
+
+    it('a 401 for a Guest (e.g. wrong password) is left to the form', () => {
+      const navigate = spyOn(TestBed.inject(Router), 'navigate');
+      errorOf('/auth/login');
+      backend
+        .expectOne(`${environment.apiBaseUrl}/auth/login`)
+        .flush({}, { status: 401, statusText: 'x' });
+      expect(navigate).not.toHaveBeenCalled();
+      expect(toasts()).toEqual([]);
+    });
+
+    it('a 403 explains the refusal without logging the user out', () => {
+      signIn();
+      errorOf('/admin/dashboard/stats');
+      backend
+        .expectOne(`${environment.apiBaseUrl}/admin/dashboard/stats`)
+        .flush(
+          { error: { code: 'FORBIDDEN', message: 'Admins only' } },
+          { status: 403, statusText: 'x' },
+        );
+      expect(TestBed.inject(SessionStore).isAuthenticated()).toBeTrue();
+      expect(toasts()).toEqual(['You do not have permission to do that.']);
+    });
+
+    it('leaves 404, 409 and 5xx to the calling screen', () => {
+      signIn();
+      [404, 409, 500].forEach((status) => {
+        const error = errorOf('/restaurants/1');
+        backend
+          .expectOne(`${environment.apiBaseUrl}/restaurants/1`)
+          .flush({}, { status, statusText: 'x' });
+        expect(error()?.status).toBe(status);
+      });
+      expect(toasts()).toEqual([]);
+      expect(TestBed.inject(SessionStore).isAuthenticated()).toBeTrue();
+    });
+  });
 });

@@ -108,12 +108,12 @@ Each phase lists its stories, the main deliverables and the exit criteria. Tick 
 - [-] **5.6** Tests: BB03, BB04, Admin redirect, external `returnTo` ignored, reload keeps session.
 
 **DSR2P-4 — Registration**
-- [ ] **4.1** `registerSchema` in `shared/validation`.
-- [ ] **4.2** `RegisterForm`: name, email, password, confirm, preferred-language radio group.
-- [ ] **4.3** `PasswordRules` live hints (`aria-describedby`) and show/hide toggle (`aria-pressed`).
-- [ ] **4.4** Map `409` to Email and `fieldErrors` onto fields; keep values except password.
-- [ ] **4.5** On success: store session, set UI language, redirect.
-- [ ] **4.6** Tests: BB01, BB02, weak password, success.
+- [-] **4.1** `registerSchema` in `shared/validation`.
+- [-] **4.2** `RegisterForm`: name, email, password, confirm, preferred-language radio group.
+- [-] **4.3** `PasswordRules` live hints (`aria-describedby`) and show/hide toggle (`aria-pressed`).
+- [-] **4.4** Map `409` to Email and `fieldErrors` onto fields; keep values except password.
+- [-] **4.5** On success: store session, set UI language, redirect.
+- [-] **4.6** Tests: BB01, BB02, weak password, success.
 
 **DSR2P-7 — Action gating**
 - [ ] **7.1** `requireAuth` and `requireAdmin` guards applied to the route map.
