@@ -49,3 +49,37 @@ body {
   font-weight: var(--font-weight-bold);
   text-decoration: underline;
 }
+
+/* Form pattern shared by every form: label wraps the control, error sits under it. */
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  margin-bottom: var(--space-4);
+  max-width: 24rem;
+}
+
+.field input {
+  min-height: var(--hit-area-min);
+  padding: 0 var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font: inherit;
+}
+
+.field input[aria-invalid='true'] {
+  border-color: var(--color-danger);
+}
+
+.field-error,
+.form-error.visible {
+  color: var(--color-danger);
+}
+
+.form-error {
+  margin-bottom: var(--space-4);
+}
+
+.form-error:focus {
+  outline: none;
+}

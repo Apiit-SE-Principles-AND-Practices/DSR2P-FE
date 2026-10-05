@@ -37,19 +37,39 @@ describe('apiInterceptor', () => {
     backend.expectOne('https://cdn.example.com/a.json');
   });
 
-  it('normalises server errors, keeping fieldErrors', () => {
+  it('flattens the backend validation envelope to the first message per field', () => {
+    const error = errorOf('/auth/register');
+    backend.expectOne(`${environment.apiBaseUrl}/auth/register`).flush(
+      {
+        error: {
+          code: 'VALIDATION_ERROR',
+          message: 'Request failed validation',
+          details: { formErrors: [], fieldErrors: { email: ['Invalid email address', 'Other'] } },
+        },
+      },
+      { status: 400, statusText: 'Bad Request' },
+    );
+    expect(error()).toEqual({
+      status: 400,
+      code: 'VALIDATION_ERROR',
+      message: 'Request failed validation',
+      fieldErrors: { email: 'Invalid email address' },
+    });
+  });
+
+  it('keeps code and message for non-validation errors', () => {
     const error = errorOf('/auth/register');
     backend
       .expectOne(`${environment.apiBaseUrl}/auth/register`)
       .flush(
-        { code: 'VALIDATION', message: 'Bad', fieldErrors: { email: 'Required' } },
-        { status: 400, statusText: 'Bad Request' },
+        { error: { code: 'CONFLICT', message: 'Email already registered' } },
+        { status: 409, statusText: 'Conflict' },
       );
     expect(error()).toEqual({
-      status: 400,
-      code: 'VALIDATION',
-      message: 'Bad',
-      fieldErrors: { email: 'Required' },
+      status: 409,
+      code: 'CONFLICT',
+      message: 'Email already registered',
+      fieldErrors: undefined,
     });
   });
 
