@@ -140,29 +140,29 @@ Each phase lists its stories, the main deliverables and the exit criteria. Tick 
 - [-] **8.4** Tests: column counts; navigation carries category and city.
 
 **DSR2P-10 — Keyword search**
-- [ ] **10.1** `SearchInput` submit goes to `/search?q=…`, keeping city and filters.
-- [ ] **10.2** `SearchResultsPage` with 300ms debounce and `switchMap` cancellation of stale requests.
-- [ ] **10.3** Pagination, delayed skeleton (~150ms), `EmptyState` naming the query, error with Retry.
-- [ ] **10.4** Result count announced in an `aria-live` region.
-- [ ] **10.5** Tests: BB05, debounce, stale response discarded, empty state.
+- [-] **10.1** `SearchInput` submit goes to `/search?q=…`, keeping city and filters.
+- [-] **10.2** `SearchResultsPage` with 300ms debounce and `switchMap` cancellation of stale requests.
+- [-] **10.3** Pagination, delayed skeleton (~150ms), `EmptyState` naming the query, error with Retry.
+- [-] **10.4** Result count announced in an `aria-live` region.
+- [-] **10.5** Tests: BB05, debounce, stale response discarded, empty state.
 
 **DSR2P-13 — Result cards**
-- [ ] **13.1** Shared `RatingDisplay` (stars + numeral + count; "No ratings yet" when unrated).
-- [ ] **13.2** Shared `PriceBand` with accessible label.
-- [ ] **13.3** `RestaurantCard` (single link, lazy image with fixed aspect ratio, placeholder, two-line truncation), mobile and ≥640px layouts.
-- [ ] **13.4** Tests: BB07 navigation, numeral always shown, unrated label.
+- [-] **13.1** Shared `RatingDisplay` (stars + numeral + count; "No ratings yet" when unrated).
+- [-] **13.2** Shared `PriceBand` with accessible label.
+- [-] **13.3** `RestaurantCard` (single link, lazy image with fixed aspect ratio, placeholder, two-line truncation), mobile and ≥640px layouts.
+- [-] **13.4** Tests: BB07 navigation, numeral always shown, unrated label.
 
 **DSR2P-11 — Filters**
-- [ ] **11.1** `FilterBar`: category, dietary chips (`aria-pressed`), spice, price band, Clear all.
-- [ ] **11.2** Mobile "Filters (n)" bottom sheet with Apply.
-- [ ] **11.3** Price-band options loaded from the backend.
-- [ ] **11.4** Reset `page` on filter change; empty state with Clear filters.
-- [ ] **11.5** Tests: BB06, dietary combination, Clear all, mobile Apply.
+- [-] **11.1** `FilterBar`: category, dietary chips (`aria-pressed`), spice, price band, Clear all.
+- [-] **11.2** Mobile "Filters (n)" bottom sheet with Apply.
+- [-] **11.3** Price-band options loaded from the backend.
+- [-] **11.4** Reset `page` on filter change; empty state with Clear filters.
+- [-] **11.5** Tests: BB06, dietary combination, Clear all, mobile Apply.
 
 **DSR2P-12 — Sort**
-- [ ] **12.1** `SortSelect` (Top rated default, Price ↑, Price ↓) bound to `sort`.
-- [ ] **12.2** Fall back to default on unknown values; unrated restaurants last.
-- [ ] **12.3** Tests: URL and request update; label persists after reload.
+- [-] **12.1** `SortSelect` (Top rated default, Price ↑, Price ↓) bound to `sort`.
+- [-] **12.2** Fall back to default on unknown values; unrated restaurants last.
+- [-] **12.3** Tests: URL and request update; label persists after reload.
 
 **Exit:** a Guest can pick a city, browse categories, search, filter, sort and open a result.
 

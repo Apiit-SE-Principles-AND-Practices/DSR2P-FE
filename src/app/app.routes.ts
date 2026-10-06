@@ -13,6 +13,13 @@ export const routes: Routes = [
       import('./pages/search-results.component').then((m) => m.SearchResultsComponent),
   },
   {
+    path: 'restaurants/:id',
+    loadComponent: () =>
+      import('./pages/restaurant-detail/restaurant-detail.component').then(
+        (m) => m.RestaurantDetailComponent,
+      ),
+  },
+  {
     path: 'login',
     canActivate: [guestOnly],
     loadComponent: () => import('./pages/login/login.component').then((m) => m.LoginComponent),
