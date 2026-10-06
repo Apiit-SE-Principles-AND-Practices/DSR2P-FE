@@ -69,7 +69,7 @@ function setup(id = 'r-1') {
     await fixture.whenStable();
     fixture.detectChanges();
   };
-  return { el, settle, restaurantRequest, reviewsRequest, done };
+  return { el, fixture, settle, restaurantRequest, reviewsRequest, done };
 }
 
 describe('RestaurantDetailComponent', () => {
@@ -144,6 +144,37 @@ describe('RestaurantDetailComponent', () => {
     await done();
     expect(el.querySelector('h1')?.textContent).toBe('Ceylon Spice House');
     expect(el.textContent).toContain('Could not load ratings.');
+  });
+
+  describe('after a review was submitted', () => {
+    afterEach(() => {
+      history.replaceState(null, '');
+    });
+
+    it('shows a dismissible notice that the review awaits a moderator, and nothing is added to the list', async () => {
+      history.replaceState({ reviewSubmitted: true }, ''); // what the review form leaves behind
+      const { el, fixture, settle, restaurantRequest, reviewsRequest, done } = setup();
+      settle();
+      restaurantRequest().flush(restaurant);
+      reviewsRequest().flush([]);
+      await done();
+
+      const notice = el.querySelector('.notice[role=status]');
+      expect(notice?.textContent).toContain('will appear once a moderator approves it');
+      expect(el.querySelectorAll('app-review-card').length).toBe(0);
+      notice?.querySelector('button')?.click();
+      fixture.detectChanges();
+      expect(el.querySelector('.notice')).toBeNull();
+    });
+
+    it('shows no notice on an ordinary visit', async () => {
+      const { el, settle, restaurantRequest, reviewsRequest, done } = setup();
+      settle();
+      restaurantRequest().flush(restaurant);
+      reviewsRequest().flush([]);
+      await done();
+      expect(el.querySelector('.notice')).toBeNull();
+    });
   });
 
   describe('Write a review', () => {

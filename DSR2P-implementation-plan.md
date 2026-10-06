@@ -182,12 +182,12 @@ Each phase lists its stories, the main deliverables and the exit criteria. Tick 
 - [-] **15.5** Tests: BB08 grouping, same-line layout at 375px, refocus refetch.
 
 **DSR2P-16 — Reviews on Detail**
-- [ ] **16.1** `ReviewsSection` with count, `ReviewSortSelect` (`reviewSort` param), Load more.
-- [ ] **16.2** `ReviewCard` as `<article>`, `lang` from the review language, plain-text rendering.
-- [ ] **16.3** `ReviewPhoto` with alt text and enlarge dialog.
-- [ ] **16.4** `RestaurantResponse` (nested, one per review) and collapsible `CommentThread`.
-- [ ] **16.5** Empty state with "Write a review" call to action.
-- [ ] **16.6** Tests: US-76–79 sorting, response placement, photo alt, like count beside rating, no status badge.
+- [-] **16.1** `ReviewsSection` with count, `ReviewSortSelect` (`reviewSort` param), Load more.
+- [-] **16.2** `ReviewCard` as `<article>`, `lang` from the review language, plain-text rendering.
+- [-] **16.3** `ReviewPhoto` with alt text and enlarge dialog.
+- [-] **16.4** `RestaurantResponse` (nested, one per review) and collapsible `CommentThread`.
+- [-] **16.5** Empty state with "Write a review" call to action.
+- [-] **16.6** Tests: US-76–79 sorting, response placement, photo alt, like count beside rating, no status badge.
 
 **DSR2P-22 — Like**
 - [ ] **22.1** `LikeButton` with `aria-pressed` and count in the accessible name.
@@ -203,13 +203,13 @@ Each phase lists its stories, the main deliverables and the exit criteria. Tick 
 ### Phase 5 — Submitting content (DSR2P-17, 38, 21, 19, 18, 6, 27)
 
 **DSR2P-17 — Submit a review**
-- [ ] **17.1** `ratingSchema` and `reviewSchema`.
-- [ ] **17.2** `StarRatingInput` as a five-option radio group in a `<fieldset>`.
-- [ ] **17.3** `ReviewForm`: three ratings, optional dish select, text with counter, Submit disabled until valid.
-- [ ] **17.4** `sessionStorage` draft autosave/restore keyed by restaurant.
-- [ ] **17.5** Pending-moderation confirmation; no optimistic insert into the public list.
-- [ ] **17.6** Failure handling: error summary with focus, field errors, Retry, values kept.
-- [ ] **17.7** Tests: BB10, disabled Submit, 0/6 rejected, Guest prompt, 500 keeps content, draft restore.
+- [-] **17.1** `ratingSchema` and `reviewSchema`.
+- [-] **17.2** `StarRatingInput` as a five-option radio group in a `<fieldset>`.
+- [-] **17.3** `ReviewForm`: three ratings, optional dish select, text with counter, Submit disabled until valid.
+- [-] **17.4** `sessionStorage` draft autosave/restore keyed by restaurant.
+- [-] **17.5** Pending-moderation confirmation; no optimistic insert into the public list.
+- [-] **17.6** Failure handling: error summary with focus, field errors, Retry, values kept.
+- [-] **17.7** Tests: BB10, disabled Submit, 0/6 rejected, Guest prompt, 500 keeps content, draft restore.
 
 **DSR2P-38 — Resilient error handling**
 - [ ] **38.1** `OfflineBanner` driven by `navigator.onLine` and `GET /health`.

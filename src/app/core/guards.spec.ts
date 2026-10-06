@@ -42,6 +42,16 @@ describe('route guards', () => {
     ).toEqual(['That page is for administrators.']);
   });
 
+  it('sends a Guest from the review form to login, so they return to it afterwards', async () => {
+    expect(await visit('/restaurants/r-1/review')).toBe(
+      '/login?returnTo=%2Frestaurants%2Fr-1%2Freview',
+    );
+  });
+
+  it('lets a Customer open the review form', async () => {
+    expect(await visit('/restaurants/r-1/review', 'Customer')).toBe('/restaurants/r-1/review');
+  });
+
   it('lets an Admin into /admin', async () => {
     expect(await visit('/admin', 'Admin')).toBe('/admin');
   });

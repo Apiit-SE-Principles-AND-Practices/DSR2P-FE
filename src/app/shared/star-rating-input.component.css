@@ -1,0 +1,32 @@
+fieldset {
+  margin: 0 0 var(--space-4);
+  padding: 0;
+  border: 0;
+}
+
+.required {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+}
+
+.stars {
+  display: flex;
+}
+
+/* 44px hit area per star; the focus ring shows on the star whose hidden radio has the keyboard focus. */
+.star {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--hit-area-min);
+  min-height: var(--hit-area-min);
+  border-radius: var(--radius-md);
+  color: var(--color-warning-text);
+  font-size: var(--font-size-xl);
+  cursor: pointer;
+}
+
+.star:has(input:focus-visible) {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-offset);
+}

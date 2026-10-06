@@ -20,6 +20,12 @@ export const routes: Routes = [
       ),
   },
   {
+    path: 'restaurants/:id/review',
+    canActivate: [requireAuth],
+    loadComponent: () =>
+      import('./pages/review-form/review-form.component').then((m) => m.ReviewFormComponent),
+  },
+  {
     path: 'login',
     canActivate: [guestOnly],
     loadComponent: () => import('./pages/login/login.component').then((m) => m.LoginComponent),

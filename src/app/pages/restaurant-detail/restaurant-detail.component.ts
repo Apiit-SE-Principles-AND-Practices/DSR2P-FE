@@ -1,4 +1,4 @@
-import { Component, DestroyRef, effect, inject } from '@angular/core';
+import { Component, DestroyRef, effect, inject, signal } from '@angular/core';
 import { rxResource, toSignal } from '@angular/core/rxjs-interop';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
@@ -31,6 +31,15 @@ import { ReviewsSectionComponent } from './reviews-section.component';
   styleUrl: './restaurant-detail.component.css',
   template: `
     @let r = restaurant.value();
+    @if (submitted()) {
+      <div class="notice" role="status">
+        <span
+          >Thanks — your review has been submitted and will appear once a moderator approves
+          it.</span
+        >
+        <button type="button" class="btn secondary" (click)="submitted.set(false)">Dismiss</button>
+      </div>
+    }
     @if (restaurant.error()) {
       @if (notFound()) {
         <app-not-found />
@@ -58,6 +67,11 @@ export class RestaurantDetailComponent {
   protected readonly id = toSignal(
     inject(ActivatedRoute).paramMap.pipe(map((params) => params.get('id') ?? '')),
     { requireSync: true },
+  );
+
+  /** Set by the review form after a successful submit (router state, so it is not in the URL). */
+  protected readonly submitted = signal(
+    (history.state as { reviewSubmitted?: boolean } | null)?.reviewSubmitted === true,
   );
 
   protected readonly restaurant = rxResource({
