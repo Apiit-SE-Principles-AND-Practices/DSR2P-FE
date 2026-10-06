@@ -7,6 +7,7 @@ import type { ApiError } from '../../core/api.interceptor';
 import type { Category } from '../../core/category.service';
 import type { MenuItem } from '../../core/menu';
 import { FormErrorComponent } from '../../shared/form-error.component';
+import { PhotoPickerComponent } from '../../shared/photo-picker.component';
 import { menuItemSchema } from '../../shared/validation/restaurant.schema';
 import { zodValidator } from '../../shared/validation/zod-validator';
 import { MenuItemFieldsetComponent, newDish } from './menu-item-fieldset.component';
@@ -14,7 +15,12 @@ import { MenuItemFieldsetComponent, newDish } from './menu-item-fieldset.compone
 /** Add a dish, or edit `item`. The fieldset is the one the restaurant form uses, so both look and validate alike. */
 @Component({
   selector: 'app-menu-item-form',
-  imports: [FormErrorComponent, MenuItemFieldsetComponent, ReactiveFormsModule],
+  imports: [
+    FormErrorComponent,
+    MenuItemFieldsetComponent,
+    PhotoPickerComponent,
+    ReactiveFormsModule,
+  ],
   template: `
     <form (submit)="$event.preventDefault(); submit()" novalidate>
       <app-form-error [message]="error()" />
@@ -26,6 +32,7 @@ import { MenuItemFieldsetComponent, newDish } from './menu-item-fieldset.compone
         [removable]="false"
         [legend]="item() ? 'Edit dish' : 'Add a dish'"
       />
+      <app-photo-picker label="Dish photo (optional)" [confirmRights]="false" [(photo)]="photo" />
       <button class="btn" type="submit" [disabled]="busy()">
         {{ busy() ? 'Saving…' : 'Save dish' }}
       </button>
@@ -43,6 +50,7 @@ export class MenuItemFormComponent {
   readonly cancelled = output();
 
   protected readonly form = newDish();
+  protected readonly photo = signal<File | null>(null);
   protected readonly busy = signal(false);
   protected readonly error = signal('');
   private readonly attempted = signal(false);
@@ -69,6 +77,7 @@ export class MenuItemFormComponent {
     effect(() => {
       const item = this.item();
       this.form.reset();
+      this.photo.set(null);
       if (item) this.form.patchValue({ ...item, priceLkr: Number(item.priceLkr) });
     });
   }
@@ -81,8 +90,8 @@ export class MenuItemFormComponent {
     this.busy.set(true);
     this.error.set('');
     (item
-      ? this.admin.updateMenuItem(this.restaurantId(), item.id, parsed.data)
-      : this.admin.addMenuItem(this.restaurantId(), parsed.data)
+      ? this.admin.updateMenuItem(this.restaurantId(), item.id, parsed.data, this.photo())
+      : this.admin.addMenuItem(this.restaurantId(), parsed.data, this.photo())
     )
       .pipe(
         finalize(() => {
