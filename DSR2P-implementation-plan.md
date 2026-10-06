@@ -169,10 +169,10 @@ Each phase lists its stories, the main deliverables and the exit criteria. Tick 
 ### Phase 4 — Restaurant Detail (DSR2P-14, 15, 16, 22, 45)
 
 **DSR2P-14 — Detail & rating breakdown**
-- [ ] **14.1** Detail layout with independently loading sections (two columns ≥1024px, stacked with anchors below).
-- [ ] **14.2** `RestaurantHeader` with "Write a review" action; `<title>` set to the restaurant name.
-- [ ] **14.3** `RatingBreakdown` with three `RatingBar` meters and numerals; zero-review state.
-- [ ] **14.4** Tests: three bars, zero-count state, 404 view.
+- [-] **14.1** Detail layout with independently loading sections (two columns ≥1024px, stacked with anchors below).
+- [-] **14.2** `RestaurantHeader` with "Write a review" action; `<title>` set to the restaurant name.
+- [-] **14.3** `RatingBreakdown` with three `RatingBar` meters and numerals; zero-review state.
+- [-] **14.4** Tests: three bars, zero-count state, 404 view.
 
 **DSR2P-15 — Menu listing**
 - [ ] **15.1** `MenuSection`, `MenuCategoryHeader` (`<h3>` overline), `MenuItemRow` with name and price on one line.
