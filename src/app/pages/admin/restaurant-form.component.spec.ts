@@ -50,6 +50,7 @@ async function setup(url = '/admin/restaurants/new') {
       imageUrl: null,
       categories: [CATEGORIES[1]],
     });
+    one(backend, '/restaurants/r-1/menu').flush([]); // the menu panel
   }
   await harness.fixture.whenStable();
   harness.detectChanges();

@@ -27,6 +27,15 @@ export interface RestaurantBody {
   imageUrl?: string;
 }
 
+/** The API takes menu items as multipart form data (it can also take an image, added in DSR2P-31). */
+const multipart = (item: MenuItemInput): FormData => {
+  const form = new FormData();
+  Object.entries(item).forEach(([name, value]) => {
+    form.append(name, String(value));
+  });
+  return form;
+};
+
 /** Admin-only restaurant and menu management. The server checks the role; these calls need an Admin login. */
 @Injectable({ providedIn: 'root' })
 export class AdminService {
@@ -59,13 +68,23 @@ export class AdminService {
     return this.http.delete<unknown>(`/admin/restaurants/${id}`);
   }
 
-  /** Multipart, like the API expects (it can also take an image, added in DSR2P-31). */
   addMenuItem(restaurantId: string, item: MenuItemInput): Observable<MenuItem> {
-    const form = new FormData();
-    Object.entries(item).forEach(([name, value]) => {
-      form.append(name, String(value));
-    });
-    return this.http.post<MenuItem>(`/admin/restaurants/${restaurantId}/menu-items`, form);
+    return this.http.post<MenuItem>(
+      `/admin/restaurants/${restaurantId}/menu-items`,
+      multipart(item),
+    );
+  }
+
+  /** Returns the saved dish: show that, not what was typed. */
+  updateMenuItem(restaurantId: string, itemId: number, item: MenuItemInput): Observable<MenuItem> {
+    return this.http.put<MenuItem>(
+      `/admin/restaurants/${restaurantId}/menu-items/${String(itemId)}`,
+      multipart(item),
+    );
+  }
+
+  removeMenuItem(restaurantId: string, itemId: number): Observable<unknown> {
+    return this.http.delete(`/admin/restaurants/${restaurantId}/menu-items/${String(itemId)}`);
   }
 
   /** What deleting would remove. The API has no summary, so this counts the menu and the published reviews. */

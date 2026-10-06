@@ -263,10 +263,10 @@ Each phase lists its stories, the main deliverables and the exit criteria. Tick 
 - [x] **29.6** Tests: BB17, delete confirmation, unsaved-changes guard.
 
 **DSR2P-30 — Menu items**
-- [ ] **30.1** `menuItemSchema` (price ≥ 0, max 2 decimals).
-- [ ] **30.2** `MenuItemsPanel` and `MenuItemForm` with dietary checkboxes and spice select.
-- [ ] **30.3** Update rows from the server response; warn when deleting an item linked to reviews.
-- [ ] **30.4** Tests: BB18, −1 rejected, 0 accepted, dietary enum values.
+- [x] **30.1** `menuItemSchema` (price ≥ 0, max 2 decimals).
+- [x] **30.2** `MenuItemsPanel` and `MenuItemForm` with dietary checkboxes and spice select.
+- [x] **30.3** Update rows from the server response; warn when deleting an item linked to reviews.
+- [x] **30.4** Tests: BB18, −1 rejected, 0 accepted, dietary enum values.
 
 **DSR2P-31 — Images & content**
 - [ ] **31.1** `ImageField`: upload (default, reuses 21.2) and https URL with load check.

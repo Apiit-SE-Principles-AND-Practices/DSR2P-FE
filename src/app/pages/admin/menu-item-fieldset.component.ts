@@ -1,15 +1,27 @@
 import { Component, input, output } from '@angular/core';
-import { FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import type { Category } from '../../core/category.service';
 import { SPICE_LEVELS } from '../../core/search-params.service';
 
-/** One dish in the restaurant form. `errors` holds messages keyed by full path, e.g. `menuItems.2.priceLkr`. */
+/** An empty dish, as the form groups used by this fieldset. */
+export const newDish = () =>
+  new FormGroup({
+    name: new FormControl('', { nonNullable: true }),
+    priceLkr: new FormControl<number | null>(null),
+    categoryId: new FormControl<number | null>(null),
+    spiceLevel: new FormControl('None', { nonNullable: true }),
+    isVegetarian: new FormControl(false, { nonNullable: true }),
+    isVegan: new FormControl(false, { nonNullable: true }),
+    isHalal: new FormControl(false, { nonNullable: true }),
+  });
+
+/** One dish in the restaurant form (and, alone, in the menu panel). `errors` holds messages keyed by full path, e.g. `menuItems.2.priceLkr`. */
 @Component({
   selector: 'app-menu-item-fieldset',
   imports: [ReactiveFormsModule],
   template: `
     <fieldset class="field" [formGroup]="group()">
-      <legend>Dish {{ index() + 1 }}</legend>
+      <legend>{{ legend() ?? 'Dish ' + (index() + 1) }}</legend>
       <label [for]="id('name')">Name</label>
       <input [id]="id('name')" formControlName="name" [attr.aria-invalid]="!!error('name')" />
       @if (error('name'); as message) {
@@ -54,9 +66,11 @@ import { SPICE_LEVELS } from '../../core/search-params.service';
       <label class="choice"><input type="checkbox" formControlName="isVegan" /> Vegan</label>
       <label class="choice"><input type="checkbox" formControlName="isHalal" /> Halal</label>
 
-      <button type="button" class="btn secondary" (click)="remove.emit()">
-        Remove dish {{ index() + 1 }}
-      </button>
+      @if (removable()) {
+        <button type="button" class="btn secondary" (click)="remove.emit()">
+          Remove dish {{ index() + 1 }}
+        </button>
+      }
     </fieldset>
   `,
 })
@@ -65,6 +79,8 @@ export class MenuItemFieldsetComponent {
   readonly index = input.required<number>();
   readonly categories = input.required<Category[]>();
   readonly errors = input<Record<string, string>>({});
+  readonly legend = input<string>();
+  readonly removable = input(true);
   readonly remove = output();
   protected readonly spiceLevels = SPICE_LEVELS;
 
