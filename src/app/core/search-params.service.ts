@@ -9,6 +9,11 @@ export const SPICE_LEVELS = ['None', 'Mild', 'Medium', 'Hot', 'Extra_Hot'] as co
 export const PRICE_BANDS = ['Budget', 'Moderate', 'Premium'] as const;
 export const SORTS = ['rating', 'price'] as const;
 
+/** Shown when the URL has no `sort`; the backend itself would list newest first. */
+export const DEFAULT_SORT = 'rating' satisfies (typeof SORTS)[number];
+
+export type PriceBand = (typeof PRICE_BANDS)[number];
+
 export interface SearchParams {
   city?: (typeof CITIES)[number];
   /** Name search text. */
@@ -17,10 +22,18 @@ export interface SearchParams {
   categoryId?: number;
   diet?: (typeof DIETS)[number];
   spice?: (typeof SPICE_LEVELS)[number];
-  price?: (typeof PRICE_BANDS)[number];
+  price?: PriceBand;
   sort?: (typeof SORTS)[number];
   page: number;
 }
+
+/** The filter fields (the name search is separate). */
+export const FILTER_KEYS = ['categoryId', 'diet', 'spice', 'price'] as const;
+
+/** A patch that removes every filter. */
+export const CLEARED_FILTERS = Object.fromEntries(
+  FILTER_KEYS.map((key) => [key, undefined]),
+) as Partial<SearchParams>;
 
 /** The listed value if `value` is one of them, else undefined (so bad URLs fall back to defaults). */
 const oneOf = <T extends string>(allowed: readonly T[], value: string | null) =>
@@ -72,10 +85,21 @@ export class SearchParamsService {
 
   /**
    * Applies `patch` to the current params and navigates to `/search`. Any change goes back to page 1
-   * unless the patch sets `page`. Pass `undefined` to remove a filter.
+   * unless the patch sets `page`. Pass `undefined` to remove a filter. `replaceUrl` keeps live typing
+   * from filling the Back history.
    */
-  update(patch: Partial<SearchParams>): Promise<boolean> {
+  update(patch: Partial<SearchParams>, replaceUrl = false): Promise<boolean> {
     const next = { ...this.params(), page: 1, ...patch };
-    return this.router.navigate(['/search'], { queryParams: toQuery(next) });
+    return this.router.navigate(['/search'], { queryParams: toQuery(next), replaceUrl });
+  }
+
+  /** Removes every filter; the name search, city and sort stay. */
+  clearFilters(): Promise<boolean> {
+    return this.update(CLEARED_FILTERS);
+  }
+
+  /** Removes the name search and every filter; the city and sort stay. */
+  reset(): Promise<boolean> {
+    return this.update({ ...CLEARED_FILTERS, q: undefined });
   }
 }
