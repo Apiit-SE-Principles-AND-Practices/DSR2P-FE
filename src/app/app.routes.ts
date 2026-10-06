@@ -59,6 +59,12 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./pages/admin/admin-restaurants.component').then((m) => m.AdminRestaurantsComponent),
   },
+  {
+    path: 'admin/moderation',
+    canActivate: [requireAdmin],
+    loadComponent: () =>
+      import('./pages/admin/moderation-queue.component').then((m) => m.ModerationQueueComponent),
+  },
   ...['admin/restaurants/new', 'admin/restaurants/:id/edit'].map((path) => ({
     path,
     canActivate: [requireAdmin],

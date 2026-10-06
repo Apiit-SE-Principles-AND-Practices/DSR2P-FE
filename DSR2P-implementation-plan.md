@@ -284,12 +284,12 @@ Each phase lists its stories, the main deliverables and the exit criteria. Tick 
 - [x] **35.3** Tests: column counts, flag only when > 0, link filters.
 
 **DSR2P-32 — Moderation queue**
-- [ ] **32.1** `ModerationQueuePage`: type filter, oldest-first, count heading.
-- [ ] **32.2** `ModerationItem` with type badge, context, parent review excerpt for replies.
-- [ ] **32.3** Remove items only after server success; busy state; keep item on failure.
-- [ ] **32.4** Refetch every 60s and on focus; handle `409` "already moderated".
-- [ ] **32.5** Move focus to the next item after removal.
-- [ ] **32.6** Tests: BB14/BB15 non-optimistic removal, failure kept, 409 handled.
+- [x] **32.1** `ModerationQueuePage`: type filter, oldest-first, count heading.
+- [x] **32.2** `ModerationItem` with type badge, context, parent review excerpt for replies.
+- [x] **32.3** Remove items only after server success; busy state; keep item on failure.
+- [x] **32.4** Refetch every 60s and on focus; handle `409` "already moderated".
+- [x] **32.5** Move focus to the next item after removal.
+- [x] **32.6** Tests: BB14/BB15 non-optimistic removal, failure kept, 409 handled.
 
 **DSR2P-33 — Approve/reject review**
 - [ ] **33.1** `rejectionReasonSchema` and shared preset-reason list.
