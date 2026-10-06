@@ -1,5 +1,28 @@
 # Changelog
 
+## [1.2.0](https://github.com/Apiit-SE-Principles-AND-Practices/DSR2P-FE/compare/dsr2p-fe-v1.1.0...dsr2p-fe-v1.2.0) (2026-10-06)
+
+
+### Features
+
+* Admin restaurants ([c11f9b3](https://github.com/Apiit-SE-Principles-AND-Practices/DSR2P-FE/commit/c11f9b34d19fec1f4b60adeff8b2710b7b770d93))
+* DSR2P-20 Restaurant response ([1c82918](https://github.com/Apiit-SE-Principles-AND-Practices/DSR2P-FE/commit/1c82918b4a921f630fd35d2f39381cccf8c7caaa))
+* DSR2P-32 Moderation queue ([f610b61](https://github.com/Apiit-SE-Principles-AND-Practices/DSR2P-FE/commit/f610b612adbf4dd3913cb89398810801bee3f2b6))
+* DSR2P-33 Approve and reject a review ([d7374dd](https://github.com/Apiit-SE-Principles-AND-Practices/DSR2P-FE/commit/d7374dd3b155ec3d2dd25290726284d8601c6116))
+* DSR2P-34 Approve and reject comment ([4c60de3](https://github.com/Apiit-SE-Principles-AND-Practices/DSR2P-FE/commit/4c60de3a3a571b99b7ac2d973f433710e8595178))
+* DSR2P-35 Dashboard ([be14a4f](https://github.com/Apiit-SE-Principles-AND-Practices/DSR2P-FE/commit/be14a4faf80df167f9b5891be0f970a29823122d))
+* Images ([b53864b](https://github.com/Apiit-SE-Principles-AND-Practices/DSR2P-FE/commit/b53864bbda6f51039d8e3bf47fbed9c04cbb5850))
+* Menu items ([a89eb8f](https://github.com/Apiit-SE-Principles-AND-Practices/DSR2P-FE/commit/a89eb8f6d744bbf6f232be59aa5230585aeaac3f))
+* Personal data access & erasure ([7c29aed](https://github.com/Apiit-SE-Principles-AND-Practices/DSR2P-FE/commit/7c29aed7ee15c0e3ef2cdca61f066668c1de0bbd))
+* Profile & language ([ec9691c](https://github.com/Apiit-SE-Principles-AND-Practices/DSR2P-FE/commit/ec9691c2848e642f720fc9da313c1649e35be6bc))
+* Report content ([e951c0c](https://github.com/Apiit-SE-Principles-AND-Practices/DSR2P-FE/commit/e951c0cb5eeef068c8776d95386ded731f8d0e38))
+* SR2P-47 Moderation guidelines ([b27282e](https://github.com/Apiit-SE-Principles-AND-Practices/DSR2P-FE/commit/b27282e072d1464f8fcc24eb51a36c13da6257de))
+
+
+### Bug Fixes
+
+* top nav 640px CI e2e error ([c932b5e](https://github.com/Apiit-SE-Principles-AND-Practices/DSR2P-FE/commit/c932b5e1884740f535bcc6e93d0b00d9a2325409))
+
 ## [1.1.0](https://github.com/Apiit-SE-Principles-AND-Practices/DSR2P-FE/compare/dsr2p-fe-v1.0.0...dsr2p-fe-v1.1.0) (2026-10-06)
 
 
