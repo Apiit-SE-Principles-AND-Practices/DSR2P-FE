@@ -172,3 +172,8 @@ textarea.select {
   border-radius: var(--radius-md);
   background: var(--color-surface);
 }
+
+/* A destructive action (deleting). */
+.btn.danger {
+  background: var(--color-danger);
+}

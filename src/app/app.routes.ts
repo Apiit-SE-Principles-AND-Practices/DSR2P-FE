@@ -1,6 +1,6 @@
 import type { Routes } from '@angular/router';
 import { environment } from '../environments/environment';
-import { guestOnly, requireAdmin, requireAuth } from './core/guards';
+import { guestOnly, requireAdmin, requireAuth, unsavedChangesGuard } from './core/guards';
 import { HomeComponent } from './pages/home.component';
 import { PlaceholderComponent } from './pages/placeholder.component';
 import { NotFoundComponent } from './shared/not-found.component';
@@ -62,6 +62,19 @@ export const routes: Routes = [
     component: PlaceholderComponent,
     data: { title: 'Admin dashboard' },
   },
+  {
+    path: 'admin/restaurants',
+    canActivate: [requireAdmin],
+    loadComponent: () =>
+      import('./pages/admin/admin-restaurants.component').then((m) => m.AdminRestaurantsComponent),
+  },
+  ...['admin/restaurants/new', 'admin/restaurants/:id/edit'].map((path) => ({
+    path,
+    canActivate: [requireAdmin],
+    canDeactivate: [unsavedChangesGuard],
+    loadComponent: () =>
+      import('./pages/admin/restaurant-form.component').then((m) => m.RestaurantFormComponent),
+  })),
   ...environment.devRoutes,
   { path: '**', component: NotFoundComponent },
 ];

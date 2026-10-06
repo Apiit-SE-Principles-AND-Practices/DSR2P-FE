@@ -34,6 +34,7 @@ export const CONTRAST_PAIRS: readonly ContrastPair[] = [
   { fg: '--color-text-muted', bg: '--color-surface', min: 4.5 },
   { fg: '--color-on-primary', bg: '--color-primary', min: 4.5 },
   { fg: '--color-on-primary', bg: '--color-primary-hover', min: 4.5 },
+  { fg: '--color-on-primary', bg: '--color-danger', min: 4.5 },
   { fg: '--color-primary', bg: '--color-bg', min: 4.5 },
   { fg: '--color-primary', bg: '--color-surface', min: 4.5 },
   { fg: '--color-success', bg: '--color-surface', min: 4.5 },
