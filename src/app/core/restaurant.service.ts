@@ -3,6 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import type { Observable } from 'rxjs';
 import type { MenuItem } from './menu';
 import type { Language } from './session.store';
+import type { ReviewInput } from '../shared/validation/review.schema';
 import type { SearchResult } from './search.service';
 
 export interface ReviewComment {
@@ -41,6 +42,17 @@ export class RestaurantService {
     return this.http.get<MenuItem[]>(`/restaurants/${id}/menu`, {
       headers: { 'Cache-Control': 'no-cache' },
     });
+  }
+
+  /** Sent as multipart form data (the endpoint also takes photos, added in DSR2P-21). Starts as Pending. */
+  submitReview(restaurantId: string, { itemId, ...fields }: ReviewInput): Observable<Review> {
+    const form = new FormData();
+    Object.entries({ restaurantId, ...fields, ...(itemId !== null && { itemId }) }).forEach(
+      ([name, value]) => {
+        form.append(name, String(value));
+      },
+    );
+    return this.http.post<Review>('/reviews', form);
   }
 
   /** Approved reviews only: the backend's default, so Pending and Rejected never reach the page. */
