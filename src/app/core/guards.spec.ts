@@ -5,6 +5,7 @@ import { provideRouter, Router } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
 import { routes } from '../app.routes';
 import { ToastService } from '../shared/toast.service';
+import { unsavedChangesGuard } from './guards';
 import { SessionStore, type Role } from './session.store';
 
 /** Navigates the real route map, signed in as `role` (or as a Guest when omitted). */
@@ -68,5 +69,27 @@ describe('route guards', () => {
     it(`keeps signed-in users off ${path}`, async () => {
       expect(await visit(path, 'Customer')).toBe('/');
     });
+  });
+});
+
+const NO_ROUTE = [{}, {}, {}] as unknown as [never, never, never];
+
+describe('unsavedChangesGuard', () => {
+  const run = (unsaved: boolean) =>
+    TestBed.runInInjectionContext(() =>
+      unsavedChangesGuard({ hasUnsavedChanges: () => unsaved }, ...NO_ROUTE),
+    );
+
+  it('lets a page with no unsaved changes go without asking', () => {
+    const ask = spyOn(window, 'confirm');
+    expect(run(false)).toBeTrue();
+    expect(ask).not.toHaveBeenCalled();
+  });
+
+  it('asks before leaving unsaved changes and follows the answer', () => {
+    const ask = spyOn(window, 'confirm').and.returnValues(false, true);
+    expect(run(true)).toBeFalse();
+    expect(run(true)).toBeTrue();
+    expect(ask).toHaveBeenCalledTimes(2);
   });
 });

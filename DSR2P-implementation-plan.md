@@ -252,15 +252,15 @@ Each phase lists its stories, the main deliverables and the exit criteria. Tick 
 
 ### Phase 6 — Admin catalogue (DSR2P-29, 30, 31)
 
-- [ ] **A.1** Shared `AdminTable` (semantic table ≥640px, stacked labelled cards below).
+- [-] **A.1** Shared `AdminTable` (semantic table ≥640px, stacked labelled cards below).
 
 **DSR2P-29 — Restaurants**
-- [ ] **29.1** `RestaurantListPage` with search and city filter.
-- [ ] **29.2** `RestaurantForm` with repeatable `MenuItemFieldset`, submitted in one request.
-- [ ] **29.3** Map nested server errors (e.g. `menuItems[2].priceLkr`).
-- [ ] **29.4** `ConfirmDeleteDialog` with cascade counts and typed name.
-- [ ] **29.5** Unsaved-changes guard (`CanDeactivateFn`).
-- [ ] **29.6** Tests: BB17, delete confirmation, unsaved-changes guard.
+- [x] **29.1** `RestaurantListPage` with search and city filter.
+- [x] **29.2** `RestaurantForm` with repeatable `MenuItemFieldset`, submitted in one request.
+- [x] **29.3** Map nested server errors (e.g. `menuItems[2].priceLkr`).
+- [x] **29.4** `ConfirmDeleteDialog` with cascade counts and typed name.
+- [x] **29.5** Unsaved-changes guard (`CanDeactivateFn`).
+- [x] **29.6** Tests: BB17, delete confirmation, unsaved-changes guard.
 
 **DSR2P-30 — Menu items**
 - [ ] **30.1** `menuItemSchema` (price ≥ 0, max 2 decimals).

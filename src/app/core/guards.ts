@@ -1,5 +1,5 @@
 import { inject } from '@angular/core';
-import { Router, type CanActivateFn } from '@angular/router';
+import { Router, type CanActivateFn, type CanDeactivateFn } from '@angular/router';
 import { ToastService } from '../shared/toast.service';
 import { SessionStore } from './session.store';
 
@@ -22,3 +22,13 @@ export const requireAdmin: CanActivateFn = (route, state) => {
 /** Login and register are for Guests; signed-in users go home. */
 export const guestOnly: CanActivateFn = () =>
   !inject(SessionStore).isAuthenticated() || inject(Router).createUrlTree(['/']);
+
+/** A page that can have edits the user has not saved yet. */
+export interface HasUnsavedChanges {
+  hasUnsavedChanges(): boolean;
+}
+
+/** Asks before leaving a form with unsaved edits. Pages with no edits (or already saved) leave freely. */
+export const unsavedChangesGuard: CanDeactivateFn<HasUnsavedChanges> = (page) =>
+  !page.hasUnsavedChanges() ||
+  window.confirm('You have unsaved changes. Leave this page and lose them?');
