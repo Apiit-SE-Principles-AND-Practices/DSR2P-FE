@@ -39,7 +39,7 @@
     "@secretlint/secretlint-rule-preset-recommend": "^13.0.7",
     "@types/jasmine": "~5.1.0",
     "angular-eslint": "^19.8.1",
-    "eslint": "^9.39.5",
+    "eslint": "^10.12.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-no-unsanitized": "^4.1.5",
     "eslint-plugin-security": "^4.2.0",
