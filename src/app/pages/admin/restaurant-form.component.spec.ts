@@ -187,4 +187,22 @@ describe('RestaurantFormComponent', () => {
     expect(update.request.method).toBe('PUT');
     expect((update.request.body as { name: string }).name).toBe('New Name');
   });
+
+  it('rejects an address that is not https, and one that does not open as an image', async () => {
+    const s = await setup();
+    set(s.el, '#image-url', 'http://example.lk/a.png');
+    s.el.querySelector<HTMLButtonElement>('button[type=submit]')?.click();
+    s.harness.detectChanges();
+    expect(s.el.textContent).toContain('Enter a full address starting with https://');
+
+    fillAndSave(s, 0);
+    set(s.el, '#image-url', 'https://example.lk/missing.png');
+    s.harness.detectChanges();
+    s.el.querySelector('img')?.dispatchEvent(new Event('error'));
+    s.el.querySelector<HTMLButtonElement>('button[type=submit]')?.click();
+    s.harness.detectChanges();
+
+    expect(s.el.textContent).toContain('does not open as an image');
+    s.backend.expectNone((r) => r.url.endsWith('/admin/restaurants'));
+  });
 });

@@ -10,6 +10,7 @@ import type { HasUnsavedChanges } from '../../core/guards';
 import { RestaurantService } from '../../core/restaurant.service';
 import { CITIES } from '../../core/search-params.service';
 import { FormErrorComponent } from '../../shared/form-error.component';
+import { ImageUrlFieldComponent } from '../../shared/image-url-field.component';
 import { ToastService } from '../../shared/toast.service';
 import { restaurantSchema } from '../../shared/validation/restaurant.schema';
 import { fieldPath, zodValidator } from '../../shared/validation/zod-validator';
@@ -19,7 +20,6 @@ import { MenuItemFieldsetComponent, newDish } from './menu-item-fieldset.compone
 const TEXT_FIELDS = [
   { key: 'name', label: 'Name' },
   { key: 'address', label: 'Address' },
-  { key: 'imageUrl', label: 'Image address (optional)' },
 ];
 
 /**
@@ -30,6 +30,7 @@ const TEXT_FIELDS = [
   selector: 'app-restaurant-form',
   imports: [
     FormErrorComponent,
+    ImageUrlFieldComponent,
     MenuItemFieldsetComponent,
     MenuItemsPanelComponent,
     ReactiveFormsModule,
@@ -53,6 +54,8 @@ const TEXT_FIELDS = [
           }
         </div>
       }
+
+      <app-image-url-field [control]="form.controls.imageUrl" [error]="errors()['imageUrl']" />
 
       <div class="field">
         <label for="city">City</label>
@@ -204,6 +207,10 @@ export class RestaurantFormComponent implements HasUnsavedChanges {
     this.attempted.set(true);
     const parsed = restaurantSchema.safeParse(this.form.getRawValue());
     if (!parsed.success || this.busy()) return;
+    if (this.form.controls.imageUrl.hasError('unloadable')) {
+      this.error.set('The image address does not open as an image. Fix it or leave it empty.');
+      return;
+    }
     const { menuItems, imageUrl, ...fields } = parsed.data;
     const body = { ...fields, ...(imageUrl && { imageUrl }) };
     this.busy.set(true);

@@ -27,12 +27,13 @@ export interface RestaurantBody {
   imageUrl?: string;
 }
 
-/** The API takes menu items as multipart form data (it can also take an image, added in DSR2P-31). */
-const multipart = (item: MenuItemInput): FormData => {
+/** The API takes menu items as multipart form data (with an optional `image` file). */
+const multipart = (item: MenuItemInput, image: File | null): FormData => {
   const form = new FormData();
   Object.entries(item).forEach(([name, value]) => {
     form.append(name, String(value));
   });
+  if (image) form.append('image', image, image.name);
   return form;
 };
 
@@ -68,18 +69,27 @@ export class AdminService {
     return this.http.delete<unknown>(`/admin/restaurants/${id}`);
   }
 
-  addMenuItem(restaurantId: string, item: MenuItemInput): Observable<MenuItem> {
+  addMenuItem(
+    restaurantId: string,
+    item: MenuItemInput,
+    image: File | null = null,
+  ): Observable<MenuItem> {
     return this.http.post<MenuItem>(
       `/admin/restaurants/${restaurantId}/menu-items`,
-      multipart(item),
+      multipart(item, image),
     );
   }
 
   /** Returns the saved dish: show that, not what was typed. */
-  updateMenuItem(restaurantId: string, itemId: number, item: MenuItemInput): Observable<MenuItem> {
+  updateMenuItem(
+    restaurantId: string,
+    itemId: number,
+    item: MenuItemInput,
+    image: File | null = null,
+  ): Observable<MenuItem> {
     return this.http.put<MenuItem>(
       `/admin/restaurants/${restaurantId}/menu-items/${String(itemId)}`,
-      multipart(item),
+      multipart(item, image),
     );
   }
 

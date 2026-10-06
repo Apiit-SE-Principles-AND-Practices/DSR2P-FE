@@ -269,10 +269,10 @@ Each phase lists its stories, the main deliverables and the exit criteria. Tick 
 - [x] **30.4** Tests: BB18, −1 rejected, 0 accepted, dietary enum values.
 
 **DSR2P-31 — Images & content**
-- [ ] **31.1** `ImageField`: upload (default, reuses 21.2) and https URL with load check.
-- [ ] **31.2** `ContentEditor` (plain textarea with counter).
-- [ ] **31.3** `POST /admin/uploads` integrated with restaurant and menu-item saves.
-- [ ] **31.4** Tests: BB19, invalid URL, non-image file.
+- [x] **31.1** `ImageField`: upload (default, reuses 21.2) and https URL with load check.
+- [x] **31.2** `ContentEditor` (plain textarea with counter).
+- [x] **31.3** `POST /admin/uploads` integrated with restaurant and menu-item saves.
+- [x] **31.4** Tests: BB19, invalid URL, non-image file.
 
 **Exit:** an Admin can fully manage restaurants, menus and images without a developer.
 

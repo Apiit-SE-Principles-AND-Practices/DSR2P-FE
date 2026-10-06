@@ -54,6 +54,28 @@ const set = (el: HTMLElement, selector: string, value: string) => {
 const field = (req: { request: { body: unknown } }, name: string) =>
   (req.request.body as FormData).get(name);
 
+async function realPicture(): Promise<File> {
+  const canvas = document.createElement('canvas');
+  canvas.width = canvas.height = 40;
+  canvas.getContext('2d')?.fillRect(0, 0, 40, 40);
+  const blob = await new Promise<Blob | null>((done) => {
+    canvas.toBlob(done, 'image/png');
+  });
+  return new File([blob ?? new Blob()], 'dish.png', { type: 'image/png' });
+}
+
+/** Picks a file the way the browser does, then waits for it to be processed. */
+async function pickFile({ fixture, el }: Setup, file: File) {
+  const input = el.querySelector<HTMLInputElement>('input[type=file]');
+  if (!input) throw new Error('No file input');
+  const transfer = new DataTransfer();
+  transfer.items.add(file);
+  input.files = transfer.files;
+  input.dispatchEvent(new Event('change'));
+  await new Promise((done) => setTimeout(done, 150)); // image decoding is not tracked by Angular
+  fixture.detectChanges();
+}
+
 /** Opens Edit on the first dish, sets its price and presses Save. */
 function editPrice({ fixture, el }: Setup, price: string) {
   button(el, 'Edit')?.click();
@@ -140,5 +162,27 @@ describe('MenuItemsPanelComponent', () => {
     s.fixture.detectChanges();
 
     expect(s.el.textContent).toContain('No dishes yet.');
+  });
+
+  it('sends a chosen dish photo with the save, shrunk to a JPEG', async () => {
+    const s = await setup();
+    button(s.el, 'Edit')?.click();
+    s.fixture.detectChanges();
+    await pickFile(s, await realPicture());
+    button(s.el, 'Save dish')?.click();
+
+    const put = s.one('/admin/restaurants/r-1/menu-items/5');
+    expect((field(put, 'image') as File).type).toBe('image/jpeg');
+  });
+
+  it('rejects a file that is not an image before anything is uploaded', async () => {
+    const s = await setup();
+    button(s.el, 'Edit')?.click();
+    s.fixture.detectChanges();
+    await pickFile(s, new File(['hello'], 'notes.txt', { type: 'text/plain' }));
+
+    expect(s.el.textContent).toContain('Choose a JPEG, PNG or WebP image.');
+    button(s.el, 'Save dish')?.click();
+    expect(field(s.one('/admin/restaurants/r-1/menu-items/5'), 'image')).toBeNull();
   });
 });

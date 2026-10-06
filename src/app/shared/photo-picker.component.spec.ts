@@ -97,4 +97,11 @@ describe('PhotoPickerComponent', () => {
     await pick(await realPicture(300, 200));
     expect(picker.rights()).toBeFalse();
   });
+
+  it('hides the rights confirmation when it is not needed', async () => {
+    const { el, fixture, pick } = setup();
+    fixture.componentRef.setInput('confirmRights', false);
+    await pick(await realPicture());
+    expect(el.querySelector('input[type=checkbox]')).toBeNull();
+  });
 });

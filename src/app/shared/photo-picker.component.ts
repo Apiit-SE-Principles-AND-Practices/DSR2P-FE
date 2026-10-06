@@ -1,4 +1,4 @@
-import { Component, effect, model, signal } from '@angular/core';
+import { Component, effect, input, model, signal } from '@angular/core';
 import { compressImage, IMAGE_TYPES, validateImage } from '../core/image';
 
 /**
@@ -10,7 +10,7 @@ import { compressImage, IMAGE_TYPES, validateImage } from '../core/image';
   styleUrl: './photo-picker.component.css',
   template: `
     <div class="field">
-      <label for="photo">Add a photo (optional)</label>
+      <label for="photo">{{ label() }}</label>
       <input id="photo" type="file" [accept]="accept" #input (change)="choose(input)" />
       @if (busy()) {
         <span class="hint" role="status">Preparing your photo…</span>
@@ -21,15 +21,20 @@ import { compressImage, IMAGE_TYPES, validateImage } from '../core/image';
     </div>
     @if (preview(); as url) {
       <img class="preview" alt="Preview of your photo" [src]="url" />
-      <label class="choice">
-        <input type="checkbox" [checked]="rights()" (change)="rights.set(!rights())" />
-        This is my photo, or I have permission to share it.
-      </label>
+      @if (confirmRights()) {
+        <label class="choice">
+          <input type="checkbox" [checked]="rights()" (change)="rights.set(!rights())" />
+          This is my photo, or I have permission to share it.
+        </label>
+      }
       <button type="button" class="btn secondary" (click)="remove(input)">Remove photo</button>
     }
   `,
 })
 export class PhotoPickerComponent {
+  readonly label = input('Add a photo (optional)');
+  /** Customers confirm a photo is theirs to share; an Admin adding a dish photo does not. */
+  readonly confirmRights = input(true);
   /** The processed photo, ready to upload; null when none is chosen. */
   readonly photo = model<File | null>(null);
   /** Whether the user confirmed the photo is theirs to share. */
