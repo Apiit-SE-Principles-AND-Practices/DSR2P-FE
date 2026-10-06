@@ -52,6 +52,10 @@ describe('route guards', () => {
     expect(await visit('/restaurants/r-1/review', 'Customer')).toBe('/restaurants/r-1/review');
   });
 
+  it('sends a Guest from My reviews to login, remembering the page', async () => {
+    expect(await visit('/account/reviews')).toBe('/login?returnTo=%2Faccount%2Freviews');
+  });
+
   it('lets an Admin into /admin', async () => {
     expect(await visit('/admin', 'Admin')).toBe('/admin');
   });
