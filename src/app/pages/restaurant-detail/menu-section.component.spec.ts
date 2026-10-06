@@ -119,4 +119,39 @@ describe('MenuSectionComponent', () => {
     await answer([item(1, 'Biryani', '900', 5)]);
     expect(el.querySelectorAll('app-menu-item-row').length).toBe(1);
   });
+
+  it('filters menu items when a category chip is selected', async () => {
+    const { el, settle, answer } = setup();
+    settle();
+    await answer([
+      item(1, 'Biryani', '1200', 5),
+      item(2, 'Watalappan', '450', 2),
+      item(3, 'Fried rice', '900', 5),
+    ]);
+
+    const chips = Array.from(el.querySelectorAll<HTMLButtonElement>('.category-chips button'));
+    expect(chips.map((c) => c.textContent?.trim())).toEqual(['All', 'Desserts', 'Rice']);
+    expect(chips[0].getAttribute('aria-pressed')).toBe('true');
+
+    // Click 'Desserts'
+    chips[1].click();
+    settle();
+    expect(Array.from(el.querySelectorAll('h3')).map((h) => h.textContent)).toEqual(['Desserts']);
+    expect(el.querySelectorAll('app-menu-item-row').length).toBe(1);
+
+    // Click 'Rice'
+    chips[2].click();
+    settle();
+    expect(Array.from(el.querySelectorAll('h3')).map((h) => h.textContent)).toEqual(['Rice']);
+    expect(el.querySelectorAll('app-menu-item-row').length).toBe(2);
+
+    // Click 'All'
+    chips[0].click();
+    settle();
+    expect(Array.from(el.querySelectorAll('h3')).map((h) => h.textContent)).toEqual([
+      'Desserts',
+      'Rice',
+    ]);
+    expect(el.querySelectorAll('app-menu-item-row').length).toBe(3);
+  });
 });
