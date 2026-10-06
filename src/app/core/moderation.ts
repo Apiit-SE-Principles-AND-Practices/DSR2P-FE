@@ -19,6 +19,8 @@ export interface ModerationEntry {
   text: string;
   language?: Language;
   reported: boolean;
+  /** How many people reported it. */
+  reportCount: number;
   restaurantId?: string;
   ratings?: { food: number; service: number; other: number };
   photos: string[];
@@ -38,6 +40,7 @@ export function toEntries({ reviews, comments }: ModerationQueue): ModerationEnt
     text: r.reviewText,
     language: r.language,
     reported: (r.reportCount ?? 0) > 0,
+    reportCount: r.reportCount ?? 0,
     restaurantId: r.restaurantId,
     ratings: { food: r.foodQualityRating, service: r.serviceRating, other: r.miscRating },
     photos: (r.images ?? []).map((image) => image.imageUrl),
@@ -52,6 +55,7 @@ export function toEntries({ reviews, comments }: ModerationQueue): ModerationEnt
       text: c.commentText,
       language: parent?.language,
       reported: (c.reportCount ?? 0) > 0,
+      reportCount: c.reportCount ?? 0,
       photos: [],
       parentText: parent?.reviewText,
     };

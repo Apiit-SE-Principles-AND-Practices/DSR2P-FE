@@ -312,10 +312,10 @@ Each phase lists its stories, the main deliverables and the exit criteria. Tick 
 - [x] **47.4** Tests: links present, content renders, presets match categories.
 
 **DSR2P-46 — Report content**
-- [ ] **46.1** `ReportButton` (hidden on own content, Guest prompt) and `ReportDialog`.
-- [ ] **46.2** Button becomes disabled "Reported" after submission; handle `409`.
-- [ ] **46.3** "Reported" badge and first-in-order sorting in the queue, per the P0.1 decision.
-- [ ] **46.4** Tests: Guest prompt, submit, Other requires details, disabled after report, queue badge and order.
+- [x] **46.1** `ReportButton` (hidden on own content, Guest prompt) and `ReportDialog`.
+- [x] **46.2** Button becomes disabled "Reported" after submission; handle `409`.
+- [x] **46.3** "Reported" badge and first-in-order sorting in the queue, per the P0.1 decision.
+- [x] **46.4** Tests: Guest prompt, submit, Other requires details, disabled after report, queue badge and order.
 
 **Exit:** the full moderation loop works end to end.
 

@@ -17,6 +17,7 @@ import { approvedComments, reviewAverage } from '../../core/reviews';
 import { SessionStore } from '../../core/session.store';
 import { RatingDisplayComponent } from '../../shared/rating-display.component';
 import { ReplyComposerComponent } from './reply-composer.component';
+import { ReportButtonComponent } from './report-button.component';
 
 const REPLIES_SHOWN = 2;
 
@@ -26,7 +27,7 @@ const REPLIES_SHOWN = 2;
  */
 @Component({
   selector: 'app-review-card',
-  imports: [RatingDisplayComponent, ReplyComposerComponent],
+  imports: [RatingDisplayComponent, ReplyComposerComponent, ReportButtonComponent],
   styleUrl: './review-card.component.css',
   template: `
     @let r = review();
@@ -71,6 +72,7 @@ const REPLIES_SHOWN = 2;
             <li>
               <p class="text">{{ reply.commentText }}</p>
               <time [attr.datetime]="reply.createdAt">{{ formatDate(reply.createdAt) }}</time>
+              <app-report-button kind="comments" [id]="reply.id" [ownerId]="reply.userId" />
             </li>
           }
         </ul>
@@ -80,6 +82,8 @@ const REPLIES_SHOWN = 2;
           </button>
         }
       }
+
+      <app-report-button kind="reviews" [id]="r.id" [ownerId]="r.userId" />
 
       @if (canRespond() && !r.response) {
         @if (responding()) {

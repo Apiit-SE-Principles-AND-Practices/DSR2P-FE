@@ -46,6 +46,7 @@ describe('toEntries', () => {
   it('flags reported items and carries the ratings of a review', () => {
     const [first] = toEntries(queue);
     expect(first.reported).toBeTrue();
+    expect(first.reportCount).toBe(1);
     expect(first.ratings).toEqual({ food: 4, service: 3, other: 5 });
   });
 });

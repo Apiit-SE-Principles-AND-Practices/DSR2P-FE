@@ -8,6 +8,10 @@ import type { SearchResult } from './search.service';
 
 export interface ReviewComment {
   id: number;
+  /** Who wrote it (the API sends the id, not a name). */
+  userId?: string;
+  /** How many people reported it. */
+  reportCount?: number;
   commentText: string;
   /** The backend currently sends every comment, so only Approved ones may be shown. */
   status: 'Pending' | 'Approved' | 'Rejected';
@@ -17,6 +21,8 @@ export interface ReviewComment {
 /** Mirrors the OpenAPI `Review`. There is no author name or like count in the API. */
 export interface Review {
   id: number;
+  userId?: string;
+  reportCount?: number;
   foodQualityRating: number;
   serviceRating: number;
   miscRating: number;
@@ -68,6 +74,11 @@ export class RestaurantService {
   /** The restaurant's one response to a review (Admin only). Public at once; a second one is a 409. */
   respond(reviewId: number, responseText: string): Observable<unknown> {
     return this.http.post(`/reviews/${String(reviewId)}/response`, { responseText });
+  }
+
+  /** Tells the moderators about a review or reply. The API takes no reason or body. */
+  report(kind: 'reviews' | 'comments', id: number): Observable<unknown> {
+    return this.http.post(`/${kind}/${String(id)}/report`, null);
   }
 
   /** Approved reviews only: the backend's default, so Pending and Rejected never reach the page. */
