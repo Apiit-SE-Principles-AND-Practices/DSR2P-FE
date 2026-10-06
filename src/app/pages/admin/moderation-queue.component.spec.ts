@@ -170,4 +170,56 @@ describe('ModerationQueueComponent', () => {
     await tick();
     backend.expectOne('/admin/moderation/queue');
   });
+
+  describe('replies (DSR2P-34)', () => {
+    it('BB14: approving a reply PATCHes the comments endpoint and removes it only after success', async () => {
+      const { backend, harness, el } = await setup('/admin/moderation?type=comments');
+      buttonIn(items(el)[0], 'Approve')?.click();
+      harness.detectChanges();
+
+      const patch = backend.expectOne('/admin/comments/7/approve');
+      expect(patch.request.method).toBe('PATCH');
+      expect(patch.request.body).toBeNull();
+      expect(items(el).length).toBe(1);
+      patch.flush({});
+      harness.detectChanges();
+      expect(items(el).length).toBe(0);
+      expect(el.textContent).toContain('Nothing is waiting for moderation.');
+    });
+
+    it('BB15: rejecting a reply needs a reason, then sends it', async () => {
+      const { backend, harness, el } = await setup('/admin/moderation?type=comments');
+      buttonIn(items(el)[0], 'Reject')?.click();
+      harness.detectChanges();
+      await Promise.resolve();
+      expect(el.querySelector('dialog')?.textContent).toContain('Reject this reply');
+      const confirm = el.querySelector<HTMLButtonElement>('dialog button.danger');
+      expect(confirm?.disabled).toBeTrue();
+
+      const box = el.querySelector('textarea');
+      if (!box) throw new Error('No textarea');
+      box.value = 'Spam';
+      box.dispatchEvent(new Event('input'));
+      harness.detectChanges();
+      confirm?.click();
+
+      const patch = backend.expectOne('/admin/comments/7/reject');
+      expect(patch.request.body).toEqual({ reason: 'Spam' });
+      patch.flush({});
+      harness.detectChanges();
+      expect(items(el).length).toBe(0);
+    });
+
+    it('keeps a reply when its decision fails', async () => {
+      const { backend, harness, el } = await setup('/admin/moderation?type=comments');
+      buttonIn(items(el)[0], 'Approve')?.click();
+      backend
+        .expectOne('/admin/comments/7/approve')
+        .flush(errorBody('Boom'), { status: 500, statusText: 'Server Error' });
+      harness.detectChanges();
+
+      expect(items(el).length).toBe(1);
+      expect(items(el)[0].querySelector('[role=alert]')).not.toBeNull();
+    });
+  });
 });

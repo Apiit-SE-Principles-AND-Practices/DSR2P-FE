@@ -297,8 +297,8 @@ Each phase lists its stories, the main deliverables and the exit criteria. Tick 
 - [x] **33.3** Tests: BB14 approve body, BB15 empty reason blocked, reason sent.
 
 **DSR2P-34 — Approve/reject comment**
-- [ ] **34.1** Parameterise `ModerationItem` and `RejectDialog` by type; wire comments endpoint.
-- [ ] **34.2** Run the DSR2P-33 tests for replies.
+- [x] **34.1** Parameterise `ModerationItem` and `RejectDialog` by type; wire comments endpoint.
+- [x] **34.2** Run the DSR2P-33 tests for replies.
 
 **DSR2P-20 — Restaurant response**
 - [ ] **20.1** Admin-only `ResponseComposer` on reviews without a response.
