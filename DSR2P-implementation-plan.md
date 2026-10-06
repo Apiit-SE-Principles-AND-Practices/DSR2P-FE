@@ -306,10 +306,10 @@ Each phase lists its stories, the main deliverables and the exit criteria. Tick 
 - [x] **20.3** Tests: BB20 hidden when a response exists, 409, non-Admin never sees it.
 
 **DSR2P-47 — Moderation guidelines**
-- [ ] **47.1** Team guideline text as `content/moderation-guidelines.md`, rendered at `/moderation-guidelines`.
-- [ ] **47.2** Link from the queue header and `RejectDialog`.
-- [ ] **47.3** Align preset rejection reasons with guideline categories from one shared list.
-- [ ] **47.4** Tests: links present, content renders, presets match categories.
+- [x] **47.1** Team guideline text as `content/moderation-guidelines.md`, rendered at `/moderation-guidelines`.
+- [x] **47.2** Link from the queue header and `RejectDialog`.
+- [x] **47.3** Align preset rejection reasons with guideline categories from one shared list.
+- [x] **47.4** Tests: links present, content renders, presets match categories.
 
 **DSR2P-46 — Report content**
 - [ ] **46.1** `ReportButton` (hidden on own content, Guest prompt) and `ReportDialog`.

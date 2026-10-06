@@ -1,8 +1,10 @@
 import { TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 import { REJECTION_MAX } from './validation/rejection-reason.schema';
 import { RejectDialogComponent } from './reject-dialog.component';
 
 async function setup() {
+  TestBed.configureTestingModule({ providers: [provideRouter([])] });
   const fixture = TestBed.createComponent(RejectDialogComponent);
   fixture.componentRef.setInput('subject', 'this review');
   fixture.detectChanges();
@@ -60,5 +62,12 @@ describe('RejectDialogComponent', () => {
     const { confirm, type } = await setup();
     type('a'.repeat(REJECTION_MAX + 1));
     expect(confirm?.disabled).toBeTrue();
+  });
+
+  it('links to the guidelines in a new tab', async () => {
+    const { el } = await setup();
+    const link = el.querySelector('a');
+    expect(link?.getAttribute('href')).toBe('/moderation-guidelines');
+    expect(link?.getAttribute('target')).toBe('_blank');
   });
 });

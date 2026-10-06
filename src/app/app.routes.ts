@@ -60,6 +60,13 @@ export const routes: Routes = [
       import('./pages/admin/admin-restaurants.component').then((m) => m.AdminRestaurantsComponent),
   },
   {
+    path: 'moderation-guidelines',
+    loadComponent: () =>
+      import('./pages/moderation-guidelines.component').then(
+        (m) => m.ModerationGuidelinesComponent,
+      ),
+  },
+  {
     path: 'admin/moderation',
     canActivate: [requireAdmin],
     loadComponent: () =>

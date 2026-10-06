@@ -1,14 +1,10 @@
 import * as z from 'zod/mini';
+import { GUIDELINE_CATEGORIES } from '../../core/moderation-guidelines';
 
 export const REJECTION_MAX = 500;
 
-/** Starting points from the moderation guidelines; they fill the box and stay editable. */
-export const REJECTION_PRESETS = [
-  'Personal attack',
-  'Not about food or service',
-  'Contains personal data',
-  'Spam',
-] as const;
+/** Starting points for the reason: the guideline categories, which fill the box and stay editable. */
+export const REJECTION_PRESETS: readonly string[] = GUIDELINE_CATEGORIES.map((c) => c.reason);
 
 /** Mirrors the backend reject input (non-blank reason). The upper limit is ours: the backend states none. */
 export const rejectionReasonSchema = z

@@ -79,6 +79,13 @@ describe('ModerationQueueComponent', () => {
     expect(items(el)[2].querySelector('.parent')?.textContent).toBe('Review 1');
   });
 
+  it('links to the moderation guidelines from the header', async () => {
+    const { el } = await setup();
+    expect(el.querySelector('a[href="/moderation-guidelines"]')?.textContent).toBe(
+      'Moderation guidelines',
+    );
+  });
+
   it('filters by the type in the address', async () => {
     const { el } = await setup('/admin/moderation?type=comments');
     expect(heading(el)).toBe('Moderation queue (1)');

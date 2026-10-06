@@ -8,6 +8,7 @@ import {
   viewChild,
   type OnInit,
 } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import {
   REJECTION_MAX,
   REJECTION_PRESETS,
@@ -20,10 +21,16 @@ import {
  */
 @Component({
   selector: 'app-reject-dialog',
+  imports: [RouterLink],
   styleUrl: './confirm-delete-dialog.component.css',
   template: `
     <dialog #dialog aria-labelledby="reject-title" (close)="cancelled.emit()">
       <h2 id="reject-title">Reject {{ subject() }}</h2>
+      <p>
+        <a routerLink="/moderation-guidelines" target="_blank"
+          >See the guidelines (opens in a new tab)</a
+        >
+      </p>
       <div class="presets" role="group" aria-label="Common reasons">
         @for (preset of presets; track preset) {
           <button type="button" class="btn secondary" (click)="reason.set(preset)">

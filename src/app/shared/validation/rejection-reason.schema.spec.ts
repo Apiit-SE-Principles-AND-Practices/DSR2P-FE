@@ -1,3 +1,4 @@
+import { GUIDELINE_CATEGORIES } from '../../core/moderation-guidelines';
 import { REJECTION_MAX, REJECTION_PRESETS, rejectionReasonSchema } from './rejection-reason.schema';
 
 describe('rejectionReasonSchema', () => {
@@ -18,5 +19,9 @@ describe('rejectionReasonSchema', () => {
     REJECTION_PRESETS.forEach((preset) => {
       expect(rejectionReasonSchema.safeParse(preset).success).toBeTrue();
     });
+  });
+
+  it('has exactly the guideline categories as presets', () => {
+    expect([...REJECTION_PRESETS]).toEqual(GUIDELINE_CATEGORIES.map((c) => c.reason));
   });
 });

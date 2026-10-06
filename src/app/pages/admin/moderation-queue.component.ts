@@ -8,7 +8,7 @@ import {
   signal,
 } from '@angular/core';
 import { rxResource, takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { finalize, interval, type Observable } from 'rxjs';
 import { AccountService } from '../../core/account.service';
 import { AdminService } from '../../core/admin.service';
@@ -39,11 +39,13 @@ const FILTERS: { value: Filter; label: string }[] = [
  */
 @Component({
   selector: 'app-moderation-queue',
-  imports: [InlineErrorComponent, ModerationItemComponent, SkeletonComponent],
+  imports: [InlineErrorComponent, ModerationItemComponent, RouterLink, SkeletonComponent],
   styleUrl: './moderation-queue.component.css',
   host: { '(window:focus)': 'queue.reload()' },
   template: `
     <h1 id="queue-heading" tabindex="-1">Moderation queue ({{ shown().length }})</h1>
+
+    <p><a routerLink="/moderation-guidelines">Moderation guidelines</a></p>
 
     <fieldset class="segmented">
       <legend class="sr-only">Show</legend>
