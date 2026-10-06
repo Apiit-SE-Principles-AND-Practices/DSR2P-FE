@@ -279,37 +279,37 @@ Each phase lists its stories, the main deliverables and the exit criteria. Tick 
 ### Phase 7 — Moderation & dashboard (DSR2P-35, 32, 33, 34, 20, 47, 46)
 
 **DSR2P-35 — Dashboard**
-- [ ] **35.1** `AdminStatTile` and `/admin` grid (2 → 4 columns at 640px).
-- [ ] **35.2** Attention style plus "Review now →" link when pending > 0.
-- [ ] **35.3** Tests: column counts, flag only when > 0, link filters.
+- [x] **35.1** `AdminStatTile` and `/admin` grid (2 → 4 columns at 640px).
+- [x] **35.2** Attention style plus "Review now →" link when pending > 0.
+- [x] **35.3** Tests: column counts, flag only when > 0, link filters.
 
 **DSR2P-32 — Moderation queue**
-- [ ] **32.1** `ModerationQueuePage`: type filter, oldest-first, count heading.
-- [ ] **32.2** `ModerationItem` with type badge, context, parent review excerpt for replies.
-- [ ] **32.3** Remove items only after server success; busy state; keep item on failure.
-- [ ] **32.4** Refetch every 60s and on focus; handle `409` "already moderated".
-- [ ] **32.5** Move focus to the next item after removal.
-- [ ] **32.6** Tests: BB14/BB15 non-optimistic removal, failure kept, 409 handled.
+- [x] **32.1** `ModerationQueuePage`: type filter, oldest-first, count heading.
+- [x] **32.2** `ModerationItem` with type badge, context, parent review excerpt for replies.
+- [x] **32.3** Remove items only after server success; busy state; keep item on failure.
+- [x] **32.4** Refetch every 60s and on focus; handle `409` "already moderated".
+- [x] **32.5** Move focus to the next item after removal.
+- [x] **32.6** Tests: BB14/BB15 non-optimistic removal, failure kept, 409 handled.
 
 **DSR2P-33 — Approve/reject review**
-- [ ] **33.1** `rejectionReasonSchema` and shared preset-reason list.
-- [ ] **33.2** `RejectDialog` with presets and required reason; Approve with busy state.
-- [ ] **33.3** Tests: BB14 approve body, BB15 empty reason blocked, reason sent.
+- [x] **33.1** `rejectionReasonSchema` and shared preset-reason list.
+- [x] **33.2** `RejectDialog` with presets and required reason; Approve with busy state.
+- [x] **33.3** Tests: BB14 approve body, BB15 empty reason blocked, reason sent.
 
 **DSR2P-34 — Approve/reject comment**
-- [ ] **34.1** Parameterise `ModerationItem` and `RejectDialog` by type; wire comments endpoint.
-- [ ] **34.2** Run the DSR2P-33 tests for replies.
+- [x] **34.1** Parameterise `ModerationItem` and `RejectDialog` by type; wire comments endpoint.
+- [x] **34.2** Run the DSR2P-33 tests for replies.
 
 **DSR2P-20 — Restaurant response**
-- [ ] **20.1** Admin-only `ResponseComposer` on reviews without a response.
-- [ ] **20.2** Handle `409`: show message and refresh the review.
-- [ ] **20.3** Tests: BB20 hidden when a response exists, 409, non-Admin never sees it.
+- [x] **20.1** Admin-only `ResponseComposer` on reviews without a response.
+- [x] **20.2** Handle `409`: show message and refresh the review.
+- [x] **20.3** Tests: BB20 hidden when a response exists, 409, non-Admin never sees it.
 
 **DSR2P-47 — Moderation guidelines**
-- [ ] **47.1** Team guideline text as `content/moderation-guidelines.md`, rendered at `/moderation-guidelines`.
-- [ ] **47.2** Link from the queue header and `RejectDialog`.
-- [ ] **47.3** Align preset rejection reasons with guideline categories from one shared list.
-- [ ] **47.4** Tests: links present, content renders, presets match categories.
+- [x] **47.1** Team guideline text as `content/moderation-guidelines.md`, rendered at `/moderation-guidelines`.
+- [x] **47.2** Link from the queue header and `RejectDialog`.
+- [x] **47.3** Align preset rejection reasons with guideline categories from one shared list.
+- [x] **47.4** Tests: links present, content renders, presets match categories.
 
 **DSR2P-46 — Report content**
 - [ ] **46.1** `ReportButton` (hidden on own content, Guest prompt) and `ReportDialog`.

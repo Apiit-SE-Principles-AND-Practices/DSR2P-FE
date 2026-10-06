@@ -5,6 +5,7 @@ import type { z } from 'zod/mini';
 import type { menuItemSchema } from '../shared/validation/restaurant.schema';
 import type { Category } from './category.service';
 import type { MenuItem } from './menu';
+import type { ModerationKind, ModerationQueue } from './moderation';
 import { CITIES } from './search-params.service';
 
 export type MenuItemInput = z.infer<typeof menuItemSchema>;
@@ -16,6 +17,21 @@ export interface AdminRestaurant {
   address: string;
   imageUrl: string | null;
   categories: Category[];
+}
+
+interface StatusCounts {
+  total: number;
+  pending: number;
+  approved: number;
+  rejected: number;
+}
+
+/** Mirrors the OpenAPI `DashboardStats`. It has no menu item count. */
+export interface DashboardStats {
+  restaurants: number;
+  users: number;
+  reviews: StatusCounts;
+  comments: StatusCounts;
 }
 
 /** Mirrors the backend `CreateRestaurantInput` / `UpdateRestaurantInput`. */
@@ -55,6 +71,27 @@ export class AdminService {
         pages.flatMap(({ data }) => data).sort((a, b) => a.name.localeCompare(b.name)),
       ),
     );
+  }
+
+  stats(): Observable<DashboardStats> {
+    return this.http.get<DashboardStats>('/admin/dashboard/stats', {
+      headers: { 'Cache-Control': 'no-cache' },
+    });
+  }
+
+  queue(): Observable<ModerationQueue> {
+    return this.http.get<ModerationQueue>('/admin/moderation/queue', {
+      headers: { 'Cache-Control': 'no-cache' },
+    });
+  }
+
+  approve(kind: ModerationKind, id: number): Observable<unknown> {
+    return this.http.patch(`/admin/${kind}/${String(id)}/approve`, null);
+  }
+
+  /** The reason is required and is shown to the author. */
+  reject(kind: ModerationKind, id: number, reason: string): Observable<unknown> {
+    return this.http.patch(`/admin/${kind}/${String(id)}/reject`, { reason });
   }
 
   create(body: RestaurantBody): Observable<AdminRestaurant> {

@@ -57,6 +57,7 @@ const LABELS: Record<ReviewSort, string> = {
               [replying]="replying() === review.id"
               (replyOpen)="replying.set(review.id)"
               (replyClose)="replying.set(null)"
+              (refresh)="reviews().reload()"
             />
           }
           @if (shown().length < sorted().length) {

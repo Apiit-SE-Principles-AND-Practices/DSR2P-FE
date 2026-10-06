@@ -1,0 +1,12 @@
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-3);
+}
+
+/* 640px: the tablet breakpoint (see core/tokens.ts) */
+@media (width >= 640px) {
+  .grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}

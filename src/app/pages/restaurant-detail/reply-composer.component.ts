@@ -17,7 +17,19 @@ import { RestaurantService } from '../../core/restaurant.service';
 import { FormErrorComponent } from '../../shared/form-error.component';
 import { REPLY_MAX, replySchema } from '../../shared/validation/reply.schema';
 
-/** Inline reply box under a review. The text is kept as a draft until it is sent. */
+const WORDS = {
+  reply: { label: 'Your reply', send: 'Send reply', failure: 'We couldn’t send your reply.' },
+  response: {
+    label: 'Your response as the restaurant',
+    send: 'Post response',
+    failure: 'We couldn’t post your response.',
+  },
+};
+
+/**
+ * Inline box under a review for a reply (anyone signed in; it waits for a moderator) or, with
+ * `kind="response"`, the restaurant's one official response (Admin only). The text is kept as a draft until sent.
+ */
 @Component({
   selector: 'app-reply-composer',
   imports: [FormErrorComponent],
@@ -25,7 +37,7 @@ import { REPLY_MAX, replySchema } from '../../shared/validation/reply.schema';
     <form (submit)="$event.preventDefault(); submit()" novalidate>
       <app-form-error [message]="error()" />
       <div class="field">
-        <label [for]="'reply-' + reviewId()">Your reply</label>
+        <label [for]="'reply-' + reviewId()">{{ words().label }}</label>
         <textarea
           class="select"
           rows="3"
@@ -41,7 +53,7 @@ import { REPLY_MAX, replySchema } from '../../shared/validation/reply.schema';
         }
       </div>
       <button class="btn" type="submit" [disabled]="busy() || !valid()">
-        {{ busy() ? 'Sending…' : failed() ? 'Retry' : 'Send reply' }}
+        {{ busy() ? 'Sending…' : failed() ? 'Retry' : words().send }}
       </button>
       <button type="button" class="btn secondary" (click)="cancelled.emit()">Cancel</button>
     </form>
@@ -49,13 +61,17 @@ import { REPLY_MAX, replySchema } from '../../shared/validation/reply.schema';
 })
 export class ReplyComposerComponent {
   readonly reviewId = input.required<number>();
-  /** The reply was accepted (it now waits for a moderator). */
+  readonly kind = input<'reply' | 'response'>('reply');
+  /** Accepted (a reply now waits for a moderator; a response is public at once). */
   readonly sent = output();
+  /** Someone else responded first (409): the review should be reloaded to show their response. */
+  readonly conflict = output();
   readonly cancelled = output();
 
   private readonly api = inject(RestaurantService);
   private readonly box = viewChild.required<ElementRef<HTMLTextAreaElement>>('box');
-  private readonly draftKey = computed(() => `reply-draft:${String(this.reviewId())}`);
+  private readonly draftKey = computed(() => `${this.kind()}-draft:${String(this.reviewId())}`);
+  protected readonly words = computed(() => WORDS[this.kind()]);
   private restored = false;
 
   protected readonly max = REPLY_MAX;
@@ -86,8 +102,11 @@ export class ReplyComposerComponent {
     if (!result.success || this.busy()) return;
     this.busy.set(true);
     this.error.set('');
-    this.api
-      .reply(this.reviewId(), result.data.commentText)
+    const text = result.data.commentText;
+    (this.kind() === 'response'
+      ? this.api.respond(this.reviewId(), text)
+      : this.api.reply(this.reviewId(), text)
+    )
       .pipe(
         finalize(() => {
           this.busy.set(false);
@@ -99,10 +118,13 @@ export class ReplyComposerComponent {
           this.sent.emit(); // nothing is added to the thread: only approved replies are shown
         },
         error: (e: ApiError) => {
+          if (e.status === 409) {
+            this.error.set('This review already has a response from the restaurant.');
+            this.conflict.emit();
+            return;
+          }
           this.failed.set(true);
-          this.error.set(
-            `We couldn’t send your reply. ${e.message} Your text is saved: press Retry.`,
-          );
+          this.error.set(`${this.words().failure} ${e.message} Your text is saved: press Retry.`);
         },
       });
   }
