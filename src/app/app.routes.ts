@@ -42,6 +42,16 @@ export const routes: Routes = [
       import('./pages/account/my-reviews.component').then((m) => m.MyReviewsComponent),
   },
   {
+    path: 'account/data',
+    canActivate: [requireAuth],
+    loadComponent: () =>
+      import('./pages/account/account-data.component').then((m) => m.AccountDataComponent),
+  },
+  {
+    path: 'privacy',
+    loadComponent: () => import('./pages/privacy.component').then((m) => m.PrivacyComponent),
+  },
+  {
     path: 'account',
     canActivate: [requireAuth],
     loadComponent: () =>

@@ -321,12 +321,12 @@ Each phase lists its stories, the main deliverables and the exit criteria. Tick 
 
 ### Phase 8 — Compliance (DSR2P-44)
 
-- [ ] **44.1** `/privacy` page: what is collected, why, retention, export/delete routes.
-- [ ] **44.2** `/account/data` with `DataExportCard` (JSON download).
-- [ ] **44.3** `DeleteAccountCard`: typed confirmation and password; clear session, drafts and local preferences on success.
-- [ ] **44.4** Apply the agreed rule for Admin self-deletion.
-- [ ] **44.5** Review the registration form for data minimisation; record a justification per field.
-- [ ] **44.6** Tests: export download, delete confirmation, local data cleared.
+- [x] **44.1** `/privacy` page: what is collected, why, retention, export/delete routes.
+- [x] **44.2** `/account/data` with `DataExportCard` (JSON download).
+- [x] **44.3** `DeleteAccountCard`: typed confirmation and password; clear session, drafts and local preferences on success.
+- [x] **44.4** Apply the agreed rule for Admin self-deletion.
+- [x] **44.5** Review the registration form for data minimisation; record a justification per field.
+- [x] **44.6** Tests: export download, delete confirmation, local data cleared.
 
 ### Phase 9 — Hardening & QA (DSR2P-36, 37, 40, 41, 39, 43)
 
