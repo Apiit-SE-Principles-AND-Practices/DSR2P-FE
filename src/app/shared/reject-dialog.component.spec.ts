@@ -1,4 +1,5 @@
 import { TestBed } from '@angular/core/testing';
+import { REJECTION_MAX } from './validation/rejection-reason.schema';
 import { RejectDialogComponent } from './reject-dialog.component';
 
 async function setup() {
@@ -17,7 +18,7 @@ async function setup() {
     box.dispatchEvent(new Event('input'));
     fixture.detectChanges();
   };
-  return { confirm, el, reasons, type };
+  return { confirm, el, fixture, reasons, type };
 }
 
 describe('RejectDialogComponent', () => {
@@ -39,5 +40,25 @@ describe('RejectDialogComponent', () => {
     type('  Spam  ');
     confirm?.click();
     expect(reasons).toEqual(['Spam']);
+  });
+
+  it('fills the box from a preset and keeps it editable', async () => {
+    const { confirm, el, fixture, reasons, type } = await setup();
+    [...el.querySelectorAll<HTMLButtonElement>('.presets button')]
+      .find((b) => b.textContent?.includes('Spam'))
+      ?.click();
+    fixture.detectChanges();
+    expect(el.querySelector('textarea')?.value).toBe('Spam');
+    expect(confirm?.disabled).toBeFalse();
+
+    type('Spam, repeated');
+    confirm?.click();
+    expect(reasons).toEqual(['Spam, repeated']);
+  });
+
+  it('blocks a reason that is too long', async () => {
+    const { confirm, type } = await setup();
+    type('a'.repeat(REJECTION_MAX + 1));
+    expect(confirm?.disabled).toBeTrue();
   });
 });

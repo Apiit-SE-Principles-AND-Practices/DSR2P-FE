@@ -292,9 +292,9 @@ Each phase lists its stories, the main deliverables and the exit criteria. Tick 
 - [x] **32.6** Tests: BB14/BB15 non-optimistic removal, failure kept, 409 handled.
 
 **DSR2P-33 — Approve/reject review**
-- [ ] **33.1** `rejectionReasonSchema` and shared preset-reason list.
-- [ ] **33.2** `RejectDialog` with presets and required reason; Approve with busy state.
-- [ ] **33.3** Tests: BB14 approve body, BB15 empty reason blocked, reason sent.
+- [x] **33.1** `rejectionReasonSchema` and shared preset-reason list.
+- [x] **33.2** `RejectDialog` with presets and required reason; Approve with busy state.
+- [x] **33.3** Tests: BB14 approve body, BB15 empty reason blocked, reason sent.
 
 **DSR2P-34 — Approve/reject comment**
 - [ ] **34.1** Parameterise `ModerationItem` and `RejectDialog` by type; wire comments endpoint.

@@ -92,6 +92,7 @@ describe('ModerationQueueComponent', () => {
 
     const patch = backend.expectOne('/admin/reviews/1/approve');
     expect(patch.request.method).toBe('PATCH');
+    expect(patch.request.body).toBeNull(); // approving needs no body
     expect(items(el).length).toBe(3); // not removed optimistically
     expect(buttonIn(items(el)[0], 'Approv')?.disabled).toBeTrue();
     expect(items(el)[0].textContent).toContain('Approving…');
