@@ -56,13 +56,48 @@ function setup() {
     box.dispatchEvent(new Event('input'));
     fixture.detectChanges();
   };
+  /** Picks a real picture through the photo picker and waits for it to be processed. */
+  const addPhoto = async () => {
+    const canvas = document.createElement('canvas');
+    canvas.width = 640;
+    canvas.height = 480;
+    canvas.getContext('2d')?.fillRect(0, 0, 640, 480);
+    const blob = await new Promise<Blob | null>((resolve) => {
+      canvas.toBlob(resolve, 'image/png');
+    });
+    const transfer = new DataTransfer();
+    transfer.items.add(new File([blob ?? new Blob()], 'me.png', { type: 'image/png' }));
+    const input = el.querySelector<HTMLInputElement>('input[type=file]');
+    if (!input) throw new Error('No file input');
+    input.files = transfer.files;
+    input.dispatchEvent(new Event('change'));
+    await new Promise((resolve) => setTimeout(resolve, 150)); // decoding is not tracked by Angular
+    fixture.detectChanges();
+  };
+  const confirmRights = () => {
+    el.querySelector<HTMLInputElement>('input[type=checkbox]')?.click();
+    fixture.detectChanges();
+  };
   const submitButton = () => el.querySelector<HTMLButtonElement>('button[type=submit]');
   const submit = () => {
     el.querySelector('form')?.dispatchEvent(new Event('submit'));
     fixture.detectChanges();
   };
   const reviewRequest = () => backend.expectOne((r) => r.url.endsWith('/reviews'));
-  return { el, fixture, open, star, rateAll, write, submitButton, submit, reviewRequest, navigate };
+  return {
+    el,
+    fixture,
+    open,
+    star,
+    rateAll,
+    write,
+    addPhoto,
+    confirmRights,
+    submitButton,
+    submit,
+    reviewRequest,
+    navigate,
+  };
 }
 
 describe('ReviewFormComponent', () => {
@@ -131,6 +166,71 @@ describe('ReviewFormComponent', () => {
     fixture.detectChanges();
     submit();
     expect((reviewRequest().request.body as FormData).get('itemId')).toBe('9');
+  });
+
+  describe('photo', () => {
+    it('is optional: a review without one sends no image', async () => {
+      const { open, rateAll, write, submit, reviewRequest } = setup();
+      await open();
+      rateAll();
+      write('No photo');
+      submit();
+      expect((reviewRequest().request.body as FormData).has('images')).toBeFalse();
+    });
+
+    it('rights gate — Submit stays disabled until the photo is confirmed as shareable', async () => {
+      const { el, open, rateAll, write, addPhoto, confirmRights, submitButton } = setup();
+      await open();
+      rateAll();
+      write('With photo');
+      expect(submitButton()?.disabled).toBeFalse();
+
+      await addPhoto();
+      expect(submitButton()?.disabled).toBeTrue();
+      expect(el.textContent).toContain('Confirm you may share your photo');
+      confirmRights();
+      expect(submitButton()?.disabled).toBeFalse();
+    });
+
+    it('BB11 — sends the shrunk photo with the review as the `images` file', async () => {
+      const { open, rateAll, write, addPhoto, confirmRights, submit, reviewRequest } = setup();
+      await open();
+      rateAll();
+      write('With photo');
+      await addPhoto();
+      confirmRights();
+      submit();
+      const sent = (reviewRequest().request.body as FormData).get('images');
+      expect(sent instanceof File).toBeTrue();
+      expect((sent as File).type).toBe('image/jpeg');
+    });
+
+    it('a failed send keeps the chosen photo, ready for Retry', async () => {
+      const {
+        el,
+        open,
+        rateAll,
+        write,
+        addPhoto,
+        confirmRights,
+        submit,
+        submitButton,
+        reviewRequest,
+        fixture,
+      } = setup();
+      await open();
+      rateAll();
+      write('With photo');
+      await addPhoto();
+      confirmRights();
+      submit();
+      reviewRequest().flush({}, { status: 500, statusText: 'x' });
+      await fixture.whenStable();
+      fixture.detectChanges();
+      expect(el.querySelector('img.preview')).not.toBeNull();
+      expect(submitButton()?.textContent?.trim()).toBe('Retry');
+      expect(submitButton()?.disabled).toBeFalse();
+    });
   });
 
   it('counts the characters of the text', async () => {
