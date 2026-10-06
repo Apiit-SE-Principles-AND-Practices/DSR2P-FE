@@ -7,6 +7,7 @@ import type { ApiError } from '../../core/api.interceptor';
 import { uiLanguage } from '../../core/languages';
 import { RestaurantService } from '../../core/restaurant.service';
 import { FormErrorComponent } from '../../shared/form-error.component';
+import { PhotoPickerComponent } from '../../shared/photo-picker.component';
 import { StarRatingInputComponent } from '../../shared/star-rating-input.component';
 import { REVIEW_MAX, reviewSchema } from '../../shared/validation/review.schema';
 
@@ -21,7 +22,7 @@ interface Draft {
 /** Write a review. Everything typed is kept in sessionStorage, so a failure, reload or re-login loses nothing. */
 @Component({
   selector: 'app-review-form',
-  imports: [FormErrorComponent, StarRatingInputComponent],
+  imports: [FormErrorComponent, PhotoPickerComponent, StarRatingInputComponent],
   template: `
     <h1>Write a review</h1>
     @if (restaurant.value(); as r) {
@@ -79,11 +80,15 @@ interface Draft {
         }
       </div>
 
-      <button class="btn" type="submit" [disabled]="busy() || !valid()">
+      <app-photo-picker [(photo)]="photo" [(rights)]="rights" />
+
+      <button class="btn" type="submit" [disabled]="busy() || !canSubmit()">
         {{ busy() ? 'Submitting…' : failed() ? 'Retry' : 'Submit review' }}
       </button>
       @if (!valid()) {
         <p class="hint">Choose all three ratings and write your review to submit it.</p>
+      } @else if (!canSubmit()) {
+        <p class="hint">Confirm you may share your photo to submit, or remove it.</p>
       }
     </form>
   `,
@@ -102,6 +107,8 @@ export class ReviewFormComponent {
   protected readonly misc = signal<number | null>(null);
   protected readonly text = signal('');
   protected readonly itemId = signal<number | null>(null);
+  protected readonly photo = signal<File | null>(null); // not kept in the draft: files cannot be stored there
+  protected readonly rights = signal(false);
 
   protected readonly busy = signal(false);
   protected readonly failed = signal(false);
@@ -124,6 +131,8 @@ export class ReviewFormComponent {
     }),
   );
   protected readonly valid = computed(() => this.result().success);
+  /** A chosen photo also needs the "this is mine to share" confirmation. */
+  protected readonly canSubmit = computed(() => this.valid() && (!this.photo() || this.rights()));
 
   constructor() {
     this.restoreDraft();
@@ -160,11 +169,11 @@ export class ReviewFormComponent {
 
   protected submit(): void {
     const result = this.result();
-    if (!result.success || this.busy()) return;
+    if (!result.success || !this.canSubmit() || this.busy()) return;
     this.busy.set(true);
     this.error.set('');
     this.api
-      .submitReview(this.restaurantId, result.data)
+      .submitReview(this.restaurantId, result.data, this.photo())
       .pipe(
         finalize(() => {
           this.busy.set(false);

@@ -44,14 +44,19 @@ export class RestaurantService {
     });
   }
 
-  /** Sent as multipart form data (the endpoint also takes photos, added in DSR2P-21). Starts as Pending. */
-  submitReview(restaurantId: string, { itemId, ...fields }: ReviewInput): Observable<Review> {
+  /** Sent as multipart form data (the photo goes in the same request as the `images` file). Starts as Pending. */
+  submitReview(
+    restaurantId: string,
+    { itemId, ...fields }: ReviewInput,
+    photo: File | null = null,
+  ): Observable<Review> {
     const form = new FormData();
     Object.entries({ restaurantId, ...fields, ...(itemId !== null && { itemId }) }).forEach(
       ([name, value]) => {
         form.append(name, String(value));
       },
     );
+    if (photo) form.append('images', photo, photo.name);
     return this.http.post<Review>('/reviews', form);
   }
 
