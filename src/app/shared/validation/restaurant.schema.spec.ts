@@ -1,4 +1,4 @@
-import { restaurantSchema } from './restaurant.schema';
+import { menuItemSchema, restaurantSchema } from './restaurant.schema';
 import { fieldPath, issueMessages } from './zod-validator';
 
 const dish = {
@@ -55,6 +55,20 @@ describe('restaurantSchema', () => {
     expect(
       restaurantSchema.safeParse({ ...valid, menuItems: [{ ...dish, priceLkr: 9.999 }] }).success,
     ).toBeFalse();
+  });
+});
+
+describe('menuItemSchema', () => {
+  it('rejects a price below 0 and accepts 0', () => {
+    expect(menuItemSchema.safeParse({ ...dish, priceLkr: -1 }).success).toBeFalse();
+    expect(menuItemSchema.safeParse({ ...dish, priceLkr: 0 }).success).toBeTrue();
+  });
+
+  it('only takes the API spice levels', () => {
+    ['None', 'Mild', 'Medium', 'Hot', 'Extra_Hot'].forEach((spiceLevel) => {
+      expect(menuItemSchema.safeParse({ ...dish, spiceLevel }).success).toBeTrue();
+    });
+    expect(menuItemSchema.safeParse({ ...dish, spiceLevel: 'Extra Hot' }).success).toBeFalse();
   });
 });
 

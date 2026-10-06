@@ -13,7 +13,8 @@ import { FormErrorComponent } from '../../shared/form-error.component';
 import { ToastService } from '../../shared/toast.service';
 import { restaurantSchema } from '../../shared/validation/restaurant.schema';
 import { fieldPath, zodValidator } from '../../shared/validation/zod-validator';
-import { MenuItemFieldsetComponent } from './menu-item-fieldset.component';
+import { MenuItemsPanelComponent } from './menu-items-panel.component';
+import { MenuItemFieldsetComponent, newDish } from './menu-item-fieldset.component';
 
 const TEXT_FIELDS = [
   { key: 'name', label: 'Name' },
@@ -21,24 +22,19 @@ const TEXT_FIELDS = [
   { key: 'imageUrl', label: 'Image address (optional)' },
 ];
 
-const newDish = () =>
-  new FormGroup({
-    name: new FormControl('', { nonNullable: true }),
-    priceLkr: new FormControl<number | null>(null),
-    categoryId: new FormControl<number | null>(null),
-    spiceLevel: new FormControl('None', { nonNullable: true }),
-    isVegetarian: new FormControl(false, { nonNullable: true }),
-    isVegan: new FormControl(false, { nonNullable: true }),
-    isHalal: new FormControl(false, { nonNullable: true }),
-  });
-
 /**
  * Admin: add or edit a restaurant. A new one can start with dishes: the API creates the restaurant first and
  * then takes the dishes one by one, so any dish that fails stays on the form and Retry sends only those.
  */
 @Component({
   selector: 'app-restaurant-form',
-  imports: [FormErrorComponent, MenuItemFieldsetComponent, ReactiveFormsModule, RouterLink],
+  imports: [
+    FormErrorComponent,
+    MenuItemFieldsetComponent,
+    MenuItemsPanelComponent,
+    ReactiveFormsModule,
+    RouterLink,
+  ],
   template: `
     <h1>{{ id ? 'Edit restaurant' : 'Add restaurant' }}</h1>
     <form [formGroup]="form" (submit)="$event.preventDefault(); submit()" novalidate>
@@ -109,6 +105,9 @@ const newDish = () =>
         <a class="btn secondary" routerLink="/admin/restaurants">Cancel</a>
       </div>
     </form>
+    @if (id) {
+      <app-menu-items-panel [restaurantId]="id" />
+    }
   `,
 })
 export class RestaurantFormComponent implements HasUnsavedChanges {
