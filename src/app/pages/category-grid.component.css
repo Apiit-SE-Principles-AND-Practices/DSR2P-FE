@@ -1,32 +1,52 @@
+section {
+  margin-bottom: var(--space-6);
+}
+
+h2 {
+  font-size: var(--font-size-h2);
+  font-weight: var(--font-weight-medium);
+  color: var(--ds-ink);
+  margin-bottom: var(--space-4);
+}
+
 .grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: var(--space-3);
 }
 
-/* 640px: the tablet breakpoint (see core/tokens.ts) */
 @media (width >= 640px) {
   .grid {
     grid-template-columns: repeat(6, 1fr);
+    gap: var(--space-4);
   }
 }
 
 .tile {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: var(--space-12);
-  padding: var(--space-2);
-  border: 1px solid var(--color-border);
+  min-height: 84px;
+  padding: var(--space-3) var(--space-2);
+  border: 1px solid var(--ds-border);
   border-radius: var(--radius-md);
-  background: var(--color-surface);
-  box-shadow: var(--shadow-card);
-  color: var(--color-text);
+  background: var(--ds-surface-raised);
+  box-shadow: var(--ds-shadow-sm);
+  color: var(--ds-ink);
+  font-size: var(--font-size-label);
+  font-weight: var(--font-weight-medium);
   text-align: center;
   text-decoration: none;
   overflow-wrap: anywhere;
+  transition: all 0.15s ease;
+  position: relative;
 }
 
 .tile:hover {
-  border-color: var(--color-primary);
+  border-color: var(--ds-brand-500);
+  background: var(--ds-brand-100);
+  color: var(--ds-brand-600);
+  box-shadow: var(--ds-shadow-md);
+  transform: translateY(-1px);
 }

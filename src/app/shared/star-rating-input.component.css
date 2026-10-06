@@ -4,26 +4,40 @@ fieldset {
   border: 0;
 }
 
+legend {
+  font-size: var(--font-size-label);
+  font-weight: var(--font-weight-medium);
+  color: var(--ds-ink);
+  margin-bottom: var(--space-1);
+}
+
 .required {
-  color: var(--color-text-muted);
-  font-size: var(--font-size-sm);
+  color: var(--ds-ink-muted);
+  font-size: var(--font-size-caption);
+  font-weight: var(--font-weight-regular);
 }
 
 .stars {
   display: flex;
+  gap: var(--space-1);
 }
 
-/* 44px hit area per star; the focus ring shows on the star whose hidden radio has the keyboard focus. */
 .star {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-width: var(--hit-area-min);
-  min-height: var(--hit-area-min);
-  border-radius: var(--radius-md);
-  color: var(--color-warning-text);
-  font-size: var(--font-size-xl);
+  min-width: 44px;
+  min-height: 44px;
+  border-radius: var(--radius-full);
+  color: var(--ds-rating);
+  font-size: var(--font-size-h1);
   cursor: pointer;
+  transition: transform 0.1s ease;
+}
+
+.star:hover {
+  transform: scale(1.15);
+  background: rgb(251 188 4 / 10%);
 }
 
 .star:has(input:focus-visible) {

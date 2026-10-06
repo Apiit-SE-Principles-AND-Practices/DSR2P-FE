@@ -1,23 +1,39 @@
 .switcher {
-  display: flex;
-  gap: var(--space-1);
+  display: inline-flex;
+  align-items: center;
+  background: var(--ds-surface-100);
+  border: 1px solid var(--ds-border);
+  border-radius: var(--radius-full);
+  padding: 2px;
+  gap: 2px;
 }
 
 .option {
-  min-width: var(--hit-area-min);
-  min-height: var(--hit-area-min);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  background: var(--color-surface);
-  color: var(--color-text);
-  font: inherit;
+  min-width: 36px;
+  min-height: 36px;
+  padding: 0 var(--space-2);
+  border: 0;
+  border-radius: var(--radius-full);
+  background: transparent;
+  color: var(--ds-ink-muted);
+  font-family: var(--font-sans);
+  font-size: var(--font-size-label);
+  font-weight: var(--font-weight-medium);
   cursor: pointer;
+  transition: all 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
-/* The chosen language is marked by its aria-current state, and by more than colour: weight and underline. */
+.option:hover {
+  color: var(--ds-ink);
+  background: rgb(0 0 0 / 4%);
+}
+
 .option[aria-current='true'] {
-  border-color: var(--color-primary);
-  color: var(--color-primary);
-  font-weight: var(--font-weight-bold);
-  text-decoration: underline;
+  background: var(--ds-brand-500);
+  color: var(--ds-on-brand);
+  font-weight: var(--font-weight-medium);
+  box-shadow: var(--ds-shadow-sm);
 }

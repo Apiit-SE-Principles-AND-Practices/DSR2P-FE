@@ -1,60 +1,153 @@
 .bar {
   display: flex;
   flex-wrap: wrap;
-  align-items: flex-end;
-  gap: var(--space-3);
-  margin-bottom: var(--space-4);
+  align-items: center;
+  gap: var(--space-2) var(--space-3);
+  margin-bottom: var(--space-5);
+  padding: var(--space-3) var(--space-4);
+  background: var(--ds-surface-sunken);
+  border: 1px solid var(--ds-border);
+  border-radius: var(--radius-lg);
 }
 
-.bar .field,
-.bar .btn {
+.filter-field {
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  gap: var(--space-2);
+  margin: 0;
+  max-width: none;
+}
+
+.filter-label {
+  font-size: var(--font-size-label);
+  font-weight: var(--font-weight-medium);
+  color: var(--ds-ink-muted);
+  white-space: nowrap;
   margin: 0;
 }
 
-.chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-2);
-  margin-bottom: var(--space-4);
+.filter-select {
+  height: 36px;
+  min-height: 36px;
+  padding: 0 var(--space-7) 0 var(--space-3);
+  border-radius: var(--radius-full);
+  background-color: var(--ds-surface-raised);
+  border: 1px solid var(--ds-border);
+  color: var(--ds-ink);
+  font-family: inherit;
+  font-size: var(--font-size-label);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' height='18' viewBox='0 -960 960 960' width='18' fill='%235f6368'%3E%3Cpath d='M480-345 240-585l56-56 184 184 184-184 56 56-240 240Z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  box-sizing: border-box;
+  transition: all 0.15s ease;
 }
 
-.bar .chips {
+.filter-select:hover {
+  background-color: var(--ds-surface-100);
+  border-color: var(--ds-border-strong);
+}
+
+.filter-select:focus {
+  border-color: var(--ds-brand-600);
+  outline: none;
+}
+
+.chips {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
   margin: 0;
 }
 
 .chip {
-  min-height: var(--hit-area-min);
-  padding: 0 var(--space-4);
-  border: 1px solid var(--color-border);
+  display: inline-flex;
+  align-items: center;
+  height: 36px;
+  min-height: 36px;
+  padding: 0 var(--space-3);
+  border: 1px solid var(--ds-border);
   border-radius: var(--radius-full);
-  background: var(--color-surface);
-  color: var(--color-text);
-  font: inherit;
+  background: var(--ds-surface-raised);
+  color: var(--ds-ink);
+  font-family: inherit;
+  font-size: var(--font-size-label);
+  font-weight: var(--font-weight-medium);
   cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s ease;
+  box-sizing: border-box;
+}
+
+.chip:hover {
+  background: var(--ds-surface-100);
+  border-color: var(--ds-border-strong);
 }
 
 .chip[aria-pressed='true'] {
-  border-color: var(--color-primary);
-  background: var(--color-primary);
-  color: var(--color-on-primary);
+  background: var(--ds-brand-100);
+  color: var(--ds-brand-600);
+  border-color: var(--ds-brand-500);
 }
 
-/* Below 640px (see core/tokens.ts) the filters live in a bottom sheet. */
+.btn-clear {
+  height: 36px;
+  min-height: 36px;
+  padding: 0 var(--space-3);
+  border: 0;
+  border-radius: var(--radius-full);
+  background: transparent;
+  color: var(--ds-brand-600);
+  font-family: inherit;
+  font-size: var(--font-size-label);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+  transition: background 0.15s ease;
+}
+
+.btn-clear:hover {
+  background: var(--ds-surface-100);
+}
+
+/* Below 640px bottom sheet modal */
 .sheet {
   inset: auto 0 0;
   width: 100%;
   max-width: none;
   margin: 0;
-  padding: var(--space-6);
-  border: 0;
+  padding: var(--space-5);
+  border: 1px solid var(--ds-border);
   border-radius: var(--radius-lg) var(--radius-lg) 0 0;
-  background: var(--color-surface);
-  color: var(--color-text);
-  box-shadow: var(--shadow-overlay);
+  background: var(--ds-surface-raised);
+  color: var(--ds-ink);
+  box-shadow: var(--ds-shadow-md);
+  box-sizing: border-box;
 }
 
 .sheet::backdrop {
-  background: rgb(31 26 23 / 50%);
+  background: rgb(32 33 36 / 60%);
+  backdrop-filter: blur(2px);
+}
+
+.sheet-header {
+  margin-bottom: var(--space-4);
+  padding-bottom: var(--space-2);
+  border-bottom: 1px solid var(--ds-border);
+}
+
+.sheet-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  margin-bottom: var(--space-5);
 }
 
 .sheet .field {
@@ -63,8 +156,12 @@
 
 .actions {
   display: flex;
+  align-items: center;
+  justify-content: flex-end;
   flex-wrap: wrap;
-  gap: var(--space-2);
+  gap: var(--space-3);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--ds-border);
 }
 
 .actions .btn {

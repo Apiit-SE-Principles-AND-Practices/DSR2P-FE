@@ -1,23 +1,45 @@
 table {
   width: 100%;
-  border-collapse: collapse;
-  background: var(--color-surface);
+  border-collapse: separate;
+  border-spacing: 0;
+  background: var(--ds-surface-raised);
+  border: 1px solid var(--ds-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: var(--ds-shadow-sm);
 }
 
 th,
 td {
-  padding: var(--space-3);
-  border-bottom: 1px solid var(--color-border);
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--ds-border);
   text-align: left;
   vertical-align: middle;
 }
 
 th {
-  color: var(--color-text-muted);
-  font-size: var(--font-size-sm);
+  background: var(--ds-surface-100);
+  color: var(--ds-ink-muted);
+  font-size: var(--font-size-overline);
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
-/* Below 640px (see core/tokens.ts): one card per row, each value labelled by its column. */
+td {
+  font-size: var(--font-size-body-sm);
+  color: var(--ds-ink);
+}
+
+tr:last-child td {
+  border-bottom: 0;
+}
+
+tbody tr:hover {
+  background: var(--ds-brand-100);
+}
+
+/* Below 640px: ds-rowcard per row */
 .cards {
   display: grid;
   gap: var(--space-3);
@@ -28,10 +50,10 @@ th {
 
 .cards li {
   padding: var(--space-4);
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--ds-border);
   border-radius: var(--radius-md);
-  background: var(--color-surface);
-  box-shadow: var(--shadow-card);
+  background: var(--ds-surface-raised);
+  box-shadow: var(--ds-shadow-sm);
 }
 
 dl {
@@ -47,18 +69,25 @@ dl div {
 }
 
 dt {
-  color: var(--color-text-muted);
+  color: var(--ds-ink-muted);
+  font-size: var(--font-size-caption);
+  font-weight: var(--font-weight-medium);
 }
 
 dd {
   margin: 0;
   text-align: right;
+  font-size: var(--font-size-body);
+  color: var(--ds-ink);
   overflow-wrap: anywhere;
 }
 
 .actions {
   display: flex;
+  align-items: center;
   flex-wrap: wrap;
   gap: var(--space-2);
   margin-top: var(--space-3);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--ds-border);
 }

@@ -31,10 +31,10 @@ const optionsOf = (values: readonly string[]) =>
   template: `
     <ng-template #controls>
       @for (select of selects(); track select.key) {
-        <div class="field">
-          <label [for]="'filter-' + select.key">{{ select.label }}</label>
+        <div class="field filter-field">
+          <label class="filter-label" [for]="'filter-' + select.key">{{ select.label }}</label>
           <select
-            class="select"
+            class="select filter-select"
             [id]="'filter-' + select.key"
             #field
             (change)="setSelect(select.key, field.value)"
@@ -66,25 +66,33 @@ const optionsOf = (values: readonly string[]) =>
     </ng-template>
 
     @if (isTablet()) {
-      <div class="bar">
+      <div class="bar ds-filterbar">
         <ng-container *ngTemplateOutlet="controls" />
         <app-sort-select />
-        <button type="button" class="btn secondary" (click)="clear()">Clear all</button>
+        <button type="button" class="btn-clear" (click)="clear()">Clear all</button>
       </div>
     } @else {
-      <div class="bar">
-        <button type="button" class="btn secondary" (click)="open(sheet)">
+      <div class="bar ds-filterbar-mobile">
+        <button type="button" class="ds-btn-secondary btn secondary" (click)="open(sheet)">
           Filters ({{ count() }})
         </button>
         <app-sort-select />
       </div>
-      <dialog #sheet class="sheet" aria-labelledby="filters-title">
-        <h2 id="filters-title">Filters</h2>
-        <ng-container *ngTemplateOutlet="controls" />
+      <dialog #sheet class="sheet ds-card" aria-labelledby="filters-title">
+        <div class="sheet-header">
+          <h2 id="filters-title" class="ds-h2">Filters</h2>
+        </div>
+        <div class="sheet-content">
+          <ng-container *ngTemplateOutlet="controls" />
+        </div>
         <div class="actions">
-          <button type="button" class="btn secondary" (click)="clear()">Clear all</button>
-          <button type="button" class="btn secondary" (click)="sheet.close()">Cancel</button>
-          <button type="button" class="btn" (click)="apply(sheet)">Apply</button>
+          <button type="button" class="ds-btn-ghost btn secondary" (click)="clear()">
+            Clear all
+          </button>
+          <button type="button" class="ds-btn-secondary btn secondary" (click)="sheet.close()">
+            Cancel
+          </button>
+          <button type="button" class="ds-btn-primary btn" (click)="apply(sheet)">Apply</button>
         </div>
       </dialog>
     }

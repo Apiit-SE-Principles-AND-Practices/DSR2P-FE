@@ -1,13 +1,17 @@
 :host {
   display: block;
   padding: var(--space-3) 0;
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--ds-border);
 }
 
-/* Name takes the free space and wraps; the price never does, so both stay on the first line. */
+:host:last-child {
+  border-bottom: 0;
+}
+
 .line {
   display: flex;
   align-items: baseline;
+  justify-content: space-between;
   gap: var(--space-3);
 }
 
@@ -15,12 +19,17 @@
   flex: 1;
   min-width: 0;
   overflow-wrap: anywhere;
-  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-medium);
+  color: var(--ds-ink);
 }
 
 .price {
   flex: none;
   white-space: nowrap;
+  font-size: var(--font-size-price);
+  font-weight: var(--font-weight-medium);
+  color: var(--ds-ink);
 }
 
 .tags {
@@ -28,12 +37,15 @@
   flex-wrap: wrap;
   gap: var(--space-2);
   margin-top: var(--space-1);
-  color: var(--color-text-muted);
-  font-size: var(--font-size-sm);
 }
 
 .tag {
-  padding: 0 var(--space-2);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-full);
+  display: inline-flex;
+  align-items: center;
+  padding: 2px var(--space-2);
+  border-radius: var(--radius-sm);
+  background: var(--ds-surface-100);
+  color: var(--ds-ink-muted);
+  font-size: var(--font-size-caption);
+  border: 1px solid var(--ds-border);
 }

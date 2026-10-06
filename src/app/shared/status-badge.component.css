@@ -1,20 +1,25 @@
 .badge {
-  display: inline-block;
-  padding: 0 var(--space-3);
-  border: 1px solid currentcolor;
-  border-radius: var(--radius-full);
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-bold);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: 2px var(--space-2);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-caption);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.4;
 }
 
 .pending {
-  color: var(--color-text-muted);
+  background: var(--ds-status-pending-bg);
+  color: var(--ds-status-pending-ink);
 }
 
 .approved {
-  color: var(--color-success);
+  background: var(--ds-status-approved-bg);
+  color: var(--ds-status-approved-ink);
 }
 
 .rejected {
-  color: var(--color-danger);
+  background: var(--ds-status-rejected-bg);
+  color: var(--ds-status-rejected-ink);
 }
