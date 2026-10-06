@@ -7,19 +7,22 @@ export const PASSWORD_RULES = [
   { label: 'At least one number', test: (p: string) => /\d/.test(p) },
 ];
 
+/** A person's name: required, at most 100 characters (the backend's limit). Used by registration and the profile. */
+export const nameSchema = z
+  .string()
+  .check(
+    z.trim(),
+    z.minLength(1, 'Enter your name.'),
+    z.maxLength(100, 'Use 100 characters or fewer.'),
+  );
+
 /**
  * Mirrors the backend `RegisterInput` limits (name 1–100, email ≤150) plus the confirm field.
  * Uses zod/mini (tree-shakable) to keep the bundle small.
  */
 export const registerSchema = z
   .object({
-    name: z
-      .string()
-      .check(
-        z.trim(),
-        z.minLength(1, 'Enter your name.'),
-        z.maxLength(100, 'Use 100 characters or fewer.'),
-      ),
+    name: nameSchema,
     email: z.pipe(
       z
         .string()

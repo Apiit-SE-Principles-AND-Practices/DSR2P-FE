@@ -1,12 +1,19 @@
 import { Component } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { CitySelectorComponent } from '../shared/city-selector.component';
+import { LanguageSwitcherComponent } from '../shared/language-switcher.component';
 import { SearchInputComponent } from '../shared/search-input.component';
 import { NAV_ITEMS } from './nav-items';
 
 @Component({
   selector: 'app-top-nav',
-  imports: [RouterLink, RouterLinkActive, CitySelectorComponent, SearchInputComponent],
+  imports: [
+    RouterLink,
+    RouterLinkActive,
+    CitySelectorComponent,
+    LanguageSwitcherComponent,
+    SearchInputComponent,
+  ],
   styleUrl: './top-nav.component.css',
   template: `
     <nav class="app-bar" aria-label="Primary">
@@ -27,6 +34,7 @@ import { NAV_ITEMS } from './nav-items';
           </li>
         }
       </ul>
+      <app-language-switcher />
     </nav>
   `,
 })

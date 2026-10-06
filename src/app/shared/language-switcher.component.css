@@ -1,0 +1,23 @@
+.switcher {
+  display: flex;
+  gap: var(--space-1);
+}
+
+.option {
+  min-width: var(--hit-area-min);
+  min-height: var(--hit-area-min);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font: inherit;
+  cursor: pointer;
+}
+
+/* The chosen language is marked by its aria-current state, and by more than colour: weight and underline. */
+.option[aria-current='true'] {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+  font-weight: var(--font-weight-bold);
+  text-decoration: underline;
+}
