@@ -11,10 +11,11 @@ import { SkeletonComponent } from '../../shared/skeleton.component';
 import { MenuSectionComponent } from './menu-section.component';
 import { RatingBreakdownComponent } from './rating-breakdown.component';
 import { RestaurantHeaderComponent } from './restaurant-header.component';
+import { ReviewsSectionComponent } from './reviews-section.component';
 
 /**
  * A restaurant's page. Each section loads on its own, so a slow one never blocks another: the header
- * and the rating breakdown start together. Reviews (DSR2P-16) join `.sections` next.
+ * and the ratings/reviews column start together.
  */
 @Component({
   selector: 'app-restaurant-detail',
@@ -24,6 +25,7 @@ import { RestaurantHeaderComponent } from './restaurant-header.component';
     NotFoundComponent,
     RatingBreakdownComponent,
     RestaurantHeaderComponent,
+    ReviewsSectionComponent,
     SkeletonComponent,
   ],
   styleUrl: './restaurant-detail.component.css',
@@ -43,7 +45,10 @@ import { RestaurantHeaderComponent } from './restaurant-header.component';
       }
       <div class="sections">
         <app-menu-section [restaurantId]="id()" />
-        <app-rating-breakdown [restaurantId]="id()" />
+        <div class="column">
+          <app-rating-breakdown [reviews]="reviews" />
+          <app-reviews-section [reviews]="reviews" [restaurantId]="id()" />
+        </div>
       </div>
     }
   `,
@@ -58,6 +63,12 @@ export class RestaurantDetailComponent {
   protected readonly restaurant = rxResource({
     request: this.id,
     loader: ({ request }) => this.service.get(request),
+  });
+
+  /** One request feeds both the rating bars and the review list. */
+  protected readonly reviews = rxResource({
+    request: this.id,
+    loader: ({ request }) => this.service.reviews(request),
   });
 
   /** A well-formed id nobody owns is a 404; a malformed one is rejected with 400. Both mean "no such page". */

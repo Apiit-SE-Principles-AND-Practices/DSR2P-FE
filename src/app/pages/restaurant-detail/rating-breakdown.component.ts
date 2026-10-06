@@ -1,22 +1,20 @@
-import { Component, inject, input } from '@angular/core';
-import { rxResource } from '@angular/core/rxjs-interop';
-import { map } from 'rxjs';
+import { Component, computed, input, type ResourceRef } from '@angular/core';
 import { ratingBreakdown } from '../../core/rating-breakdown';
-import { RestaurantService } from '../../core/restaurant.service';
+import type { Review } from '../../core/restaurant.service';
 import { InlineErrorComponent } from '../../shared/inline-error.component';
 import { RatingBarComponent } from '../../shared/rating-bar.component';
 import { SkeletonComponent } from '../../shared/skeleton.component';
 
-/** Food, service and other ratings from the approved reviews. Loads on its own, apart from the header. */
+/** Food, service and other ratings from the approved reviews (shared with the reviews list, so one request). */
 @Component({
   selector: 'app-rating-breakdown',
   imports: [InlineErrorComponent, RatingBarComponent, SkeletonComponent],
   template: `
     <section aria-labelledby="breakdown-title">
       <h2 id="breakdown-title">Ratings</h2>
-      @let b = reviews.value();
-      @if (reviews.error()) {
-        <app-inline-error message="Could not load ratings." (retry)="reviews.reload()" />
+      @let b = breakdown();
+      @if (reviews().error()) {
+        <app-inline-error message="Could not load ratings." (retry)="reviews().reload()" />
       } @else if (b) {
         @if (b.count === 0) {
           <p>No approved reviews yet — be the first to write one.</p>
@@ -33,11 +31,9 @@ import { SkeletonComponent } from '../../shared/skeleton.component';
   `,
 })
 export class RatingBreakdownComponent {
-  readonly restaurantId = input.required<string>();
-  private readonly service = inject(RestaurantService);
-
-  protected readonly reviews = rxResource({
-    request: this.restaurantId,
-    loader: ({ request }) => this.service.reviews(request).pipe(map(ratingBreakdown)),
+  readonly reviews = input.required<ResourceRef<Review[] | undefined>>();
+  protected readonly breakdown = computed(() => {
+    const list = this.reviews().value();
+    return list && ratingBreakdown(list);
   });
 }

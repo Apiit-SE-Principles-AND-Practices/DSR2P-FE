@@ -18,10 +18,18 @@ const restaurant: SearchResult = {
   averageRating: 4.3,
   priceBand: 'Moderate',
 };
-const reviews = [
-  { foodQualityRating: 5, serviceRating: 4, miscRating: 4 },
-  { foodQualityRating: 4, serviceRating: 4, miscRating: 3 },
-];
+const review = (food: number, service: number, misc: number, id: number) => ({
+  id,
+  foodQualityRating: food,
+  serviceRating: service,
+  miscRating: misc,
+  reviewText: 'Lovely.',
+  language: 'en',
+  createdAt: '2026-10-05T12:00:00Z',
+  comments: [],
+  response: null,
+});
+const reviews = [review(5, 4, 4, 1), review(4, 4, 3, 2)];
 
 function setup(id = 'r-1') {
   TestBed.configureTestingModule({
@@ -29,7 +37,13 @@ function setup(id = 'r-1') {
       provideRouter([]),
       provideHttpClient(),
       provideHttpClientTesting(),
-      { provide: ActivatedRoute, useValue: { paramMap: of(convertToParamMap({ id })) } },
+      {
+        provide: ActivatedRoute,
+        useValue: {
+          paramMap: of(convertToParamMap({ id })),
+          queryParamMap: of(convertToParamMap({})),
+        },
+      },
     ],
   });
   const backend = TestBed.inject(HttpTestingController);

@@ -11,3 +11,8 @@
     align-items: start;
   }
 }
+
+.column {
+  display: grid;
+  gap: var(--space-6);
+}
