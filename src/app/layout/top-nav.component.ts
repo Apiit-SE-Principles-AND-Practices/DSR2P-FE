@@ -1,16 +1,18 @@
 import { Component } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { CitySelectorComponent } from '../shared/city-selector.component';
+import { SearchInputComponent } from '../shared/search-input.component';
 import { NAV_ITEMS } from './nav-items';
 
 @Component({
   selector: 'app-top-nav',
-  imports: [RouterLink, RouterLinkActive, CitySelectorComponent],
+  imports: [RouterLink, RouterLinkActive, CitySelectorComponent, SearchInputComponent],
   styleUrl: './top-nav.component.css',
   template: `
     <nav class="app-bar" aria-label="Primary">
       <a class="logo" routerLink="/">Ruchi</a>
       <app-city-selector />
+      <app-search-input />
       <ul>
         @for (item of items; track item.path) {
           <li>

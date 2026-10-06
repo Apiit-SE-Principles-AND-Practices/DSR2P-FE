@@ -8,6 +8,11 @@ import { NotFoundComponent } from './shared/not-found.component';
 export const routes: Routes = [
   { path: '', component: HomeComponent, pathMatch: 'full' },
   {
+    path: 'search',
+    loadComponent: () =>
+      import('./pages/search-results.component').then((m) => m.SearchResultsComponent),
+  },
+  {
     path: 'login',
     canActivate: [guestOnly],
     loadComponent: () => import('./pages/login/login.component').then((m) => m.LoginComponent),

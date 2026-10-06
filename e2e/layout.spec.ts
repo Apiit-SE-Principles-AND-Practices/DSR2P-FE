@@ -12,7 +12,12 @@ for (const [width, topNav, bottomBar] of [
     await page.goto('/');
     await expect(page.locator('app-top-nav')).toHaveCount(topNav);
     await expect(page.locator('app-bottom-tab-bar')).toHaveCount(bottomBar);
-    await expect(page.getByLabel('City')).toHaveCount(1); // the selector is in whichever header is shown
+    // City selector and search box are in whichever header is shown, selector on the left.
+    const [city, search] = [page.getByLabel('City'), page.getByLabel('Search restaurants')];
+    await expect(city).toHaveCount(1);
+    await expect(search).toHaveCount(1);
+    const [cityBox, searchBox] = [await city.boundingBox(), await search.boundingBox()];
+    expect(cityBox?.x).toBeLessThan(searchBox?.x ?? 0);
     const overflows = await page.evaluate(
       () => document.documentElement.scrollWidth > window.innerWidth,
     );

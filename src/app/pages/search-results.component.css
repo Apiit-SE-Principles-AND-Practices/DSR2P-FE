@@ -1,0 +1,27 @@
+/* One column on mobile; from 640px (see core/tokens.ts) a grid of cards. */
+.results {
+  display: grid;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+}
+
+@media (width >= 640px) {
+  .results {
+    grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+  }
+}
+
+app-skeleton {
+  margin-bottom: var(--space-3);
+}
+
+.pager {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+
+.pager .btn {
+  margin: 0;
+}

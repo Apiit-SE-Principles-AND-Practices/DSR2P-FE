@@ -1,0 +1,75 @@
+/* Mobile: image beside the text. 640px and up (see core/tokens.ts): image above the text. */
+.card {
+  display: flex;
+  gap: var(--space-3);
+  height: 100%;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-card);
+  color: var(--color-text);
+  text-decoration: none;
+  overflow: hidden;
+}
+
+.card:hover {
+  border-color: var(--color-primary);
+}
+
+.photo {
+  flex: none;
+  width: 6rem;
+  object-fit: cover;
+  background: var(--color-border);
+}
+
+.body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-width: 0;
+  padding: var(--space-3) var(--space-3) var(--space-3) 0;
+}
+
+/* Long English, Sinhala or Tamil names wrap to two lines, then end in an ellipsis. */
+/* stylelint-disable property-no-vendor-prefix, value-no-vendor-prefix */
+.name {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+/* stylelint-enable property-no-vendor-prefix, value-no-vendor-prefix */
+
+.meta {
+  overflow: hidden;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  margin-top: auto;
+}
+
+@media (width >= 640px) {
+  .card {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .photo {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+  }
+
+  .body {
+    padding: var(--space-3);
+  }
+}
