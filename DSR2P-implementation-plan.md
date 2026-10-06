@@ -237,10 +237,10 @@ Each phase lists its stories, the main deliverables and the exit criteria. Tick 
 - [-] **18.4** Tests: three badges, reason shown, filter request.
 
 **DSR2P-6 — Profile & language**
-- [ ] **6.1** `/account` with `ProfileForm`, read-only email, links to My reviews and My data.
-- [ ] **6.2** `PATCH /me`; Save enabled only when dirty; success toast; failure handling.
-- [ ] **6.3** Connect `LanguageSwitcher` to `PATCH /me` for signed-in users (one shared source).
-- [ ] **6.4** Tests: language applied and persisted after reload; name validation.
+- [-] **6.1** `/account` with `ProfileForm`, read-only email, links to My reviews and My data.
+- [-] **6.2** `PATCH /me`; Save enabled only when dirty; success toast; failure handling.
+- [-] **6.3** Connect `LanguageSwitcher` to `PATCH /me` for signed-in users (one shared source).
+- [-] **6.4** Tests: language applied and persisted after reload; name validation.
 
 **DSR2P-27 — Multi-script entry**
 - [ ] **27.1** `ContentLanguageSelect` on review, reply, menu item and restaurant description fields.

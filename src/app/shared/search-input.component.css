@@ -1,5 +1,7 @@
+/* Takes the free space but never less than 10rem while the bar can wrap (top nav); in the single-row
+   mobile header it can still shrink. */
 :host {
-  flex: 1;
+  flex: 1 1 10rem;
   min-width: 0;
 }
 
