@@ -14,12 +14,12 @@ async function setup(url: string) {
 describe('SearchParamsService', () => {
   it('reads valid params from the URL', async () => {
     const { service } = await setup(
-      '/search?city=Kandy&q=%20kottu%20&diet=Halal&sort=price&page=3',
+      '/search?city=Kandy&q=%20kottu%20&categoryId=7&diet=Halal&sort=price&page=3',
     );
     expect(service.params()).toEqual({
       city: 'Kandy',
       q: 'kottu',
-      category: undefined,
+      categoryId: 7,
       diet: 'Halal',
       spice: undefined,
       price: undefined,
@@ -29,10 +29,12 @@ describe('SearchParamsService', () => {
   });
 
   it('ignores unknown values and bad pages instead of failing', async () => {
-    const { service } = await setup('/search?city=Paris&sort=best&diet=Keto&page=-2');
+    const { service } = await setup(
+      '/search?city=Paris&sort=best&diet=Keto&page=-2&categoryId=abc',
+    );
     expect(service.params()).toEqual(jasmine.objectContaining({ page: 1 }));
-    const { city, sort, diet } = service.params();
-    expect([city, sort, diet]).toEqual([undefined, undefined, undefined]);
+    const { city, sort, diet, categoryId } = service.params();
+    expect([city, sort, diet, categoryId]).toEqual([undefined, undefined, undefined, undefined]);
   });
 
   it('updates the URL, resetting to page 1 when a filter changes', async () => {
@@ -56,8 +58,8 @@ describe('SearchParamsService', () => {
   it('navigates to /search from any other page', async () => {
     const { service, router } = await setup('/search');
     await router.navigateByUrl('/');
-    await service.update({ category: 'rice' });
-    expect(router.url).toBe('/search?category=rice');
+    await service.update({ categoryId: 5 });
+    expect(router.url).toBe('/search?categoryId=5');
   });
 });
 
