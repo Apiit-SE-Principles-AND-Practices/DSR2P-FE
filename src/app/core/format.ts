@@ -14,3 +14,7 @@ export function formatLkr(amount: number | string): string {
     maximumFractionDigits: 2,
   }).format(value);
 }
+
+/** A calendar date for the current UI language, e.g. "5 Oct 2026". */
+export const formatDate = (iso: string): string =>
+  new Intl.DateTimeFormat(uiLanguage(), { dateStyle: 'medium' }).format(new Date(iso));

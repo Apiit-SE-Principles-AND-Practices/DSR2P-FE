@@ -20,8 +20,28 @@ async function mockApi(page: Page) {
   await page.route(/:3000\/restaurants\/r-1\/reviews$/, (route) =>
     route.fulfill({
       json: [
-        { foodQualityRating: 5, serviceRating: 4, miscRating: 4 },
-        { foodQualityRating: 4, serviceRating: 4, miscRating: 3 },
+        {
+          id: 1,
+          foodQualityRating: 5,
+          serviceRating: 4,
+          miscRating: 4,
+          reviewText: 'Lovely.',
+          language: 'en',
+          createdAt: '2026-10-05T12:00:00Z',
+          comments: [],
+          response: null,
+        },
+        {
+          id: 2,
+          foodQualityRating: 4,
+          serviceRating: 4,
+          miscRating: 3,
+          reviewText: 'Lovely.',
+          language: 'en',
+          createdAt: '2026-10-05T12:00:00Z',
+          comments: [],
+          response: null,
+        },
       ],
     }),
   );
