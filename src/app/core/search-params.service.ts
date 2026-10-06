@@ -13,8 +13,8 @@ export interface SearchParams {
   city?: (typeof CITIES)[number];
   /** Name search text. */
   q?: string;
-  /** Category slug; an unknown slug is simply ignored by the results page. */
-  category?: string;
+  /** Restaurant category id (from GET /categories); an unknown id simply matches nothing. */
+  categoryId?: number;
   diet?: (typeof DIETS)[number];
   spice?: (typeof SPICE_LEVELS)[number];
   price?: (typeof PRICE_BANDS)[number];
@@ -32,17 +32,21 @@ const text = (value: string | null): string | undefined => {
   return trimmed.length > 0 ? trimmed : undefined;
 };
 
+const positiveInt = (value: string | null): number | undefined => {
+  const number = Number(value);
+  return Number.isInteger(number) && number > 0 ? number : undefined;
+};
+
 function parse(query: ParamMap): SearchParams {
-  const page = Number(query.get('page'));
   return {
     city: oneOf(CITIES, query.get('city')),
     q: text(query.get('q')),
-    category: text(query.get('category')),
+    categoryId: positiveInt(query.get('categoryId')),
     diet: oneOf(DIETS, query.get('diet')),
     spice: oneOf(SPICE_LEVELS, query.get('spice')),
     price: oneOf(PRICE_BANDS, query.get('price')),
     sort: oneOf(SORTS, query.get('sort')),
-    page: Number.isInteger(page) && page > 0 ? page : 1,
+    page: positiveInt(query.get('page')) ?? 1,
   };
 }
 
