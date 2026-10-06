@@ -41,16 +41,14 @@ describe('AdminDashboardComponent', () => {
 
   it('flags only a pending count above 0, linking to that queue', async () => {
     const { el } = await setup(2, 0);
-    const links = [...el.querySelectorAll('.grid a')];
+    const links = [...el.querySelectorAll('a')];
     expect(links.length).toBe(1);
     expect(links[0].getAttribute('href')).toBe('/admin/moderation?type=reviews');
   });
 
   it('links pending replies to the replies queue', async () => {
     const { el } = await setup(0, 4);
-    expect(el.querySelector('.grid a')?.getAttribute('href')).toBe(
-      '/admin/moderation?type=comments',
-    );
+    expect(el.querySelector('a')?.getAttribute('href')).toBe('/admin/moderation?type=comments');
   });
 
   it('refreshes when the tab regains focus', async () => {
@@ -59,11 +57,5 @@ describe('AdminDashboardComponent', () => {
     fixture.detectChanges();
     await tick();
     backend.expectOne('/admin/dashboard/stats');
-  });
-
-  it('links to the restaurant list and the moderation queue', async () => {
-    const { el } = await setup();
-    const hrefs = [...el.querySelectorAll('nav a')].map((a) => a.getAttribute('href'));
-    expect(hrefs).toEqual(['/admin/restaurants', '/admin/moderation']);
   });
 });

@@ -10,9 +10,3 @@
     grid-template-columns: repeat(4, 1fr);
   }
 }
-
-.manage {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-2);
-}

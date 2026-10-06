@@ -1,6 +1,5 @@
 import { Component, inject } from '@angular/core';
 import { rxResource } from '@angular/core/rxjs-interop';
-import { RouterLink } from '@angular/router';
 import { AdminService } from '../../core/admin.service';
 import { AdminStatTileComponent } from '../../shared/admin-stat-tile.component';
 import { InlineErrorComponent } from '../../shared/inline-error.component';
@@ -11,15 +10,11 @@ const queue = (type: string) => ({ path: '/admin/moderation', query: { type } })
 /** Admin home: counts at a glance, with pending moderation work flagged. Refreshes when the tab regains focus. */
 @Component({
   selector: 'app-admin-dashboard',
-  imports: [AdminStatTileComponent, InlineErrorComponent, RouterLink, SkeletonComponent],
+  imports: [AdminStatTileComponent, InlineErrorComponent, SkeletonComponent],
   styleUrl: './admin-dashboard.component.css',
   host: { '(window:focus)': 'stats.reload()' },
   template: `
     <h1>Admin dashboard</h1>
-    <nav aria-label="Manage" class="manage">
-      <a class="btn secondary" routerLink="/admin/restaurants">Manage restaurants</a>
-      <a class="btn secondary" routerLink="/admin/moderation">Moderation queue</a>
-    </nav>
     @let s = stats.value();
     @if (stats.error()) {
       <app-inline-error message="Could not load the dashboard." (retry)="stats.reload()" />
