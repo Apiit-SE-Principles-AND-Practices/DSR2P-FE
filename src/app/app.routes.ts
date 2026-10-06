@@ -36,6 +36,12 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./pages/register/register.component').then((m) => m.RegisterComponent),
   },
+  {
+    path: 'account/reviews',
+    canActivate: [requireAuth],
+    loadComponent: () =>
+      import('./pages/account/my-reviews.component').then((m) => m.MyReviewsComponent),
+  },
   // Placeholders until the real screens land (6.1 account, 35 admin dashboard).
   {
     path: 'account',
