@@ -52,7 +52,12 @@ const LABELS: Record<ReviewSort, string> = {
             </select>
           </div>
           @for (review of shown(); track review.id) {
-            <app-review-card [review]="review" />
+            <app-review-card
+              [review]="review"
+              [replying]="replying() === review.id"
+              (replyOpen)="replying.set(review.id)"
+              (replyClose)="replying.set(null)"
+            />
           }
           @if (shown().length < sorted().length) {
             <button type="button" class="btn secondary" (click)="visible.set(visible() + pageSize)">
@@ -78,6 +83,8 @@ export class ReviewsSectionComponent {
   protected readonly labels = LABELS;
   protected readonly pageSize = PAGE_SIZE;
   protected readonly visible = signal(PAGE_SIZE);
+  /** The review whose reply box is open: opening another closes this one. */
+  protected readonly replying = signal<number | null>(null);
 
   protected readonly sort = computed(
     () => REVIEW_SORTS.find((s) => s === this.query().get('reviewSort')) ?? 'newest',

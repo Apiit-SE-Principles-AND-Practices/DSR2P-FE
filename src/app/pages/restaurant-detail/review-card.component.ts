@@ -1,8 +1,21 @@
-import { Component, computed, input, signal } from '@angular/core';
+import {
+  afterNextRender,
+  Component,
+  computed,
+  ElementRef,
+  inject,
+  Injector,
+  input,
+  output,
+  signal,
+  viewChild,
+} from '@angular/core';
 import { formatDate } from '../../core/format';
+import { RequireLogin } from '../../core/require-login';
 import type { Review } from '../../core/restaurant.service';
 import { approvedComments, reviewAverage } from '../../core/reviews';
 import { RatingDisplayComponent } from '../../shared/rating-display.component';
+import { ReplyComposerComponent } from './reply-composer.component';
 
 const REPLIES_SHOWN = 2;
 
@@ -12,7 +25,7 @@ const REPLIES_SHOWN = 2;
  */
 @Component({
   selector: 'app-review-card',
-  imports: [RatingDisplayComponent],
+  imports: [RatingDisplayComponent, ReplyComposerComponent],
   styleUrl: './review-card.component.css',
   template: `
     @let r = review();
@@ -66,11 +79,33 @@ const REPLIES_SHOWN = 2;
           </button>
         }
       }
+
+      @if (replying()) {
+        <app-reply-composer [reviewId]="r.id" (sent)="onSent()" (cancelled)="close()" />
+      } @else {
+        <button #replyButton type="button" class="btn secondary" (click)="startReply()">
+          Reply
+        </button>
+      }
+      @if (replySent()) {
+        <p class="hint" role="status">
+          Your reply has been submitted and will appear once a moderator approves it.
+        </p>
+      }
     </article>
   `,
 })
 export class ReviewCardComponent {
   readonly review = input.required<Review>();
+  /** Whether this review's reply box is open (the section keeps only one open at a time). */
+  readonly replying = input(false);
+  readonly replyOpen = output();
+  readonly replyClose = output();
+
+  private readonly requireLogin = inject(RequireLogin);
+  private readonly injector = inject(Injector);
+  private readonly replyButton = viewChild<ElementRef<HTMLButtonElement>>('replyButton');
+  protected readonly replySent = signal(false);
   protected readonly expanded = signal(false);
   protected readonly photo = signal('');
   protected readonly formatDate = formatDate;
@@ -82,6 +117,24 @@ export class ReviewCardComponent {
     this.expanded() ? this.replies() : this.replies().slice(0, REPLIES_SHOWN),
   );
   protected readonly hidden = computed(() => this.replies().length - this.shownReplies().length);
+
+  /** A Guest is asked to log in first; nobody else is asked anything. */
+  protected startReply(): void {
+    this.requireLogin.run('Log in to reply.', () => {
+      this.replyOpen.emit();
+    });
+  }
+
+  protected onSent(): void {
+    this.replySent.set(true);
+    this.close();
+  }
+
+  /** Closes the box and puts the keyboard focus back on the Reply button. */
+  protected close(): void {
+    this.replyClose.emit();
+    afterNextRender(() => this.replyButton()?.nativeElement.focus(), { injector: this.injector });
+  }
 
   protected open(viewer: HTMLDialogElement, url: string): void {
     this.photo.set(url);

@@ -60,6 +60,11 @@ export class RestaurantService {
     return this.http.post<Review>('/reviews', form);
   }
 
+  /** A reply to a review. It starts as Pending, so it is not shown until a moderator approves it. */
+  reply(reviewId: number, commentText: string): Observable<ReviewComment> {
+    return this.http.post<ReviewComment>(`/reviews/${String(reviewId)}/comments`, { commentText });
+  }
+
   /** Approved reviews only: the backend's default, so Pending and Rejected never reach the page. */
   reviews(id: string): Observable<Review[]> {
     return this.http.get<Review[]>(`/restaurants/${id}/reviews`);

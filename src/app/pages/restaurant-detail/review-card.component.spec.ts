@@ -1,4 +1,8 @@
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
+import { RequireLogin } from '../../core/require-login';
+import { SessionStore } from '../../core/session.store';
 import type { Review, ReviewComment } from '../../core/restaurant.service';
 import { ReviewCardComponent } from './review-card.component';
 
@@ -28,6 +32,12 @@ function render(overrides: Partial<Review> = {}) {
 }
 
 describe('ReviewCardComponent', () => {
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [provideHttpClient(), provideHttpClientTesting()],
+    });
+  });
+
   it('is an article with a dated heading, the average beside the numerals of each rating', () => {
     const { el } = render();
     expect(el.querySelector('article h3 time')?.textContent).toContain('2026');
@@ -103,7 +113,7 @@ describe('ReviewCardComponent', () => {
       more?.click();
       fixture.detectChanges();
       expect(el.querySelectorAll('.replies li').length).toBe(4);
-      expect(el.querySelector('.replies + button')).toBeNull();
+      expect(el.textContent).not.toContain('more repl'); // no "Show more" left
     });
 
     it('leaves out Pending and Rejected replies', () => {
@@ -117,6 +127,64 @@ describe('ReviewCardComponent', () => {
 
     it('shows nothing when there are no replies', () => {
       expect(render().el.querySelector('.replies')).toBeNull();
+    });
+  });
+
+  describe('Reply', () => {
+    const replyButton = (el: HTMLElement) =>
+      Array.from(el.querySelectorAll('button')).find((b) => b.textContent?.trim() === 'Reply');
+    const signIn = () => {
+      TestBed.inject(SessionStore).start({
+        token: 't',
+        user: { id: 'u', name: 'Ann', email: 'a@b.lk', role: 'Customer', language: 'en' },
+      });
+    };
+
+    it('a Guest tapping Reply gets the log in prompt and no box opens', () => {
+      const { el, fixture } = render();
+      const opened = jasmine.createSpy('opened');
+      fixture.componentInstance.replyOpen.subscribe(opened);
+      replyButton(el)?.click();
+      expect(opened).not.toHaveBeenCalled();
+      expect(TestBed.inject(RequireLogin).prompt()).toBe('Log in to reply.');
+    });
+
+    it('a signed-in user tapping Reply asks for the box to open', () => {
+      const { el, fixture } = render();
+      signIn();
+      const opened = jasmine.createSpy('opened');
+      fixture.componentInstance.replyOpen.subscribe(opened);
+      replyButton(el)?.click();
+      expect(opened).toHaveBeenCalledTimes(1);
+      expect(TestBed.inject(RequireLogin).prompt()).toBeNull();
+    });
+
+    it('shows the reply box instead of the button while it is open', () => {
+      const { el, fixture } = render();
+      fixture.componentRef.setInput('replying', true);
+      fixture.detectChanges();
+      expect(el.querySelector('app-reply-composer textarea')).not.toBeNull();
+      expect(replyButton(el)).toBeUndefined();
+    });
+
+    it('BB13 — after sending, shows the pending note and adds nothing to the thread', () => {
+      const { el, fixture } = render({ comments: [comment(1)] });
+      fixture.componentRef.setInput('replying', true);
+      fixture.detectChanges();
+      const closed = jasmine.createSpy('closed');
+      fixture.componentInstance.replyClose.subscribe(closed);
+
+      // the composer reports success through its `sent` output
+      fixture.debugElement
+        .query((d) => d.name === 'app-reply-composer')
+        .triggerEventHandler('sent');
+      fixture.detectChanges();
+
+      expect(closed).toHaveBeenCalled();
+      expect(el.querySelector('[role=status]')?.textContent).toContain(
+        'will appear once a moderator approves it',
+      );
+      expect(el.querySelectorAll('.replies li').length).toBe(1); // still only the one approved reply
     });
   });
 });
