@@ -45,7 +45,13 @@ function setup(id = 'r-1') {
     backend.expectOne((req) => req.url.endsWith(`/restaurants/${id}`));
   const reviewsRequest = () =>
     backend.expectOne((req) => req.url.endsWith(`/restaurants/${id}/reviews`));
+  /** The menu section also loads /menu and /categories; answer them so the page can settle. */
   const done = async () => {
+    backend
+      .match((req) => /\/(menu|categories)$/.test(req.url))
+      .forEach((req) => {
+        req.flush([]);
+      });
     await fixture.whenStable();
     fixture.detectChanges();
   };

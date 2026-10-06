@@ -13,6 +13,10 @@ const restaurant = {
 
 /** The API is mocked so these tests need no backend. */
 async function mockApi(page: Page) {
+  await page.route(/:3000\/categories$/, (route) => route.fulfill({ json: [] }));
+  await page.route(/:3000\/restaurants\/(r-1|missing)\/menu$/, (route) =>
+    route.fulfill({ json: [] }),
+  );
   await page.route(/:3000\/restaurants\/r-1\/reviews$/, (route) =>
     route.fulfill({
       json: [

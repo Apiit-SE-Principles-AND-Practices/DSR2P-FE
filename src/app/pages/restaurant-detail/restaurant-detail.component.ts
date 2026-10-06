@@ -8,17 +8,19 @@ import { RestaurantService } from '../../core/restaurant.service';
 import { InlineErrorComponent } from '../../shared/inline-error.component';
 import { NotFoundComponent } from '../../shared/not-found.component';
 import { SkeletonComponent } from '../../shared/skeleton.component';
+import { MenuSectionComponent } from './menu-section.component';
 import { RatingBreakdownComponent } from './rating-breakdown.component';
 import { RestaurantHeaderComponent } from './restaurant-header.component';
 
 /**
  * A restaurant's page. Each section loads on its own, so a slow one never blocks another: the header
- * and the rating breakdown start together. Menu (DSR2P-15) and reviews (DSR2P-16) join `.sections`.
+ * and the rating breakdown start together. Reviews (DSR2P-16) join `.sections` next.
  */
 @Component({
   selector: 'app-restaurant-detail',
   imports: [
     InlineErrorComponent,
+    MenuSectionComponent,
     NotFoundComponent,
     RatingBreakdownComponent,
     RestaurantHeaderComponent,
@@ -40,6 +42,7 @@ import { RestaurantHeaderComponent } from './restaurant-header.component';
         <app-skeleton height="var(--space-12)" />
       }
       <div class="sections">
+        <app-menu-section [restaurantId]="id()" />
         <app-rating-breakdown [restaurantId]="id()" />
       </div>
     }
