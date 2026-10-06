@@ -13,7 +13,7 @@ import { RejectDialogComponent } from '../../shared/reject-dialog.component';
     <h3 [id]="'mod-' + e.key" tabindex="-1">
       <span class="badge">{{ e.kind === 'reviews' ? 'Review' : 'Reply' }}</span>
       @if (e.reported) {
-        <span class="badge reported">Reported</span>
+        <span class="badge reported">Reported ({{ e.reportCount }})</span>
       }
       {{ restaurant() ?? (e.kind === 'reviews' ? 'A restaurant' : 'Reply to a review') }}
       · <time [attr.datetime]="e.createdAt">{{ date() }}</time>

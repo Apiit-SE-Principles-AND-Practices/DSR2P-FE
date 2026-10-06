@@ -36,7 +36,7 @@ const QUEUE = {
   ],
 };
 
-async function setup(url = '/admin/moderation') {
+async function setup(url = '/admin/moderation', queue: object = QUEUE) {
   TestBed.configureTestingModule({
     providers: [
       provideRouter([{ path: 'admin/moderation', component: ModerationQueueComponent }]),
@@ -49,7 +49,7 @@ async function setup(url = '/admin/moderation') {
   await harness.navigateByUrl(url);
   const el = harness.fixture.nativeElement as HTMLElement;
   await tick();
-  backend.expectOne('/admin/moderation/queue').flush(QUEUE);
+  backend.expectOne('/admin/moderation/queue').flush(queue);
   backend
     .match((r) => r.url === '/restaurants')
     .forEach((r) => {
@@ -84,6 +84,17 @@ describe('ModerationQueueComponent', () => {
     expect(el.querySelector('a[href="/moderation-guidelines"]')?.textContent).toBe(
       'Moderation guidelines',
     );
+  });
+
+  it('shows a reported item first, with a “Reported” badge and the number of reports', async () => {
+    const reported = { ...review(3, '2026-10-09T10:00:00Z'), reportCount: 2 };
+    const { el } = await setup('/admin/moderation', {
+      ...QUEUE,
+      reviews: [...QUEUE.reviews, reported],
+    });
+    expect(items(el)[0].textContent).toContain('Review 3');
+    expect(items(el)[0].querySelector('.reported')?.textContent).toBe('Reported (2)');
+    expect(items(el)[1].querySelector('.reported')).toBeNull();
   });
 
   it('filters by the type in the address', async () => {
