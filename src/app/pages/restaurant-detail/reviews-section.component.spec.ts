@@ -5,6 +5,7 @@ import { TestBed } from '@angular/core/testing';
 import { provideRouter, Router } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
 import type { Review } from '../../core/restaurant.service';
+import { SessionStore } from '../../core/session.store';
 import { ReviewsSectionComponent } from './reviews-section.component';
 
 const review = (id: number, day: number, ratings: [number, number, number]): Review => ({
@@ -27,6 +28,9 @@ function fakeResource(value: Review[] | undefined, error?: unknown) {
   >;
   return { ref, reload };
 }
+
+const loadMore = (el: HTMLElement) =>
+  Array.from(el.querySelectorAll('button')).find((b) => b.textContent?.trim() === 'Load more');
 
 let current: ResourceRef<Review[] | undefined>;
 
@@ -114,10 +118,10 @@ describe('ReviewsSectionComponent', () => {
     const many = Array.from({ length: 12 }, (_, i) => review(12 - i, 12 - i, [4, 4, 4]));
     const { el, harness } = await open(many);
     expect(el.querySelectorAll('app-review-card').length).toBe(10);
-    el.querySelector<HTMLButtonElement>('button.btn.secondary')?.click();
+    loadMore(el)?.click();
     harness.detectChanges();
     expect(el.querySelectorAll('app-review-card').length).toBe(12);
-    expect(el.querySelector('button.btn.secondary')).toBeNull();
+    expect(loadMore(el)).toBeUndefined();
   });
 
   it('shows the empty state with a Write a review call to action', async () => {
@@ -136,5 +140,53 @@ describe('ReviewsSectionComponent', () => {
 
   it('shows a skeleton while loading', async () => {
     expect((await open(undefined)).el.querySelectorAll('app-skeleton').length).toBe(1);
+  });
+
+  describe('replying', () => {
+    const replyButtons = (el: HTMLElement) =>
+      Array.from(el.querySelectorAll('button')).filter((b) => b.textContent?.trim() === 'Reply');
+    const signIn = () => {
+      TestBed.inject(SessionStore).start({
+        token: 't',
+        user: { id: 'u', name: 'Ann', email: 'a@b.lk', role: 'Customer', language: 'en' },
+      });
+    };
+
+    it('only one reply box is open at a time', async () => {
+      const { el, harness } = await open(list);
+      signIn();
+      replyButtons(el)[0].click();
+      harness.detectChanges();
+      expect(el.querySelectorAll('app-reply-composer').length).toBe(1);
+
+      replyButtons(el)[0].click(); // the first card's own button is gone; this is the second card's
+      harness.detectChanges();
+      expect(el.querySelectorAll('app-reply-composer').length).toBe(1);
+      expect(
+        el.querySelectorAll('app-review-card')[1].querySelector('app-reply-composer'),
+      ).not.toBeNull();
+    });
+
+    it('closing the box puts the focus back on that review Reply button', async () => {
+      const { el, harness } = await open(list);
+      signIn();
+      replyButtons(el)[0].click();
+      harness.detectChanges();
+      Array.from(el.querySelectorAll('app-reply-composer button'))
+        .find((b) => b.textContent?.trim() === 'Cancel')
+        ?.dispatchEvent(new Event('click'));
+      harness.detectChanges();
+      await harness.fixture.whenStable();
+      harness.detectChanges();
+      expect(el.querySelector('app-reply-composer')).toBeNull();
+      expect(document.activeElement).toBe(replyButtons(el)[0]);
+    });
+
+    it('a Guest tapping Reply opens no box', async () => {
+      const { el, harness } = await open(list);
+      replyButtons(el)[0].click();
+      harness.detectChanges();
+      expect(el.querySelector('app-reply-composer')).toBeNull();
+    });
   });
 });

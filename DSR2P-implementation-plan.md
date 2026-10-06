@@ -219,11 +219,11 @@ Each phase lists its stories, the main deliverables and the exit criteria. Tick 
 - [ ] **38.5** Tests: 500, timeout, offline, 401 round-trip, error fallback.
 
 **DSR2P-21 — Photo on a review**
-- [ ] **21.1** `PhotoPicker`: type/size validation before processing, preview, Remove, alt-text field.
-- [ ] **21.2** Resize/compress helper (≤1600px long edge, ~0.8 quality, EXIF stripped, ≤500 KB target).
-- [ ] **21.3** Required image-rights checkbox gating Submit.
-- [ ] **21.4** Agreed upload strategy, including "saved without photo — retry photo".
-- [ ] **21.5** Tests: BB11, oversized/wrong type rejected with no request, rights gate, output dimensions.
+- [-] **21.1** `PhotoPicker`: type/size validation before processing, preview, Remove, alt-text field.
+- [-] **21.2** Resize/compress helper (≤1600px long edge, ~0.8 quality, EXIF stripped, ≤500 KB target).
+- [-] **21.3** Required image-rights checkbox gating Submit.
+- [-] **21.4** Agreed upload strategy, including "saved without photo — retry photo".
+- [-] **21.5** Tests: BB11, oversized/wrong type rejected with no request, rights gate, output dimensions.
 
 **DSR2P-19 — Reply**
 - [ ] **19.1** `replySchema`; inline `ReplyComposer` (one open at a time, focus management).
