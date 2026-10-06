@@ -1,0 +1,13 @@
+/* Sections stack below 1024px (see core/tokens.ts) and sit side by side from there. */
+.sections {
+  display: grid;
+  gap: var(--space-6);
+  margin-top: var(--space-6);
+}
+
+@media (width >= 1024px) {
+  .sections {
+    grid-template-columns: 1fr 1fr;
+    align-items: start;
+  }
+}
