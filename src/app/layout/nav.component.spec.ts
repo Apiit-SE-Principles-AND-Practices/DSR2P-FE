@@ -1,4 +1,5 @@
 import { Type } from '@angular/core';
+import { provideHttpClient } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
@@ -10,7 +11,7 @@ describe('navigation components', () => {
   [TopNavComponent, BottomTabBarComponent].forEach((component: Type<unknown>) => {
     it(`${component.name} marks only the active link with aria-current="page"`, async () => {
       TestBed.configureTestingModule({
-        providers: [provideRouter([{ path: '**', children: [] }])],
+        providers: [provideRouter([{ path: '**', children: [] }]), provideHttpClient()],
       });
       await (await RouterTestingHarness.create()).navigateByUrl('/search');
       const fixture = TestBed.createComponent(component);

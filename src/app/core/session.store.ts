@@ -56,6 +56,11 @@ export class SessionStore {
     setUiLanguage(result.user.language);
   }
 
+  /** Replaces the signed-in user's details (e.g. after a profile change); the token stays. */
+  updateUser(user: PublicUser): void {
+    this.session.update((current) => current && { ...current, user });
+  }
+
   logout(): void {
     this.session.set(null);
   }

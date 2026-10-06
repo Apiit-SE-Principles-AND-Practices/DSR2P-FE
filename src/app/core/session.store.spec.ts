@@ -84,6 +84,19 @@ describe('SessionStore', () => {
     expect(store.isAuthenticated()).toBeTrue();
   });
 
+  it('updateUser swaps the user but keeps the session', () => {
+    login(admin);
+    store.updateUser({ ...admin.user, name: 'Ann Perera' });
+    expect(store.user()?.name).toBe('Ann Perera');
+    expect(store.token()).toBe('jwt-123');
+    expect(store.isAuthenticated()).toBeTrue();
+  });
+
+  it('updateUser does nothing when nobody is signed in', () => {
+    store.updateUser(admin.user);
+    expect(store.isAuthenticated()).toBeFalse();
+  });
+
   it('clears everything on logout', () => {
     login(admin);
     store.logout();

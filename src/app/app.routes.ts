@@ -44,10 +44,17 @@ export const routes: Routes = [
   },
   // Placeholders until the real screens land (6.1 account, 35 admin dashboard).
   {
+    path: 'account/reviews',
+    canActivate: [requireAuth],
+    loadComponent: () =>
+      import('./pages/account/my-reviews.component').then((m) => m.MyReviewsComponent),
+  },
+  // Placeholder until the admin dashboard lands (35).
+  {
     path: 'account',
     canActivate: [requireAuth],
-    component: PlaceholderComponent,
-    data: { title: 'Account' },
+    loadComponent: () =>
+      import('./pages/account/account.component').then((m) => m.AccountComponent),
   },
   {
     path: 'admin',

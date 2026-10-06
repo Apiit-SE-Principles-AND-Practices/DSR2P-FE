@@ -231,10 +231,10 @@ Each phase lists its stories, the main deliverables and the exit criteria. Tick 
 - [-] **19.3** Tests: BB13, Guest prompt, empty reply blocked.
 
 **DSR2P-18 — My reviews & replies**
-- [ ] **18.1** `/account/reviews` with Reviews | Replies tabs and status filter.
-- [ ] **18.2** `AccountReviewRow` and `StatusBadge` (icon + text); rejection reason under rejected rows.
-- [ ] **18.3** Per-tab empty states; "No reason recorded" fallback.
-- [ ] **18.4** Tests: three badges, reason shown, filter request.
+- [-] **18.1** `/account/reviews` with Reviews | Replies tabs and status filter.
+- [-] **18.2** `AccountReviewRow` and `StatusBadge` (icon + text); rejection reason under rejected rows.
+- [-] **18.3** Per-tab empty states; "No reason recorded" fallback.
+- [-] **18.4** Tests: three badges, reason shown, filter request.
 
 **DSR2P-6 — Profile & language**
 - [ ] **6.1** `/account` with `ProfileForm`, read-only email, links to My reviews and My data.
