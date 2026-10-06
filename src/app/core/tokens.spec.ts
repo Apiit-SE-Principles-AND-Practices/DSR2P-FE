@@ -11,7 +11,7 @@ describe('tokens', () => {
 
   it('exposes CSS custom properties globally', () => {
     const style = getComputedStyle(document.documentElement);
-    expect(style.getPropertyValue('--space-4').trim()).toBe('1rem');
-    expect(style.getPropertyValue('--color-primary').trim()).toBe('#a63a14');
+    expect(style.getPropertyValue('--space-4').trim()).toBe('16px');
+    expect(style.getPropertyValue('--ds-brand-500').trim()).toBe('#1a73e8');
   });
 });

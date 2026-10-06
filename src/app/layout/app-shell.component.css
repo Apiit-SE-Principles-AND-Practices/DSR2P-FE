@@ -2,11 +2,22 @@
   display: flex;
   flex-direction: column;
   min-height: 100dvh;
+  background: var(--ds-surface-50);
 }
 
 main {
   flex: 1;
   padding: var(--space-4);
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+@media (width >= 640px) {
+  main {
+    padding: var(--space-6) var(--space-5);
+  }
 }
 
 main:focus {
@@ -16,16 +27,20 @@ main:focus {
 app-bottom-tab-bar {
   position: sticky;
   bottom: 0;
+  z-index: 100;
 }
 
 .skip-link {
   position: absolute;
   left: var(--space-2);
   top: calc(-1 * var(--hit-area-min) - var(--space-4));
-  z-index: 10;
+  z-index: 1000;
   padding: var(--space-3) var(--space-4);
-  background: var(--color-primary);
-  color: var(--color-on-primary);
+  border-radius: var(--radius-full);
+  background: var(--ds-brand-500);
+  color: var(--ds-on-brand);
+  font-weight: var(--font-weight-medium);
+  text-decoration: none;
 }
 
 .skip-link:focus {

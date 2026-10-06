@@ -11,15 +11,17 @@ import { RatingDisplayComponent } from './rating-display.component';
   styleUrl: './restaurant-card.component.css',
   template: `
     @let r = restaurant();
-    <a class="card" [routerLink]="['/restaurants', r.id]">
+    <a class="ds-card card" [routerLink]="['/restaurants', r.id]">
       @if (r.imageUrl) {
         <img class="photo" loading="lazy" alt="" width="320" height="180" [src]="r.imageUrl" />
       } @else {
-        <div class="photo" aria-hidden="true"></div>
+        <div class="photo photo-placeholder" aria-hidden="true">
+          <span class="material-symbols-outlined placeholder-icon">restaurant</span>
+        </div>
       }
       <div class="body">
-        <strong class="name" [title]="r.name">{{ r.name }}</strong>
-        <span class="meta">{{ r.city }} · {{ categories() }}</span>
+        <strong class="name ds-h3" [title]="r.name">{{ r.name }}</strong>
+        <span class="meta ds-caption">{{ r.city }} · {{ categories() }}</span>
         <span class="row">
           <app-rating-display [rating]="r.averageRating" />
           <app-price-band [band]="r.priceBand" />

@@ -28,20 +28,30 @@ export interface ContrastPair {
 
 /** Every foreground/background token pair the UI uses. Add new pairs here; CI checks them all. */
 export const CONTRAST_PAIRS: readonly ContrastPair[] = [
+  { fg: '--ds-ink', bg: '--ds-surface-50', min: 4.5 },
+  { fg: '--ds-ink', bg: '--ds-surface-100', min: 4.5 },
+  { fg: '--ds-ink', bg: '--ds-surface-raised', min: 4.5 },
+  { fg: '--ds-ink-muted', bg: '--ds-surface-50', min: 4.5 },
+  { fg: '--ds-ink-muted', bg: '--ds-surface-raised', min: 4.5 },
+  { fg: '--ds-on-brand', bg: '--ds-brand-500', min: 4.5 },
+  { fg: '--ds-on-brand', bg: '--ds-brand-600', min: 4.5 },
+  { fg: '--ds-brand-600', bg: '--ds-surface-50', min: 4.5 },
+  { fg: '--ds-on-accent', bg: '--ds-accent-500', min: 4.5 },
+  { fg: '--ds-on-accent', bg: '--ds-accent-600', min: 4.5 },
+  { fg: '--ds-status-pending-ink', bg: '--ds-status-pending-bg', min: 4.5 },
+  { fg: '--ds-status-approved-ink', bg: '--ds-status-approved-bg', min: 4.5 },
+  { fg: '--ds-status-rejected-ink', bg: '--ds-status-rejected-bg', min: 4.5 },
+  { fg: '--ds-danger-500', bg: '--ds-surface-50', min: 4.5 },
+  { fg: '--ds-focus-ring-color', bg: '--ds-surface-50', min: 3 },
+  { fg: '--ds-focus-ring-color', bg: '--ds-surface-100', min: 3 },
+  /* Legacy alias compatibility */
   { fg: '--color-text', bg: '--color-bg', min: 4.5 },
   { fg: '--color-text', bg: '--color-surface', min: 4.5 },
   { fg: '--color-text-muted', bg: '--color-bg', min: 4.5 },
   { fg: '--color-text-muted', bg: '--color-surface', min: 4.5 },
   { fg: '--color-on-primary', bg: '--color-primary', min: 4.5 },
   { fg: '--color-on-primary', bg: '--color-primary-hover', min: 4.5 },
-  { fg: '--color-on-primary', bg: '--color-danger', min: 4.5 },
-  { fg: '--color-primary', bg: '--color-bg', min: 4.5 },
-  { fg: '--color-primary', bg: '--color-surface', min: 4.5 },
-  { fg: '--color-success', bg: '--color-surface', min: 4.5 },
-  { fg: '--color-danger', bg: '--color-surface', min: 4.5 },
   { fg: '--color-warning-text', bg: '--color-warning-bg', min: 4.5 },
-  { fg: '--color-focus', bg: '--color-bg', min: 3 },
-  { fg: '--color-focus', bg: '--color-surface', min: 3 },
 ];
 
 /** Ratio for a pair, read from the live CSS custom properties. */

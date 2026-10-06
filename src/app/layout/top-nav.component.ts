@@ -16,11 +16,15 @@ import { NAV_ITEMS } from './nav-items';
   ],
   styleUrl: './top-nav.component.css',
   template: `
-    <nav class="app-bar" aria-label="Primary">
-      <a class="logo" routerLink="/">Ruchi</a>
-      <app-city-selector />
-      <app-search-input />
-      <ul>
+    <nav class="top-bar app-bar" aria-label="Primary">
+      <div class="brand-section">
+        <a class="logo logo-text" routerLink="/">Ruchi</a>
+        <app-city-selector />
+      </div>
+      <div class="search-section">
+        <app-search-input />
+      </div>
+      <ul class="nav-links">
         @for (item of items; track item.path) {
           <li>
             <a

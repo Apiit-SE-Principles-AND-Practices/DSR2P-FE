@@ -1,53 +1,126 @@
-/* Ruchi design tokens. The only file allowed to hold raw colour, size and shadow values. */
+/* Ruchi design tokens — Google Business Profile & Maps Design System */
 :root {
-  /* Colour */
-  --color-primary: #a63a14;
-  --color-primary-hover: #8a2f10;
-  --color-on-primary: #fff;
-  --color-bg: #fffaf5;
-  --color-surface: #fff;
-  --color-text: #1f1a17;
-  --color-text-muted: #5e534c;
-  --color-border: #d9cdc4;
-  --color-focus: #0b57d0;
-  --color-success: #1b6b3a;
-  --color-warning-bg: #fff1c2;
-  --color-warning-text: #6b4500;
-  --color-danger: #b3261e;
+  /* Surface Tokens */
+  --ds-surface-50: #ffffff;
+  --ds-surface-100: #f1f3f4;
+  --ds-surface-raised: #ffffff;
+  --ds-surface-sunken: #f1f3f4;
+
+  /* Border Tokens */
+  --ds-border: #dadce0;
+  --ds-border-strong: #bdc1c6;
+
+  /* Text & Ink Tokens */
+  --ds-ink: #202124;
+  --ds-ink-muted: #5f6368;
+  --ds-ink-faint: #80868b;
+
+  /* Brand Blue Tokens (Google Signature Blue) */
+  --ds-brand-100: #e8f0fe;
+  --ds-brand-500: #1a73e8;
+  --ds-brand-600: #1967d2;
+  --ds-on-brand: #ffffff;
+
+  /* Accent Green Tokens (Approve / Confirmations) */
+  --ds-accent-100: #e6f4ea;
+  --ds-accent-500: #188038;
+  --ds-accent-600: #137333;
+  --ds-on-accent: #ffffff;
+
+  /* Rating Gold Tokens (Google Business Gold) */
+  --ds-rating: #fbbc04;
+  --ds-rating-track: #e8eaed;
+
+  /* Status Badges */
+  --ds-status-pending-bg: #fef7e0;
+  --ds-status-pending-ink: #976000;
+  --ds-status-approved-bg: #e6f4ea;
+  --ds-status-approved-ink: #137333;
+  --ds-status-rejected-bg: #fce8e6;
+  --ds-status-rejected-ink: #c5221f;
+
+  /* Danger / Destructive Red */
+  --ds-danger-500: #d93025;
+  --ds-danger-100: #fce8e6;
+
+  /* Focus Ring */
+  --ds-focus-ring-color: #1967d2;
+  --focus-ring: 3px solid var(--ds-focus-ring-color);
+  --focus-offset: 2px;
+  --hit-area-min: 44px;
 
   /* Typography */
-  --font-sans: 'Google Sans', roboto, 'Noto Sans Sinhala', 'Noto Sans Tamil', system-ui, sans-serif;
-  --font-size-sm: 0.875rem;
-  --font-size-body: 1rem;
-  --font-size-lg: 1.25rem;
-  --font-size-xl: 1.5rem;
-  --font-size-2xl: 2rem;
+  --font-sans:
+    'Google Sans', Roboto, 'Noto Sans Sinhala', 'Noto Sans Tamil', system-ui, -apple-system,
+    sans-serif;
+  --font-size-display: 2.125rem; /* 34px */
+  --font-size-h1: 1.5rem; /* 24px */
+  --font-size-h2: 1.25rem; /* 20px */
+  --font-size-h3: 1rem; /* 16px */
+  --font-size-body-lg: 1rem; /* 16px */
+  --font-size-body: 0.875rem; /* 14px */
+  --font-size-body-sm: 0.75rem; /* 12px */
+  --font-size-label: 0.875rem; /* 14px */
+  --font-size-overline: 0.6875rem; /* 11px */
+  --font-size-caption: 0.75rem; /* 12px */
+  --font-size-price: 0.875rem; /* 14px */
+
   --font-weight-regular: 400;
+  --font-weight-medium: 500;
   --font-weight-bold: 700;
-  --line-height-body: 1.6;
+
+  --line-height-display: 40px;
+  --line-height-h1: 30px;
+  --line-height-h2: 26px;
+  --line-height-h3: 22px;
+  --line-height-body-lg: 24px;
+  --line-height-body: 21px;
+  --line-height-body-sm: 18px;
+  --line-height-label: 20px;
+  --line-height-overline: 14px;
+  --line-height-caption: 16px;
+  --line-height-price: 20px;
+
+  /* Spacing Scale */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+
+  /* Radii */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 16px;
+  --radius-full: 999px;
+
+  /* Shadows (1dp and 3dp elevation recipes) */
+  --ds-shadow-sm: 0 1px 2px 0 rgba(60, 64, 67, 0.3), 0 1px 3px 1px rgba(60, 64, 67, 0.15);
+  --ds-shadow-md: 0 1px 3px 0 rgba(60, 64, 67, 0.3), 0 4px 8px 3px rgba(60, 64, 67, 0.15);
+
+  /* Legacy semantic mappings for backwards compatibility */
+  --color-primary: var(--ds-brand-500);
+  --color-primary-hover: var(--ds-brand-600);
+  --color-on-primary: var(--ds-on-brand);
+  --color-bg: var(--ds-surface-50);
+  --color-surface: var(--ds-surface-raised);
+  --color-text: var(--ds-ink);
+  --color-text-muted: var(--ds-ink-muted);
+  --color-border: var(--ds-border);
+  --color-focus: var(--ds-brand-600);
+  --color-success: var(--ds-accent-500);
+  --color-warning-bg: var(--ds-status-pending-bg);
+  --color-warning-text: var(--ds-status-pending-ink);
+  --color-danger: var(--ds-danger-500);
+  --shadow-card: var(--ds-shadow-sm);
+  --shadow-overlay: var(--ds-shadow-md);
+  --font-size-sm: var(--font-size-body-sm);
+  --font-size-lg: var(--font-size-h2);
+  --font-size-xl: var(--font-size-h1);
+  --font-size-2xl: var(--font-size-display);
+  --line-height-body: 1.5;
   --line-height-heading: 1.3;
-
-  /* Spacing */
-  --space-1: 0.25rem;
-  --space-2: 0.5rem;
-  --space-3: 0.75rem;
-  --space-4: 1rem;
-  --space-6: 1.5rem;
-  --space-8: 2rem;
-  --space-12: 3rem;
-
-  /* Radius */
-  --radius-sm: 0.25rem;
-  --radius-md: 0.5rem;
-  --radius-lg: 1rem;
-  --radius-full: 9999px;
-
-  /* Shadow */
-  --shadow-card: 0 1px 3px rgb(31 26 23 / 12%), 0 1px 2px rgb(31 26 23 / 8%);
-  --shadow-overlay: 0 8px 24px rgb(31 26 23 / 20%);
-
-  /* Accessibility */
-  --focus-ring: 3px solid var(--color-focus);
-  --focus-offset: 2px;
-  --hit-area-min: 2.75rem;
 }

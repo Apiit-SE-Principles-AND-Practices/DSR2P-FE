@@ -3,8 +3,9 @@ body {
   font-family: var(--font-sans);
   font-size: var(--font-size-body);
   line-height: var(--line-height-body);
-  color: var(--color-text);
-  background: var(--color-bg);
+  color: var(--ds-ink);
+  background: var(--ds-surface-50);
+  -webkit-font-smoothing: antialiased;
 }
 
 :focus-visible {
@@ -12,112 +13,479 @@ body {
   outline-offset: var(--focus-offset);
 }
 
+/* Typography Utilities */
+.ds-display {
+  font-size: var(--font-size-display);
+  line-height: var(--line-height-display);
+  font-weight: var(--font-weight-medium);
+  margin: 0;
+}
+
+.ds-h1,
+h1 {
+  font-size: var(--font-size-h1);
+  line-height: var(--line-height-h1);
+  font-weight: var(--font-weight-medium);
+  margin: 0;
+}
+
+.ds-h2,
+h2 {
+  font-size: var(--font-size-h2);
+  line-height: var(--line-height-h2);
+  font-weight: var(--font-weight-medium);
+  margin: 0;
+}
+
+.ds-h3,
+h3 {
+  font-size: var(--font-size-h3);
+  line-height: var(--line-height-h3);
+  font-weight: var(--font-weight-medium);
+  margin: 0;
+}
+
+.ds-body-lg {
+  font-size: var(--font-size-body-lg);
+  line-height: var(--line-height-body-lg);
+  font-weight: var(--font-weight-regular);
+}
+
+.ds-body,
+p {
+  font-size: var(--font-size-body);
+  line-height: var(--line-height-body);
+  font-weight: var(--font-weight-regular);
+}
+
+.ds-body-sm {
+  font-size: var(--font-size-body-sm);
+  line-height: var(--line-height-body-sm);
+  font-weight: var(--font-weight-regular);
+}
+
+.ds-label-text {
+  font-size: var(--font-size-label);
+  line-height: var(--line-height-label);
+  font-weight: var(--font-weight-medium);
+}
+
+.ds-overline {
+  font-size: var(--font-size-overline);
+  line-height: var(--line-height-overline);
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.ds-caption {
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-caption);
+  color: var(--ds-ink-muted);
+}
+
+.ds-price {
+  font-size: var(--font-size-price);
+  line-height: var(--line-height-price);
+  font-weight: var(--font-weight-medium);
+  color: var(--ds-ink);
+}
+
+/* Google Business Buttons (Pill-shaped, 44px tap target) */
+.ds-btn-primary,
 .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: var(--space-2);
   min-height: var(--hit-area-min);
   min-width: var(--hit-area-min);
   padding: 0 var(--space-4);
   border: 0;
-  border-radius: var(--radius-md);
-  background: var(--color-primary);
-  color: var(--color-on-primary);
-  font: inherit;
+  border-radius: var(--radius-full);
+  background: var(--ds-brand-500);
+  color: var(--ds-on-brand);
+  font-family: inherit;
+  font-size: var(--font-size-label);
+  font-weight: var(--font-weight-medium);
   text-decoration: none;
   cursor: pointer;
+  transition:
+    background-color 0.15s ease,
+    box-shadow 0.15s ease;
+  box-sizing: border-box;
 }
 
+.ds-btn-primary:hover,
 .btn:hover {
-  background: var(--color-primary-hover);
+  background: var(--ds-brand-600);
+  box-shadow: var(--ds-shadow-sm);
 }
 
-/* Shared by TopNav and BottomTabBar so both stay visually consistent. */
-.nav-link {
-  display: flex;
+.ds-btn-secondary,
+.btn.secondary {
+  display: inline-flex;
   align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
   min-height: var(--hit-area-min);
   min-width: var(--hit-area-min);
   padding: 0 var(--space-4);
-  border-radius: var(--radius-md);
-  color: var(--color-text);
+  border: 1px solid var(--ds-border);
+  border-radius: var(--radius-full);
+  background: var(--ds-surface-raised);
+  color: var(--ds-brand-600);
+  font-family: inherit;
+  font-size: var(--font-size-label);
+  font-weight: var(--font-weight-medium);
   text-decoration: none;
+  cursor: pointer;
+  box-sizing: border-box;
 }
 
-.nav-link.active {
-  color: var(--color-primary);
-  font-weight: var(--font-weight-bold);
-  text-decoration: underline;
+.ds-btn-secondary:hover,
+.btn.secondary:hover {
+  background: var(--ds-brand-100);
+  border-color: var(--ds-brand-500);
 }
 
-/* Form pattern shared by every form: label wraps the control, error sits under it. */
+.ds-btn-approve {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: var(--hit-area-min);
+  padding: 0 var(--space-4);
+  border: 0;
+  border-radius: var(--radius-full);
+  background: var(--ds-accent-500);
+  color: var(--ds-on-accent);
+  font-family: inherit;
+  font-size: var(--font-size-label);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+}
+
+.ds-btn-approve:hover {
+  background: var(--ds-accent-600);
+}
+
+.ds-btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: var(--hit-area-min);
+  padding: 0 var(--space-3);
+  border: 0;
+  border-radius: var(--radius-full);
+  background: transparent;
+  color: var(--ds-brand-600);
+  font-family: inherit;
+  font-size: var(--font-size-label);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+}
+
+.ds-btn-ghost:hover {
+  background: var(--ds-surface-100);
+}
+
+.ds-btn-danger,
+.btn.danger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: var(--hit-area-min);
+  padding: 0 var(--space-4);
+  border: 0;
+  border-radius: var(--radius-full);
+  background: var(--ds-danger-500);
+  color: var(--ds-on-brand);
+  font-family: inherit;
+  font-size: var(--font-size-label);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+}
+
+.ds-btn-danger:hover,
+.btn.danger:hover {
+  background: var(--ds-status-rejected-ink);
+}
+
+.ds-btn-sm {
+  min-height: 36px;
+  min-width: 36px;
+  padding: 0 var(--space-3);
+  font-size: var(--font-size-body-sm);
+}
+
+.ds-btn-icon {
+  width: var(--hit-area-min);
+  height: var(--hit-area-min);
+  min-width: var(--hit-area-min);
+  min-height: var(--hit-area-min);
+  padding: 0;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Google Business Cards */
+.ds-card {
+  background: var(--ds-surface-raised);
+  border: 1px solid var(--ds-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--ds-shadow-sm);
+  padding: var(--space-4);
+  box-sizing: border-box;
+}
+
+/* Google Business Filter Chips (Pill shapes) */
+.ds-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 36px;
+  padding: 0 var(--space-3);
+  border: 1px solid var(--ds-border);
+  border-radius: var(--radius-full);
+  background: var(--ds-surface-raised);
+  color: var(--ds-ink);
+  font-family: inherit;
+  font-size: var(--font-size-label);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s ease;
+}
+
+.ds-chip:hover {
+  background: var(--ds-surface-100);
+  border-color: var(--ds-border-strong);
+}
+
+.ds-chip[aria-pressed='true'],
+.ds-chip.active {
+  background: var(--ds-brand-100);
+  color: var(--ds-brand-600);
+  border-color: var(--ds-brand-500);
+}
+
+/* Badges & Status */
+.ds-badge-pending {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px var(--space-2);
+  border-radius: var(--radius-sm);
+  background: var(--ds-status-pending-bg);
+  color: var(--ds-status-pending-ink);
+  font-size: var(--font-size-caption);
+  font-weight: var(--font-weight-medium);
+}
+
+.ds-badge-approved {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px var(--space-2);
+  border-radius: var(--radius-sm);
+  background: var(--ds-status-approved-bg);
+  color: var(--ds-status-approved-ink);
+  font-size: var(--font-size-caption);
+  font-weight: var(--font-weight-medium);
+}
+
+.ds-badge-rejected {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px var(--space-2);
+  border-radius: var(--radius-sm);
+  background: var(--ds-status-rejected-bg);
+  color: var(--ds-status-rejected-ink);
+  font-size: var(--font-size-caption);
+  font-weight: var(--font-weight-medium);
+}
+
+.ds-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px var(--space-2);
+  border-radius: var(--radius-sm);
+  background: var(--ds-surface-100);
+  color: var(--ds-ink-muted);
+  font-size: var(--font-size-caption);
+}
+
+.ds-tag-spice {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px var(--space-2);
+  border-radius: var(--radius-sm);
+  background: var(--ds-status-pending-bg);
+  color: var(--ds-status-pending-ink);
+  font-size: var(--font-size-caption);
+  font-weight: var(--font-weight-medium);
+}
+
+/* Form Fields & Inputs */
 .field {
   display: flex;
   flex-direction: column;
   gap: var(--space-1);
   margin-bottom: var(--space-4);
-  max-width: 24rem;
+  max-width: 28rem;
 }
 
+.ds-label,
+label {
+  font-size: var(--font-size-label);
+  font-weight: var(--font-weight-medium);
+  color: var(--ds-ink);
+}
+
+.ds-input,
 .field input,
-.select {
+.select,
+select,
+textarea {
   min-height: var(--hit-area-min);
   padding: 0 var(--space-3);
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--ds-border);
   border-radius: var(--radius-md);
+  background-color: var(--ds-surface-raised);
+  color: var(--ds-ink);
   font: inherit;
+  box-sizing: border-box;
+  transition: border-color 0.15s ease;
 }
 
-.field input[aria-invalid='true'] {
-  border-color: var(--color-danger);
+.select,
+select {
+  appearance: none;
+  padding-right: var(--space-7);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' height='18' viewBox='0 -960 960 960' width='18' fill='%235f6368'%3E%3Cpath d='M480-345 240-585l56-56 184 184 184-184 56 56-240 240Z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  cursor: pointer;
+}
+
+.ds-input:hover,
+.field input:hover,
+.select:hover,
+select:hover,
+textarea:hover {
+  border-color: var(--ds-border-strong);
+}
+
+.ds-input:focus,
+.field input:focus,
+.select:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--ds-brand-600);
+}
+
+.ds-input-search {
+  border-radius: var(--radius-full);
+  background: var(--ds-surface-100);
+  border: 1px solid var(--ds-border);
+  padding-left: var(--space-4);
+}
+
+.field input[aria-invalid='true'],
+.ds-input[aria-invalid='true'] {
+  border-color: var(--ds-danger-500);
 }
 
 .field-error,
+.ds-field-error,
 .form-error.visible {
-  color: var(--color-danger);
+  color: var(--ds-danger-500);
+  font-size: var(--font-size-caption);
 }
 
-.form-error {
-  margin-bottom: var(--space-4);
+.hint,
+.ds-hint {
+  color: var(--ds-ink-muted);
+  font-size: var(--font-size-caption);
 }
 
-.form-error:focus {
-  outline: none;
-}
-
-fieldset.field {
-  border: 0;
-  padding: 0;
-}
-
-.choice {
+/* Review Avatar & Response */
+.ds-avatar {
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  min-height: 40px;
+  border-radius: 50%;
+  background: var(--ds-brand-100);
+  color: var(--ds-brand-600);
   display: flex;
   align-items: center;
-  gap: var(--space-2);
+  justify-content: center;
+  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-body);
+}
+
+.ds-review-response {
+  border-left: 3px solid var(--ds-accent-500);
+  background: var(--ds-surface-100);
+  padding: var(--space-3) var(--space-4);
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  margin-top: var(--space-3);
+}
+
+.ds-review-comment {
+  margin-left: var(--space-5);
+  border-left: 2px solid var(--ds-border);
+  padding-left: var(--space-3);
+  margin-top: var(--space-2);
+}
+
+/* Nav Links & App Bar */
+.nav-link {
+  display: flex;
+  align-items: center;
   min-height: var(--hit-area-min);
+  padding: 0 var(--space-3);
+  border-radius: var(--radius-full);
+  color: var(--ds-ink-muted);
+  font-size: var(--font-size-label);
+  font-weight: var(--font-weight-medium);
+  text-decoration: none;
+  transition: all 0.15s ease;
 }
 
-.rules {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  font-size: var(--font-size-sm);
-  color: var(--color-text-muted);
+.nav-link:hover {
+  background: var(--ds-surface-100);
+  color: var(--ds-ink);
 }
 
-.rules .met {
-  color: var(--color-success);
+.nav-link.active {
+  color: var(--ds-brand-600);
+  background: var(--ds-brand-100);
+  font-weight: var(--font-weight-medium);
 }
 
-.btn.secondary {
-  margin-bottom: var(--space-4);
-  border: 1px solid var(--color-primary);
-  background: var(--color-surface);
-  color: var(--color-primary);
+.app-bar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  padding: 0 var(--space-4);
+  background: var(--ds-surface-raised);
+  border-bottom: 1px solid var(--ds-border);
 }
 
-.btn.secondary:hover {
-  background: var(--color-bg);
+.logo {
+  display: flex;
+  align-items: center;
+  min-height: var(--hit-area-min);
+  font-size: var(--font-size-h1);
+  font-weight: var(--font-weight-medium);
+  color: var(--ds-brand-600);
+  text-decoration: none;
+  letter-spacing: -0.5px;
 }
 
 .sr-only {
@@ -129,38 +497,6 @@ fieldset.field {
   white-space: nowrap;
 }
 
-/* Top bar shared by TopNav (>= 640px) and MobileHeader (< 640px). */
-.app-bar {
-  display: flex;
-  align-items: center;
-  gap: var(--space-4);
-  padding: 0 var(--space-4);
-  background: var(--color-surface);
-  box-shadow: var(--shadow-card);
-}
-
-.logo {
-  display: flex;
-  align-items: center;
-  min-height: var(--hit-area-min);
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-bold);
-  color: var(--color-primary);
-  text-decoration: none;
-}
-
-textarea.select {
-  padding: var(--space-2) var(--space-3);
-  resize: vertical;
-}
-
-/* Hint under a field, e.g. a character counter. */
-.hint {
-  color: var(--color-text-muted);
-  font-size: var(--font-size-sm);
-}
-
-/* A status message that stays until the user dismisses it. */
 .notice {
   display: flex;
   align-items: center;
@@ -168,12 +504,9 @@ textarea.select {
   gap: var(--space-4);
   margin-bottom: var(--space-4);
   padding: var(--space-3) var(--space-4);
-  border: 1px solid var(--color-success);
+  border: 1px solid var(--ds-border);
+  border-left: 4px solid var(--ds-accent-500);
   border-radius: var(--radius-md);
-  background: var(--color-surface);
-}
-
-/* A destructive action (deleting). */
-.btn.danger {
-  background: var(--color-danger);
+  background: var(--ds-surface-raised);
+  box-shadow: var(--ds-shadow-sm);
 }

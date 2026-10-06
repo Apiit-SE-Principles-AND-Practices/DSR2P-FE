@@ -1,22 +1,42 @@
 :host {
   display: block;
+  margin-bottom: var(--space-5);
 }
 
 .hero {
   width: 100%;
-  aspect-ratio: 3 / 1;
-  border-radius: var(--radius-md);
+  aspect-ratio: 21 / 9;
+  border-radius: var(--radius-lg);
   object-fit: cover;
-  background: var(--color-border);
+  background: var(--ds-brand-100);
+  box-shadow: var(--ds-shadow-sm);
+  margin-bottom: var(--space-4);
+}
+
+h1 {
+  font-size: var(--font-size-h1);
+  font-weight: var(--font-weight-medium);
+  color: var(--ds-ink);
+  margin: 0 0 var(--space-1);
 }
 
 .meta {
-  margin: 0;
-  color: var(--color-text-muted);
+  margin: 0 0 var(--space-1);
+  color: var(--ds-ink-muted);
+  font-size: var(--font-size-body);
 }
 
 .row {
   display: flex;
   align-items: center;
   gap: var(--space-4);
+  margin: var(--space-3) 0 var(--space-4);
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-top: var(--space-4);
 }

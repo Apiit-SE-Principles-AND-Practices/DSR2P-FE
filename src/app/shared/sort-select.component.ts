@@ -11,9 +11,9 @@ const LABELS: Record<(typeof SORTS)[number], string> = {
   selector: 'app-sort-select',
   styleUrl: './sort-select.component.css',
   template: `
-    <div class="field">
-      <label for="sort">Sort by</label>
-      <select id="sort" class="select" #sort (change)="pick(sort.value)">
+    <div class="field sort-field">
+      <label class="sort-label" for="sort">Sort by</label>
+      <select id="sort" class="select sort-select" #sort (change)="pick(sort.value)">
         @for (option of sorts; track option) {
           <option [value]="option" [selected]="option === current()">{{ labels[option] }}</option>
         }

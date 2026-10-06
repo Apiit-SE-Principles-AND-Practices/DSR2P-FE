@@ -13,9 +13,10 @@ export const TYPING_DEBOUNCE_MS = 300;
   imports: [ReactiveFormsModule],
   styleUrl: './search-input.component.css',
   template: `
-    <form role="search" (submit)="$event.preventDefault(); apply(false)">
+    <form role="search" class="search-form" (submit)="$event.preventDefault(); apply(false)">
+      <span class="material-symbols-outlined search-icon" aria-hidden="true">search</span>
       <input
-        class="select"
+        class="ds-input-search search-input"
         type="search"
         enterkeyhint="search"
         aria-label="Search restaurants"

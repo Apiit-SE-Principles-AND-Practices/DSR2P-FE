@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, test } from './fixtures';
 
 // Real-viewport checks that unit tests can't do. Widths are the documented breakpoints (DSR2P-3 / 40).
 for (const [width, topNav, bottomBar] of [

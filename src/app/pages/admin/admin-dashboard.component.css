@@ -1,18 +1,26 @@
-.grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: var(--space-3);
-}
-
-/* 640px: the tablet breakpoint (see core/tokens.ts) */
-@media (width >= 640px) {
-  .grid {
-    grid-template-columns: repeat(4, 1fr);
-  }
+h1 {
+  font-size: var(--font-size-h1);
+  font-weight: var(--font-weight-medium);
+  color: var(--ds-ink);
+  margin-bottom: var(--space-3);
 }
 
 .manage {
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-2);
+  margin-bottom: var(--space-5);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-3);
+}
+
+@media (width >= 640px) {
+  .grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-4);
+  }
 }
