@@ -175,11 +175,11 @@ Each phase lists its stories, the main deliverables and the exit criteria. Tick 
 - [-] **14.4** Tests: three bars, zero-count state, 404 view.
 
 **DSR2P-15 — Menu listing**
-- [ ] **15.1** `MenuSection`, `MenuCategoryHeader` (`<h3>` overline), `MenuItemRow` with name and price on one line.
-- [ ] **15.2** `DietaryTag` and `SpiceLevel` with text labels.
-- [ ] **15.3** No caching for the menu request; refetch on window refocus.
-- [ ] **15.4** LKR formatting with `Intl.NumberFormat`; empty-menu state.
-- [ ] **15.5** Tests: BB08 grouping, same-line layout at 375px, refocus refetch.
+- [-] **15.1** `MenuSection`, `MenuCategoryHeader` (`<h3>` overline), `MenuItemRow` with name and price on one line.
+- [-] **15.2** `DietaryTag` and `SpiceLevel` with text labels.
+- [-] **15.3** No caching for the menu request; refetch on window refocus.
+- [-] **15.4** LKR formatting with `Intl.NumberFormat`; empty-menu state.
+- [-] **15.5** Tests: BB08 grouping, same-line layout at 375px, refocus refetch.
 
 **DSR2P-16 — Reviews on Detail**
 - [ ] **16.1** `ReviewsSection` with count, `ReviewSortSelect` (`reviewSort` param), Load more.
