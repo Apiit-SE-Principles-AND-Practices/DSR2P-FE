@@ -18,6 +18,21 @@ export interface AdminRestaurant {
   categories: Category[];
 }
 
+interface StatusCounts {
+  total: number;
+  pending: number;
+  approved: number;
+  rejected: number;
+}
+
+/** Mirrors the OpenAPI `DashboardStats`. It has no menu item count. */
+export interface DashboardStats {
+  restaurants: number;
+  users: number;
+  reviews: StatusCounts;
+  comments: StatusCounts;
+}
+
 /** Mirrors the backend `CreateRestaurantInput` / `UpdateRestaurantInput`. */
 export interface RestaurantBody {
   name: string;
@@ -55,6 +70,12 @@ export class AdminService {
         pages.flatMap(({ data }) => data).sort((a, b) => a.name.localeCompare(b.name)),
       ),
     );
+  }
+
+  stats(): Observable<DashboardStats> {
+    return this.http.get<DashboardStats>('/admin/dashboard/stats', {
+      headers: { 'Cache-Control': 'no-cache' },
+    });
   }
 
   create(body: RestaurantBody): Observable<AdminRestaurant> {

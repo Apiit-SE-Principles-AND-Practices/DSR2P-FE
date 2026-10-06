@@ -1,0 +1,38 @@
+:host {
+  display: block;
+}
+
+.tile {
+  height: 100%;
+  box-sizing: border-box;
+  padding: var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-card);
+}
+
+.tile.attention {
+  border-color: var(--color-warning-text);
+  background: var(--color-warning-bg);
+  color: var(--color-warning-text);
+}
+
+.label {
+  margin: 0;
+}
+
+.value {
+  margin: 0;
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+}
+
+.flag {
+  margin: 0;
+  font-weight: var(--font-weight-bold);
+}
+
+a {
+  color: inherit;
+}

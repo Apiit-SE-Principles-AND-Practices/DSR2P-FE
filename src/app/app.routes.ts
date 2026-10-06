@@ -2,7 +2,6 @@ import type { Routes } from '@angular/router';
 import { environment } from '../environments/environment';
 import { guestOnly, requireAdmin, requireAuth, unsavedChangesGuard } from './core/guards';
 import { HomeComponent } from './pages/home.component';
-import { PlaceholderComponent } from './pages/placeholder.component';
 import { NotFoundComponent } from './shared/not-found.component';
 
 export const routes: Routes = [
@@ -42,14 +41,6 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./pages/account/my-reviews.component').then((m) => m.MyReviewsComponent),
   },
-  // Placeholders until the real screens land (6.1 account, 35 admin dashboard).
-  {
-    path: 'account/reviews',
-    canActivate: [requireAuth],
-    loadComponent: () =>
-      import('./pages/account/my-reviews.component').then((m) => m.MyReviewsComponent),
-  },
-  // Placeholder until the admin dashboard lands (35).
   {
     path: 'account',
     canActivate: [requireAuth],
@@ -59,8 +50,8 @@ export const routes: Routes = [
   {
     path: 'admin',
     canActivate: [requireAdmin],
-    component: PlaceholderComponent,
-    data: { title: 'Admin dashboard' },
+    loadComponent: () =>
+      import('./pages/admin/admin-dashboard.component').then((m) => m.AdminDashboardComponent),
   },
   {
     path: 'admin/restaurants',

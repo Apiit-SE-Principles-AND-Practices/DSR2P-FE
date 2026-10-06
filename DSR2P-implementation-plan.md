@@ -279,9 +279,9 @@ Each phase lists its stories, the main deliverables and the exit criteria. Tick 
 ### Phase 7 — Moderation & dashboard (DSR2P-35, 32, 33, 34, 20, 47, 46)
 
 **DSR2P-35 — Dashboard**
-- [ ] **35.1** `AdminStatTile` and `/admin` grid (2 → 4 columns at 640px).
-- [ ] **35.2** Attention style plus "Review now →" link when pending > 0.
-- [ ] **35.3** Tests: column counts, flag only when > 0, link filters.
+- [x] **35.1** `AdminStatTile` and `/admin` grid (2 → 4 columns at 640px).
+- [x] **35.2** Attention style plus "Review now →" link when pending > 0.
+- [x] **35.3** Tests: column counts, flag only when > 0, link filters.
 
 **DSR2P-32 — Moderation queue**
 - [ ] **32.1** `ModerationQueuePage`: type filter, oldest-first, count heading.
