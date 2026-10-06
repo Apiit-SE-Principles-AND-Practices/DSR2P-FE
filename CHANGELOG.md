@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.1.0](https://github.com/Apiit-SE-Principles-AND-Practices/DSR2P-FE/compare/dsr2p-fe-v1.0.0...dsr2p-fe-v1.1.0) (2026-10-06)
+
+
+### Features
+
+* My reviews and replies ([d99c3e5](https://github.com/Apiit-SE-Principles-AND-Practices/DSR2P-FE/commit/d99c3e51edb72d3c596f337e4c0eaa2d8271359f))
+* Photo on a review ([ef1b33b](https://github.com/Apiit-SE-Principles-AND-Practices/DSR2P-FE/commit/ef1b33bc50b7e93938cecab0cab65671fc910a7b))
+* Reply review ([506047d](https://github.com/Apiit-SE-Principles-AND-Practices/DSR2P-FE/commit/506047daca120a0e508dbc049318148b1c08d8c6))
+
 ## 1.0.0 (2026-10-06)
 
 
