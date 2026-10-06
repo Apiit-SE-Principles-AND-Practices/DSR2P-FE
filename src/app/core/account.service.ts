@@ -3,6 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import { forkJoin, map, shareReplay, type Observable } from 'rxjs';
 import type { Review, ReviewComment } from './restaurant.service';
 import { CITIES } from './search-params.service';
+import { SessionStore } from './session.store';
 
 export type ModerationStatus = ReviewComment['status'];
 
@@ -22,6 +23,7 @@ export interface MyComment extends ReviewComment {
 @Injectable({ providedIn: 'root' })
 export class AccountService {
   private readonly http = inject(HttpClient);
+  private readonly session = inject(SessionStore);
 
   myReviews(): Observable<MyReview[]> {
     return this.http.get<MyReview[]>('/users/me/reviews');
@@ -45,4 +47,27 @@ export class AccountService {
     ),
     shareReplay(1),
   );
+
+  /** How much content goes with the account (the API has no summary, so this counts the lists). */
+  counts(): Observable<{ reviews: number; replies: number }> {
+    return forkJoin({ reviews: this.myReviews(), replies: this.myComments() }).pipe(
+      map(({ reviews, replies }) => ({ reviews: reviews.length, replies: replies.length })),
+    );
+  }
+
+  /** Everything held about the user. The API has no export endpoint, so it is gathered from what it offers. */
+  exportData(): Observable<object> {
+    return forkJoin({ reviews: this.myReviews(), comments: this.myComments() }).pipe(
+      map((content) => ({
+        exportedAt: new Date().toISOString(),
+        profile: this.session.user(),
+        ...content,
+      })),
+    );
+  }
+
+  /** The API takes no password for this; the page asks for a typed confirmation instead. */
+  deleteAccount(): Observable<unknown> {
+    return this.http.delete('/users/me');
+  }
 }

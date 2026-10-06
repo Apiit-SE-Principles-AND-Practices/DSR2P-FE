@@ -17,7 +17,7 @@ import {
   styleUrl: './confirm-delete-dialog.component.css',
   template: `
     <dialog #dialog aria-labelledby="delete-title" (close)="cancelled.emit()">
-      <h2 id="delete-title">Delete {{ name() }}?</h2>
+      <h2 id="delete-title">{{ heading() ?? 'Delete ' + name() + '?' }}</h2>
       @if (impact(); as lines) {
         <p>This cannot be undone. It also permanently deletes:</p>
         <ul>
@@ -56,6 +56,8 @@ import {
 })
 export class ConfirmDeleteDialogComponent implements OnInit {
   readonly name = input.required<string>();
+  /** Replaces the default "Delete {name}?" title. */
+  readonly heading = input<string>();
   /** What goes with it, one line each; `null` while still counting. */
   readonly impact = input<string[] | null>(null);
   readonly busy = input(false);
