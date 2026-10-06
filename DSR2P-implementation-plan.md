@@ -301,9 +301,9 @@ Each phase lists its stories, the main deliverables and the exit criteria. Tick 
 - [x] **34.2** Run the DSR2P-33 tests for replies.
 
 **DSR2P-20 — Restaurant response**
-- [ ] **20.1** Admin-only `ResponseComposer` on reviews without a response.
-- [ ] **20.2** Handle `409`: show message and refresh the review.
-- [ ] **20.3** Tests: BB20 hidden when a response exists, 409, non-Admin never sees it.
+- [x] **20.1** Admin-only `ResponseComposer` on reviews without a response.
+- [x] **20.2** Handle `409`: show message and refresh the review.
+- [x] **20.3** Tests: BB20 hidden when a response exists, 409, non-Admin never sees it.
 
 **DSR2P-47 — Moderation guidelines**
 - [ ] **47.1** Team guideline text as `content/moderation-guidelines.md`, rendered at `/moderation-guidelines`.

@@ -14,6 +14,7 @@ import { formatDate } from '../../core/format';
 import { RequireLogin } from '../../core/require-login';
 import type { Review } from '../../core/restaurant.service';
 import { approvedComments, reviewAverage } from '../../core/reviews';
+import { SessionStore } from '../../core/session.store';
 import { RatingDisplayComponent } from '../../shared/rating-display.component';
 import { ReplyComposerComponent } from './reply-composer.component';
 
@@ -80,6 +81,22 @@ const REPLIES_SHOWN = 2;
         }
       }
 
+      @if (canRespond() && !r.response) {
+        @if (responding()) {
+          <app-reply-composer
+            kind="response"
+            [reviewId]="r.id"
+            (sent)="onResponded()"
+            (conflict)="refresh.emit()"
+            (cancelled)="closeResponse()"
+          />
+        } @else {
+          <button #respondButton type="button" class="btn secondary" (click)="responding.set(true)">
+            Respond as restaurant
+          </button>
+        }
+      }
+
       @if (replying()) {
         <app-reply-composer [reviewId]="r.id" (sent)="onSent()" (cancelled)="close()" />
       } @else {
@@ -101,10 +118,17 @@ export class ReviewCardComponent {
   readonly replying = input(false);
   readonly replyOpen = output();
   readonly replyClose = output();
+  /** The review changed on the server (a response was posted, or someone else's was found): reload it. */
+  readonly refresh = output();
 
   private readonly requireLogin = inject(RequireLogin);
+  private readonly session = inject(SessionStore);
   private readonly injector = inject(Injector);
   private readonly replyButton = viewChild<ElementRef<HTMLButtonElement>>('replyButton');
+  private readonly respondButton = viewChild<ElementRef<HTMLButtonElement>>('respondButton');
+  protected readonly responding = signal(false);
+  /** Only an Admin is offered the response box; the server enforces it too. */
+  protected readonly canRespond = computed(() => this.session.role() === 'Admin');
   protected readonly replySent = signal(false);
   protected readonly expanded = signal(false);
   protected readonly photo = signal('');
@@ -134,6 +158,16 @@ export class ReviewCardComponent {
   protected close(): void {
     this.replyClose.emit();
     afterNextRender(() => this.replyButton()?.nativeElement.focus(), { injector: this.injector });
+  }
+
+  protected onResponded(): void {
+    this.responding.set(false);
+    this.refresh.emit();
+  }
+
+  protected closeResponse(): void {
+    this.responding.set(false);
+    afterNextRender(() => this.respondButton()?.nativeElement.focus(), { injector: this.injector });
   }
 
   protected open(viewer: HTMLDialogElement, url: string): void {

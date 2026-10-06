@@ -65,6 +65,11 @@ export class RestaurantService {
     return this.http.post<ReviewComment>(`/reviews/${String(reviewId)}/comments`, { commentText });
   }
 
+  /** The restaurant's one response to a review (Admin only). Public at once; a second one is a 409. */
+  respond(reviewId: number, responseText: string): Observable<unknown> {
+    return this.http.post(`/reviews/${String(reviewId)}/response`, { responseText });
+  }
+
   /** Approved reviews only: the backend's default, so Pending and Rejected never reach the page. */
   reviews(id: string): Observable<Review[]> {
     return this.http.get<Review[]>(`/restaurants/${id}/reviews`);

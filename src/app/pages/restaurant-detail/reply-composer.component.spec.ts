@@ -135,3 +135,60 @@ describe('ReplyComposerComponent', () => {
     });
   });
 });
+
+describe('ReplyComposerComponent as the restaurant response', () => {
+  async function setupResponse() {
+    TestBed.configureTestingModule({
+      providers: [
+        provideHttpClient(withInterceptors([apiInterceptor])),
+        provideHttpClientTesting(),
+      ],
+    });
+    const backend = TestBed.inject(HttpTestingController);
+    const fixture = TestBed.createComponent(ReplyComposerComponent);
+    fixture.componentRef.setInput('reviewId', 5);
+    fixture.componentRef.setInput('kind', 'response');
+    const sent = jasmine.createSpy('sent');
+    const conflict = jasmine.createSpy('conflict');
+    fixture.componentInstance.sent.subscribe(sent);
+    fixture.componentInstance.conflict.subscribe(conflict);
+    fixture.detectChanges();
+    await fixture.whenStable();
+    fixture.detectChanges();
+    const el = fixture.nativeElement as HTMLElement;
+    const box = el.querySelector('textarea');
+    if (!box) throw new Error('No textarea');
+    box.value = '  Thank you for visiting  ';
+    box.dispatchEvent(new Event('input'));
+    el.querySelector('form')?.dispatchEvent(new Event('submit'));
+    fixture.detectChanges();
+    const request = backend.expectOne((r) => r.url.endsWith('/reviews/5/response'));
+    return { backend, conflict, el, fixture, request, sent };
+  }
+
+  afterEach(() => {
+    sessionStorage.removeItem('response-draft:5');
+  });
+
+  it('has its own wording and posts the trimmed text as responseText', async () => {
+    const { el, request, sent } = await setupResponse();
+    expect(el.textContent).toContain('Your response as the restaurant');
+    expect(request.request.method).toBe('POST');
+    expect(request.request.body).toEqual({ responseText: 'Thank you for visiting' });
+    request.flush({ id: 1 }, { status: 201, statusText: 'Created' });
+    expect(sent).toHaveBeenCalled();
+  });
+
+  it('BB20: on 409 says the review already has a response and asks for a refresh', async () => {
+    const { conflict, el, fixture, request, sent } = await setupResponse();
+    request.flush(
+      { error: { code: 'CONFLICT', message: 'Already responded', details: {} } },
+      { status: 409, statusText: 'Conflict' },
+    );
+    fixture.detectChanges();
+
+    expect(el.textContent).toContain('This review already has a response from the restaurant.');
+    expect(conflict).toHaveBeenCalled();
+    expect(sent).not.toHaveBeenCalled();
+  });
+});

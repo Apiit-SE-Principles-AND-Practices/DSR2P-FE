@@ -187,4 +187,43 @@ describe('ReviewCardComponent', () => {
       expect(el.querySelectorAll('.replies li').length).toBe(1); // still only the one approved reply
     });
   });
+
+  describe('Respond as restaurant (DSR2P-20)', () => {
+    const signIn = (role: 'Admin' | 'Customer') => {
+      const user = { id: '1', name: 'Ann', email: 'a@b.lk', role, language: 'en' } as const;
+      TestBed.inject(SessionStore).start({ token: 't', user });
+    };
+    const respondButton = (el: HTMLElement) =>
+      [...el.querySelectorAll('button')].find((b) =>
+        b.textContent?.includes('Respond as restaurant'),
+      );
+
+    it('is offered to an Admin on a review with no response', () => {
+      signIn('Admin');
+      expect(respondButton(render().el)).toBeDefined();
+    });
+
+    it('BB20: is hidden once the review has a response', () => {
+      signIn('Admin');
+      const { el } = render({
+        response: { responseText: 'Thanks!', createdAt: '2026-10-06T12:00:00Z' },
+      });
+      expect(respondButton(el)).toBeUndefined();
+      expect(el.textContent).toContain('Thanks!');
+    });
+
+    it('is never shown to a Customer or a Guest', () => {
+      expect(respondButton(render().el)).toBeUndefined(); // Guest
+      signIn('Customer');
+      expect(respondButton(render().el)).toBeUndefined();
+    });
+
+    it('opens the response box for an Admin', () => {
+      signIn('Admin');
+      const { el, fixture } = render();
+      respondButton(el)?.click();
+      fixture.detectChanges();
+      expect(el.textContent).toContain('Your response as the restaurant');
+    });
+  });
 });
