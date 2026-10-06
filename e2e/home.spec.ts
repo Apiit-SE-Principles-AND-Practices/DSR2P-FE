@@ -1,4 +1,4 @@
-import { expect, test, type Page } from '@playwright/test';
+import { expect, test, type Page } from './fixtures';
 
 const categories = ['Chinese', 'Desserts', 'Pizza', 'Salads', 'Seafood', 'Soups', 'Curries'].map(
   (name, index) => ({ id: index + 1, name }),

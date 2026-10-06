@@ -1,4 +1,4 @@
-import { expect, test, type Page } from '@playwright/test';
+import { expect, test, type Page } from './fixtures';
 
 const LONG_NAME =
   'Traditional Jaffna crab curry served with string hoppers, pol sambol and a side of lunu miris';
