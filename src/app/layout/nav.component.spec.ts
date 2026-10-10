@@ -29,7 +29,7 @@ describe('navigation components', () => {
     });
   });
 
-  it('TopNavComponent shows the user name instead of Login, with Logout in a menu', async () => {
+  it('TopNavComponent shows the user name instead of Login, with Logout in a menu', () => {
     TestBed.configureTestingModule({
       providers: [provideRouter([{ path: '**', children: [] }]), provideHttpClient()],
     });
@@ -41,13 +41,18 @@ describe('navigation components', () => {
     fixture.detectChanges();
     const el = fixture.nativeElement as HTMLElement;
     expect(el.textContent).not.toContain('Login');
-    const button = el.querySelector<HTMLButtonElement>('.user-button')!;
+    const button = el.querySelector<HTMLButtonElement>('.user-button');
+    if (!button) throw new Error('No user button');
     expect(button.textContent).toContain('Nimal');
-    expect(el.querySelector('.logout-button')).toBeNull();
+    expect(el.querySelector('[role=menu]')).toBeNull();
 
     button.click();
     fixture.detectChanges();
-    el.querySelector<HTMLButtonElement>('.logout-button')!.click();
+    const logout = Array.from(el.querySelectorAll<HTMLButtonElement>('[role=menuitem]')).find((b) =>
+      b.textContent?.includes('Logout'),
+    );
+    if (!logout) throw new Error('No logout button');
+    logout.click();
     fixture.detectChanges();
     expect(TestBed.inject(SessionStore).isAuthenticated()).toBeFalse();
     expect(el.textContent).toContain('Login');

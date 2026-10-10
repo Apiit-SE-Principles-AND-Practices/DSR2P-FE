@@ -122,7 +122,7 @@ describe('AccountComponent', () => {
       const { el, saveButton, type, submit, backend } = setup();
       type('   ');
       expect(saveButton().disabled).toBeTrue();
-      expect(el.querySelector('#name-error')?.textContent).toBe('Enter your name.');
+      expect(el.querySelector('#name-error')?.textContent?.trim()).toBe('Enter your name.');
       submit();
       backend.expectNone(() => true);
     });
@@ -131,7 +131,9 @@ describe('AccountComponent', () => {
       const { el, saveButton, type } = setup();
       type('a'.repeat(101));
       expect(saveButton().disabled).toBeTrue();
-      expect(el.querySelector('#name-error')?.textContent).toBe('Use 100 characters or fewer.');
+      expect(el.querySelector('#name-error')?.textContent?.trim()).toBe(
+        'Use 100 characters or fewer.',
+      );
     });
 
     it('accepts exactly 100 characters', () => {
@@ -174,7 +176,7 @@ describe('AccountComponent', () => {
         { status: 400, statusText: 'x' },
       );
       fixture.detectChanges();
-      expect(el.querySelector('#name-error')?.textContent).toBe(
+      expect(el.querySelector('#name-error')?.textContent?.trim()).toBe(
         'Name must be at most 100 characters',
       );
       type('Ann Silvia');
