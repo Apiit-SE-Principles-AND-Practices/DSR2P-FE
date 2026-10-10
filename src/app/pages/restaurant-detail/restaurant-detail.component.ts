@@ -50,7 +50,7 @@ import { ReviewsSectionComponent } from './reviews-section.component';
       @if (r) {
         <app-restaurant-header [restaurant]="r" />
       } @else {
-        <div class="header-skeleton" role="status" aria-label="Loading restaurant">
+        <div class="header-skeleton" aria-hidden="true">
           <app-skeleton height="auto" class="hero-skeleton" />
           <app-skeleton height="var(--space-6)" class="title-skeleton" />
           <app-skeleton height="var(--space-3)" class="meta-skeleton" />

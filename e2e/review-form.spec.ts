@@ -64,7 +64,7 @@ async function mockApi(page: Page, { failFirst = false } = {}) {
 async function openForm(page: Page) {
   await page.goto(`/login?returnTo=${encodeURIComponent(REVIEW_URL)}`);
   await page.getByLabel('Email').fill('ann@example.com');
-  await page.getByLabel('Password').fill('Password123');
+  await page.getByLabel('Password', { exact: true }).fill('Password123');
   await page.getByRole('button', { name: 'Log in' }).click();
   await expect(page.getByRole('heading', { name: 'Write a review' })).toBeVisible();
 }

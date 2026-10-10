@@ -11,7 +11,7 @@ import { SkeletonComponent } from './skeleton.component';
       gap: var(--space-3);
     }
   `,
-  host: { role: 'status', 'aria-label': 'Loading' },
+  host: { 'aria-hidden': 'true' },
   template: `
     @for (row of items(); track row) {
       <app-skeleton [height]="height()" />
