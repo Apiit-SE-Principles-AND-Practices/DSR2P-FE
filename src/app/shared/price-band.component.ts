@@ -5,13 +5,16 @@ import { PRICE_BANDS, type PriceBand } from '../core/search-params.service';
 @Component({
   selector: 'app-price-band',
   styleUrl: './price-band.component.css',
-  standalone: true,
   template: `
     @let value = band();
     @if (value) {
-      <span title="Price band: {{ value.toLowerCase() }}" class="band-icon">{{
-        symbols(value)
-      }}</span>
+      <span
+        role="img"
+        class="band-icon"
+        [title]="'Price band: ' + value.toLowerCase()"
+        [attr.aria-label]="'Price band: ' + value.toLowerCase()"
+        >{{ symbols(value) }}</span
+      >
     }
   `,
 })
