@@ -81,9 +81,11 @@ function fillAndSave({ harness, el }: Setup, dishes: number) {
   for (let i = 0; i < dishes; i++) {
     [...el.querySelectorAll('button')].find((b) => b.textContent?.includes('Add a dish'))?.click();
     harness.detectChanges();
-    set(el, `#dish-${String(i)}-name`, `Dish ${String(i + 1)}`);
-    set(el, `#dish-${String(i)}-price`, String(500 + i));
-    pick(el, `#dish-${String(i)}-category`, 1);
+    set(el, '#dish-0-name', `Dish ${String(i + 1)}`);
+    set(el, '#dish-0-price', String(500 + i));
+    pick(el, '#dish-0-category', 1);
+    [...el.querySelectorAll('button')].find((b) => b.textContent?.includes('Add dish'))?.click();
+    harness.detectChanges();
   }
   harness.detectChanges();
   el.querySelector<HTMLButtonElement>('button[type=submit]')?.click();
@@ -117,6 +119,23 @@ describe('RestaurantFormComponent', () => {
     expect(TestBed.inject(Router).url).toBe('/admin/restaurants');
   });
 
+  it('lists a dish in the table once it is added in the popup', async () => {
+    const s = await setup();
+    [...s.el.querySelectorAll('button')]
+      .find((b) => b.textContent?.includes('Add a dish'))
+      ?.click();
+    s.harness.detectChanges();
+    expect(s.el.querySelector('dialog')).not.toBeNull();
+    set(s.el, '#dish-0-name', 'Kottu');
+    set(s.el, '#dish-0-price', '900');
+    pick(s.el, '#dish-0-category', 1);
+    [...s.el.querySelectorAll('button')].find((b) => b.textContent?.includes('Add dish'))?.click();
+    s.harness.detectChanges();
+
+    expect(s.el.querySelector('dialog')).toBeNull();
+    expect(s.el.querySelector('tbody')?.textContent).toContain('Kottu');
+  });
+
   it('shows the schema messages and sends nothing while the form is invalid', async () => {
     const s = await setup();
     s.el.querySelector<HTMLButtonElement>('button[type=submit]')?.click();
@@ -142,9 +161,9 @@ describe('RestaurantFormComponent', () => {
     );
     s.harness.detectChanges();
 
-    const dishes = s.el.querySelectorAll('app-menu-item-fieldset');
-    expect(dishes[0].textContent).not.toContain('Too expensive');
-    expect(dishes[1].textContent).toContain('Too expensive');
+    const rows = s.el.querySelectorAll('tbody tr');
+    expect(rows[0].textContent).not.toContain('Too expensive');
+    expect(rows[1].textContent).toContain('Too expensive');
   });
 
   it('keeps only the failed dish and retries just that one, without creating the restaurant again', async () => {
@@ -164,7 +183,7 @@ describe('RestaurantFormComponent', () => {
     );
     s.harness.detectChanges();
 
-    expect(s.el.querySelectorAll('app-menu-item-fieldset').length).toBe(1);
+    expect(s.el.querySelectorAll('tbody tr').length).toBe(1);
     expect(s.el.textContent).toContain('Too high');
 
     s.el.querySelector<HTMLButtonElement>('button[type=submit]')?.click();

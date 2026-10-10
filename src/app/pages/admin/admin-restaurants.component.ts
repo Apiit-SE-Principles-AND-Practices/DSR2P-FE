@@ -19,6 +19,7 @@ const COLUMNS: AdminColumn<AdminRestaurant>[] = [
 /** Admin: every restaurant with search, a city filter, and edit / delete. */
 @Component({
   selector: 'app-admin-restaurants',
+  styleUrl: './admin-restaurants.component.css',
   imports: [
     AdminTableComponent,
     ConfirmDeleteDialogComponent,
@@ -27,27 +28,34 @@ const COLUMNS: AdminColumn<AdminRestaurant>[] = [
     SkeletonComponent,
   ],
   template: `
-    <h1>Restaurants</h1>
-    <a class="btn" routerLink="/admin/restaurants/new">Add restaurant</a>
+    <header class="page-head">
+      <div>
+        <h1>Restaurants</h1>
+        <p class="count">{{ shown().length }} of {{ restaurants.value()?.length ?? 0 }} shown</p>
+      </div>
+      <a class="btn" routerLink="/admin/restaurants/new">Add restaurant</a>
+    </header>
 
-    <div class="field">
-      <label for="restaurant-search">Search by name or address</label>
-      <input
-        id="restaurant-search"
-        type="search"
-        [value]="query()"
-        #box
-        (input)="query.set(box.value)"
-      />
-    </div>
-    <div class="field">
-      <label for="restaurant-city">City</label>
-      <select id="restaurant-city" class="select" #cityBox (change)="city.set(cityBox.value)">
-        <option value="">All cities</option>
-        @for (option of cities; track option) {
-          <option [value]="option" [selected]="option === city()">{{ option }}</option>
-        }
-      </select>
+    <div class="toolbar">
+      <div class="field">
+        <label for="restaurant-search">Search by name or address</label>
+        <input
+          id="restaurant-search"
+          type="search"
+          [value]="query()"
+          #box
+          (input)="query.set(box.value)"
+        />
+      </div>
+      <div class="field">
+        <label for="restaurant-city">City</label>
+        <select id="restaurant-city" class="select" #cityBox (change)="city.set(cityBox.value)">
+          <option value="">All cities</option>
+          @for (option of cities; track option) {
+            <option [value]="option" [selected]="option === city()">{{ option }}</option>
+          }
+        </select>
+      </div>
     </div>
 
     @if (restaurants.error()) {

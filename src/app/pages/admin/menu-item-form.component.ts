@@ -6,13 +6,20 @@ import { AdminService } from '../../core/admin.service';
 import type { ApiError } from '../../core/api.interceptor';
 import type { Category } from '../../core/category.service';
 import type { MenuItem } from '../../core/menu';
+import type { MenuItemInput } from '../../core/admin.service';
 import { FormErrorComponent } from '../../shared/form-error.component';
 import { PhotoPickerComponent } from '../../shared/photo-picker.component';
 import { menuItemSchema } from '../../shared/validation/restaurant.schema';
 import { zodValidator } from '../../shared/validation/zod-validator';
 import { MenuItemFieldsetComponent, newDish } from './menu-item-fieldset.component';
 
-/** Add a dish, or edit `item`. The fieldset is the one the restaurant form uses, so both look and validate alike. */
+/** A dish typed on the new-restaurant form, waiting for the restaurant to exist. */
+export interface StagedDish {
+  input: MenuItemInput;
+  photo: File | null;
+}
+
+/** Add a dish, or edit `item`. Without a `restaurantId` nothing is sent: the dish is handed back as `staged`. The fieldset is the one the restaurant form uses, so both look and validate alike. */
 @Component({
   selector: 'app-menu-item-form',
   imports: [
@@ -21,6 +28,17 @@ import { MenuItemFieldsetComponent, newDish } from './menu-item-fieldset.compone
     PhotoPickerComponent,
     ReactiveFormsModule,
   ],
+  styles: `
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-2);
+      margin-top: var(--space-4);
+    }
+    .actions .btn {
+      margin: 0;
+    }
+  `,
   template: `
     <form (submit)="$event.preventDefault(); submit()" novalidate>
       <app-form-error [message]="error()" />
@@ -33,20 +51,24 @@ import { MenuItemFieldsetComponent, newDish } from './menu-item-fieldset.compone
         [legend]="item() ? 'Edit dish' : 'Add a dish'"
       />
       <app-photo-picker label="Dish photo (optional)" [confirmRights]="false" [(photo)]="photo" />
-      <button class="btn" type="submit" [disabled]="busy()">
-        {{ busy() ? 'Saving…' : 'Save dish' }}
-      </button>
-      <button type="button" class="btn secondary" (click)="cancelled.emit()">Cancel</button>
+      <div class="actions">
+        <button class="btn" type="submit" [disabled]="busy()">
+          {{ busy() ? 'Saving…' : restaurantId() === null ? 'Add dish' : 'Save dish' }}
+        </button>
+        <button type="button" class="btn secondary" (click)="cancelled.emit()">Cancel</button>
+      </div>
     </form>
   `,
 })
 export class MenuItemFormComponent {
   private readonly admin = inject(AdminService);
-  readonly restaurantId = input.required<string>();
+  readonly restaurantId = input<string | null>(null);
   readonly item = input<MenuItem | null>(null);
   readonly categories = input.required<Category[]>();
   /** The dish as the server saved it. */
   readonly saved = output<MenuItem>();
+  /** The checked dish, when there is no restaurant yet to send it to. */
+  readonly staged = output<StagedDish>();
   readonly cancelled = output();
 
   protected readonly form = newDish();
@@ -86,12 +108,17 @@ export class MenuItemFormComponent {
     this.attempted.set(true);
     const parsed = menuItemSchema.safeParse(this.form.getRawValue());
     if (!parsed.success || this.busy()) return;
+    const restaurantId = this.restaurantId();
+    if (restaurantId === null) {
+      this.staged.emit({ input: parsed.data, photo: this.photo() });
+      return;
+    }
     const item = this.item();
     this.busy.set(true);
     this.error.set('');
     (item
-      ? this.admin.updateMenuItem(this.restaurantId(), item.id, parsed.data, this.photo())
-      : this.admin.addMenuItem(this.restaurantId(), parsed.data, this.photo())
+      ? this.admin.updateMenuItem(restaurantId, item.id, parsed.data, this.photo())
+      : this.admin.addMenuItem(restaurantId, parsed.data, this.photo())
     )
       .pipe(
         finalize(() => {

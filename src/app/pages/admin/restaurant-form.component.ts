@@ -1,115 +1,177 @@
 import { Component, computed, effect, inject, signal } from '@angular/core';
 import { rxResource, toSignal } from '@angular/core/rxjs-interop';
-import { FormArray, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  type AbstractControl,
+  type ValidatorFn,
+} from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { catchError, concatMap, finalize, from, map, of, switchMap, tap, toArray } from 'rxjs';
 import { AdminService, type MenuItemInput } from '../../core/admin.service';
 import type { ApiError } from '../../core/api.interceptor';
 import { CategoryService } from '../../core/category.service';
+import { formatLkr } from '../../core/format';
 import type { HasUnsavedChanges } from '../../core/guards';
 import { RestaurantService } from '../../core/restaurant.service';
 import { CITIES } from '../../core/search-params.service';
+import { AdminTableComponent, type AdminColumn } from '../../shared/admin-table.component';
 import { FormErrorComponent } from '../../shared/form-error.component';
 import { ImageUrlFieldComponent } from '../../shared/image-url-field.component';
 import { ToastService } from '../../shared/toast.service';
 import { restaurantSchema } from '../../shared/validation/restaurant.schema';
 import { fieldPath, zodValidator } from '../../shared/validation/zod-validator';
+import { MenuItemDialogComponent } from './menu-item-dialog.component';
+import type { StagedDish } from './menu-item-form.component';
 import { MenuItemsPanelComponent } from './menu-items-panel.component';
-import { MenuItemFieldsetComponent, newDish } from './menu-item-fieldset.component';
 
 const TEXT_FIELDS = [
   { key: 'name', label: 'Name' },
   { key: 'address', label: 'Address' },
 ];
 
+/** A dish waiting in the table for the restaurant to exist. `error` is the server's complaint if it failed. */
+interface DishRow {
+  key: number;
+  input: MenuItemInput;
+  photo: File | null;
+  error?: string;
+}
+
+/** The restaurant fields only: dishes are checked when they are added in the popup. */
+const restaurantFieldsValidator: ValidatorFn = (group: AbstractControl) =>
+  zodValidator(restaurantSchema)({
+    value: { ...(group.value as object), menuItems: [] },
+  } as AbstractControl);
+
+/** The server's messages for dish `index`, from errors keyed `menuItems.<index>.<field>`. */
+const dishMessage = (errors: Record<string, string>, index: number): string | undefined => {
+  const prefix = `menuItems.${String(index)}.`;
+  const messages = Object.entries(errors)
+    .filter(([key]) => key.startsWith(prefix))
+    .map(([, message]) => message);
+  return messages.length > 0 ? `Failed: ${messages.join(' ')}` : undefined;
+};
+
 /**
- * Admin: add or edit a restaurant. A new one can start with dishes: the API creates the restaurant first and
- * then takes the dishes one by one, so any dish that fails stays on the form and Retry sends only those.
+ * Admin: add or edit a restaurant. A new one can start with dishes, added in a popup and listed in a table:
+ * the API creates the restaurant first and then takes the dishes one by one, so any dish that fails stays
+ * in the table and Retry sends only those.
  */
 @Component({
   selector: 'app-restaurant-form',
   imports: [
+    AdminTableComponent,
     FormErrorComponent,
     ImageUrlFieldComponent,
-    MenuItemFieldsetComponent,
+    MenuItemDialogComponent,
     MenuItemsPanelComponent,
     ReactiveFormsModule,
     RouterLink,
   ],
+  styleUrl: './restaurant-form.component.css',
   template: `
+    <a class="back" routerLink="/admin/restaurants">← All restaurants</a>
     <h1>{{ id ? 'Edit restaurant' : 'Add restaurant' }}</h1>
     <form [formGroup]="form" (submit)="$event.preventDefault(); submit()" novalidate>
       <app-form-error [message]="error()" />
 
-      @for (field of textFields; track field.key) {
+      <section class="card" aria-labelledby="details-title">
+        <h2 id="details-title">Details</h2>
+        @for (field of textFields; track field.key) {
+          <div class="field">
+            <label [for]="field.key">{{ field.label }}</label>
+            <input
+              [id]="field.key"
+              [formControlName]="field.key"
+              [attr.aria-invalid]="!!errors()[field.key]"
+            />
+            @if (errors()[field.key]; as message) {
+              <span class="field-error">{{ message }}</span>
+            }
+          </div>
+        }
+
         <div class="field">
-          <label [for]="field.key">{{ field.label }}</label>
-          <input
-            [id]="field.key"
-            [formControlName]="field.key"
-            [attr.aria-invalid]="!!errors()[field.key]"
-          />
-          @if (errors()[field.key]; as message) {
+          <label for="city">City</label>
+          <select id="city" class="select" formControlName="city">
+            <option value="">Choose a city</option>
+            @for (city of cities; track city) {
+              <option [value]="city">{{ city }}</option>
+            }
+          </select>
+          @if (errors()['city']; as message) {
             <span class="field-error">{{ message }}</span>
           }
         </div>
-      }
 
-      <app-image-url-field [control]="form.controls.imageUrl" [error]="errors()['imageUrl']" />
+        <app-image-url-field [control]="form.controls.imageUrl" [error]="errors()['imageUrl']" />
+      </section>
 
-      <div class="field">
-        <label for="city">City</label>
-        <select id="city" class="select" formControlName="city">
-          <option value="">Choose a city</option>
-          @for (city of cities; track city) {
-            <option [value]="city">{{ city }}</option>
+      <section class="card">
+        <fieldset class="chips">
+          <legend>Categories</legend>
+          @for (category of categoryList(); track category.id) {
+            <label class="choice chip">
+              <input
+                type="checkbox"
+                [checked]="form.controls.categoryIds.value.includes(category.id)"
+                (change)="toggleCategory(category.id)"
+              />
+              {{ category.name }}
+            </label>
           }
-        </select>
-        @if (errors()['city']; as message) {
-          <span class="field-error">{{ message }}</span>
-        }
-      </div>
-
-      <fieldset class="field">
-        <legend>Categories</legend>
-        @for (category of categoryList(); track category.id) {
-          <label class="choice">
-            <input
-              type="checkbox"
-              [checked]="form.controls.categoryIds.value.includes(category.id)"
-              (change)="toggleCategory(category.id)"
-            />
-            {{ category.name }}
-          </label>
-        }
-        @if (errors()['categoryIds']; as message) {
-          <span class="field-error">{{ message }}</span>
-        }
-      </fieldset>
+          @if (errors()['categoryIds']; as message) {
+            <span class="field-error">{{ message }}</span>
+          }
+        </fieldset>
+      </section>
 
       @if (!id) {
-        <h2>Menu</h2>
-        @for (dish of menuItems.controls; track dish; let i = $index) {
-          <app-menu-item-fieldset
-            [group]="dish"
-            [index]="i"
-            [categories]="categoryList()"
-            [errors]="errors()"
-            (remove)="removeDish(i)"
+        <section class="card" aria-labelledby="menu-title">
+          <header class="card-head">
+            <h2 id="menu-title">Menu</h2>
+            <button type="button" class="btn secondary" (click)="adding.set(true)">
+              Add a dish
+            </button>
+          </header>
+          <app-admin-table
+            caption="Dishes to add"
+            empty="No dishes yet. You can also add them after saving."
+            [columns]="dishColumns()"
+            [rows]="dishes()"
+            [rowId]="dishId"
+            [actions]="dishActions"
           />
-        }
-        <button type="button" class="btn secondary" (click)="addDish()">Add a dish</button>
+          <ng-template #dishActions let-row>
+            <button type="button" class="btn danger" (click)="removeDish(row.key)">
+              Remove<span class="sr-only"> {{ row.input.name }}</span>
+            </button>
+          </ng-template>
+        </section>
       }
 
-      <div>
+      <div class="actions">
         <button class="btn" type="submit" [disabled]="busy()">
           {{ busy() ? 'Saving…' : failed() ? 'Retry' : 'Save' }}
         </button>
         <a class="btn secondary" routerLink="/admin/restaurants">Cancel</a>
       </div>
     </form>
+
     @if (id) {
-      <app-menu-items-panel [restaurantId]="id" />
+      <section class="card">
+        <app-menu-items-panel [restaurantId]="id" />
+      </section>
+    }
+
+    @if (adding()) {
+      <app-menu-item-dialog
+        [categories]="categoryList()"
+        (staged)="stageDish($event)"
+        (closed)="adding.set(false)"
+      />
     }
   `,
 })
@@ -122,10 +184,34 @@ export class RestaurantFormComponent implements HasUnsavedChanges {
   protected readonly id = inject(ActivatedRoute).snapshot.paramMap.get('id');
   private createdId: string | null = null;
   private saved = false;
+  private nextKey = 0;
 
   protected readonly textFields = TEXT_FIELDS;
   protected readonly cities = CITIES;
-  protected readonly menuItems = new FormArray<ReturnType<typeof newDish>>([]);
+  protected readonly adding = signal(false);
+  protected readonly dishes = signal<DishRow[]>([]);
+  protected readonly dishId = (row: DishRow): number => row.key;
+  protected readonly dishColumns = computed<AdminColumn<DishRow>[]>(() => [
+    { label: 'Name', value: (d) => d.input.name },
+    {
+      label: 'Category',
+      value: (d) => this.categoryList().find((c) => c.id === d.input.categoryId)?.name ?? 'Other',
+    },
+    { label: 'Price', value: (d) => formatLkr(d.input.priceLkr) },
+    {
+      label: 'Dietary',
+      value: (d) =>
+        [
+          d.input.isVegetarian && 'Vegetarian',
+          d.input.isVegan && 'Vegan',
+          d.input.isHalal && 'Halal',
+        ]
+          .filter(Boolean)
+          .join(', ') || 'None',
+    },
+    { label: 'Spice', value: (d) => d.input.spiceLevel.replace('_', ' ') },
+    { label: 'Status', value: (d) => d.error ?? 'Ready' },
+  ]);
   protected readonly form = new FormGroup(
     {
       name: new FormControl('', { nonNullable: true }),
@@ -133,9 +219,8 @@ export class RestaurantFormComponent implements HasUnsavedChanges {
       categoryIds: new FormControl<number[]>([], { nonNullable: true }),
       address: new FormControl('', { nonNullable: true }),
       imageUrl: new FormControl('', { nonNullable: true }),
-      menuItems: this.menuItems,
     },
-    { validators: zodValidator(restaurantSchema) },
+    { validators: restaurantFieldsValidator },
   );
 
   protected readonly busy = signal(false);
@@ -180,7 +265,7 @@ export class RestaurantFormComponent implements HasUnsavedChanges {
 
   /** The unsaved-changes guard asks this before leaving the page. */
   hasUnsavedChanges(): boolean {
-    return this.form.dirty && !this.saved;
+    return (this.form.dirty || this.dishes().length > 0) && !this.saved;
   }
 
   protected toggleCategory(categoryId: number): void {
@@ -193,26 +278,28 @@ export class RestaurantFormComponent implements HasUnsavedChanges {
     categoryIds.markAsDirty();
   }
 
-  protected addDish(): void {
-    this.menuItems.push(newDish());
-    this.menuItems.markAsDirty();
+  protected stageDish({ input, photo }: StagedDish): void {
+    this.dishes.update((list) => [...list, { key: this.nextKey++, input, photo }]);
+    this.adding.set(false);
   }
 
-  protected removeDish(index: number): void {
-    this.menuItems.removeAt(index);
-    this.menuItems.markAsDirty();
+  protected removeDish(key: number): void {
+    this.dishes.update((list) => list.filter((d) => d.key !== key));
   }
 
   protected submit(): void {
     this.attempted.set(true);
-    const parsed = restaurantSchema.safeParse(this.form.getRawValue());
+    const parsed = restaurantSchema.safeParse({
+      ...this.form.getRawValue(),
+      menuItems: this.dishes().map((d) => d.input),
+    });
     if (!parsed.success || this.busy()) return;
     if (this.form.controls.imageUrl.hasError('unloadable')) {
       this.error.set('The image address does not open as an image. Fix it or leave it empty.');
       return;
     }
-    const { menuItems, imageUrl, ...fields } = parsed.data;
-    const body = { ...fields, ...(imageUrl && { imageUrl }) };
+    const { name, city, categoryIds, address, imageUrl } = parsed.data;
+    const body = { name, city, categoryIds, address, ...(imageUrl && { imageUrl }) };
     this.busy.set(true);
     this.error.set('');
     const restaurantId$ = this.id
@@ -227,25 +314,24 @@ export class RestaurantFormComponent implements HasUnsavedChanges {
           );
     restaurantId$
       .pipe(
-        switchMap((id) => this.addDishes(id, menuItems)),
+        switchMap((id) => this.addDishes(id)),
         finalize(() => {
           this.busy.set(false);
         }),
       )
       .subscribe({
         next: (failures) => {
-          if (failures.length === 0) this.finish(fields.name);
+          if (failures.length === 0) this.finish(name);
           else this.keepFailed(failures);
         },
         error: (e: ApiError) => {
           this.failed.set(true);
-          this.serverErrors.set(
-            Object.fromEntries(
-              Object.entries(e.fieldErrors ?? {}).map(([key, message]) => [
-                fieldPath(key),
-                message,
-              ]),
-            ),
+          const fieldErrors = Object.fromEntries(
+            Object.entries(e.fieldErrors ?? {}).map(([key, message]) => [fieldPath(key), message]),
+          );
+          this.serverErrors.set(fieldErrors);
+          this.dishes.update((list) =>
+            list.map((d, i) => ({ ...d, error: dishMessage(fieldErrors, i) })),
           );
           this.error.set(
             `We couldn’t save the restaurant. ${e.message} Check the details and press Retry.`,
@@ -255,12 +341,12 @@ export class RestaurantFormComponent implements HasUnsavedChanges {
   }
 
   /** One request per dish, in order. A dish that fails does not stop the others. */
-  private addDishes(restaurantId: string, items: MenuItemInput[]) {
-    return from(items.entries()).pipe(
-      concatMap(([index, item]) =>
-        this.admin.addMenuItem(restaurantId, item).pipe(
+  private addDishes(restaurantId: string) {
+    return from(this.dishes()).pipe(
+      concatMap(({ key, input, photo }) =>
+        this.admin.addMenuItem(restaurantId, input, photo).pipe(
           map(() => null),
-          catchError((e: ApiError) => of({ index, e })),
+          catchError((e: ApiError) => of({ key, e })),
         ),
       ),
       toArray(),
@@ -268,25 +354,22 @@ export class RestaurantFormComponent implements HasUnsavedChanges {
     );
   }
 
-  /** The restaurant exists: leave only the dishes that failed, each with the server's messages. */
-  private keepFailed(failures: { index: number; e: ApiError }[]): void {
-    const failedIndexes = new Set(failures.map(({ index }) => index));
-    for (let i = this.menuItems.length - 1; i >= 0; i--) {
-      if (!failedIndexes.has(i)) this.menuItems.removeAt(i);
-    }
-    this.failed.set(true);
-    this.serverErrors.set(
-      Object.fromEntries(
-        failures.flatMap(({ e }, row) =>
-          Object.entries(e.fieldErrors ?? {}).map(([key, message]) => [
-            `menuItems.${String(row)}.${key}`,
-            message,
-          ]),
-        ),
-      ),
+  /** The restaurant exists: leave only the dishes that failed, each with the server's message. */
+  private keepFailed(failures: { key: number; e: ApiError }[]): void {
+    const byKey = new Map(failures.map(({ key, e }) => [key, e]));
+    this.dishes.update((list) =>
+      list
+        .filter((d) => byKey.has(d.key))
+        .map((d) => {
+          const e = byKey.get(d.key);
+          const detail = Object.values(e?.fieldErrors ?? {}).join(' ') || e?.message;
+          return { ...d, error: `Failed: ${detail ?? 'try again'}` };
+        }),
     );
+    this.failed.set(true);
+    this.serverErrors.set({});
     this.error.set(
-      `The restaurant was saved, but ${String(failures.length)} dish(es) could not be added. They are still below: fix them and press Retry.`,
+      `The restaurant was saved, but ${String(failures.length)} dish(es) could not be added. They are still below: remove any you do not want and press Retry.`,
     );
   }
 
