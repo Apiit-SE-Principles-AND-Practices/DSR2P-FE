@@ -32,7 +32,9 @@ import { profileSchema } from '../../shared/validation/profile.schema';
 
         <section class="account-card" aria-labelledby="profile-info-heading">
           <h2 id="profile-info-heading" class="card-title">Profile details</h2>
-          <p class="card-desc">Update your display name and view your registered account details.</p>
+          <p class="card-desc">
+            Update your display name and view your registered account details.
+          </p>
 
           <form class="profile-form" (submit)="$event.preventDefault(); save()" novalidate>
             <app-form-error [message]="error()" />
@@ -103,11 +105,7 @@ import { profileSchema } from '../../shared/validation/profile.schema';
               </p>
             </div>
 
-            <button
-              class="btn save-btn"
-              type="submit"
-              [disabled]="busy() || !dirty() || !valid()"
-            >
+            <button class="btn save-btn" type="submit" [disabled]="busy() || !dirty() || !valid()">
               @if (busy()) {
                 <span class="btn-spinner" aria-hidden="true"></span>
                 <span>Saving…</span>

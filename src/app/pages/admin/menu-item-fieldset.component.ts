@@ -60,17 +60,27 @@ export const newDish = () =>
         }
       </select>
 
-      <label style="display: flex;
+      <label
+        style="display: flex;
     align-items: center;
-    gap: inherit;" class="choice"
+    gap: inherit;"
+        class="choice"
         ><input type="checkbox" formControlName="isVegetarian" /> Vegetarian</label
       >
-      <label style="display: flex;
+      <label
+        style="display: flex;
     align-items: center;
-    gap: inherit;" class="choice"><input type="checkbox" formControlName="isVegan" /> Vegan</label>
-      <label style="display: flex;
+    gap: inherit;"
+        class="choice"
+        ><input type="checkbox" formControlName="isVegan" /> Vegan</label
+      >
+      <label
+        style="display: flex;
     align-items: center;
-    gap: inherit;" class="choice"><input type="checkbox" formControlName="isHalal" /> Halal</label>
+    gap: inherit;"
+        class="choice"
+        ><input type="checkbox" formControlName="isHalal" /> Halal</label
+      >
 
       @if (removable()) {
         <button type="button" class="btn secondary" (click)="remove.emit()">

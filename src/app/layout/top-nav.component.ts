@@ -30,7 +30,7 @@ import { NAV_ITEMS } from './nav-items';
         <app-search-input />
       </div>
       <ul class="nav-links">
-         <app-language-switcher />
+        <app-language-switcher />
         @for (item of items(); track item.path) {
           <li>
             <a
@@ -56,7 +56,6 @@ import { NAV_ITEMS } from './nav-items';
             </button>
             @if (menuOpen()) {
               <div class="user-dropdown" role="menu">
-                
                 <!-- <li>
                   <a
                       class="nav-link"
@@ -67,7 +66,12 @@ import { NAV_ITEMS } from './nav-items';
                       Account
                     </a>
                 </li> -->
-                <button type="button" class="logout-button" role="menuitem"  [routerLink]="'/account'">
+                <button
+                  type="button"
+                  class="logout-button"
+                  role="menuitem"
+                  [routerLink]="'/account'"
+                >
                   Account
                 </button>
                 <button type="button" class="logout-button" role="menuitem" (click)="logout()">
@@ -78,7 +82,6 @@ import { NAV_ITEMS } from './nav-items';
           </li>
         }
       </ul>
-     
     </nav>
   `,
 })

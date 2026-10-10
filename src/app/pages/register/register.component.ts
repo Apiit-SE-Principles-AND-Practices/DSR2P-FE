@@ -70,7 +70,9 @@ type FieldKey = (typeof FIELDS)[number]['key'] | 'language';
             </svg>
           </div>
           <h1 class="auth-title">Create an account</h1>
-          <p class="auth-subtitle">Join Dine Score to explore and review authentic Sri Lankan cuisine</p>
+          <p class="auth-subtitle">
+            Join Dine Score to explore and review authentic Sri Lankan cuisine
+          </p>
         </header>
 
         <form class="auth-form" [formGroup]="form" (ngSubmit)="submit()" novalidate>
