@@ -1,5 +1,28 @@
 # Changelog
 
+## [1.3.0](https://github.com/Apiit-SE-Principles-AND-Practices/DSR2P-FE/compare/dsr2p-fe-v1.2.0...dsr2p-fe-v1.3.0) (2026-10-10)
+
+
+### Features
+
+* Manage restaurants ([57e2dca](https://github.com/Apiit-SE-Principles-AND-Practices/DSR2P-FE/commit/57e2dca2c8808c319dd63f3e11a14989589a7c8c))
+
+
+### Bug Fixes
+
+* Account Page Redesign: ([2beca12](https://github.com/Apiit-SE-Principles-AND-Practices/DSR2P-FE/commit/2beca121fd095112436534aa6ad1629b65411813))
+* add category chips to menu ([3751fb6](https://github.com/Apiit-SE-Principles-AND-Practices/DSR2P-FE/commit/3751fb6d259f30424ca4589efc228ec3c3375c40))
+* ci tests ([a8565c5](https://github.com/Apiit-SE-Principles-AND-Practices/DSR2P-FE/commit/a8565c5b88b1e62adc989f66b080fa8721db4b09))
+* ci tests fails ([f81b754](https://github.com/Apiit-SE-Principles-AND-Practices/DSR2P-FE/commit/f81b7547e5cedeafc4945eda9725e605fd6eca90))
+* e2e [@media](https://github.com/media) (width &gt;= 640px) rule was set to row issue ([e532df4](https://github.com/Apiit-SE-Principles-AND-Practices/DSR2P-FE/commit/e532df45abe675557b30b82bead98901122109a5))
+* e2e tests ([25069d3](https://github.com/Apiit-SE-Principles-AND-Practices/DSR2P-FE/commit/25069d3e78ae54194e3536b5e9dbffb4f081309f))
+* lint tests ([f48b3f5](https://github.com/Apiit-SE-Principles-AND-Practices/DSR2P-FE/commit/f48b3f5b5ad893db5da403c185d737f46b0d263b))
+* photo upload issue for restuarant ([ffea428](https://github.com/Apiit-SE-Principles-AND-Practices/DSR2P-FE/commit/ffea428f03e0c793e36ff483077258ad693dcb52))
+* redesign admin restaurant pages ([82e16c4](https://github.com/Apiit-SE-Principles-AND-Practices/DSR2P-FE/commit/82e16c4e663414c7df1a40e42354bc82cc7c1051))
+* redesign the login component and nav styles ([e7cd111](https://github.com/Apiit-SE-Principles-AND-Practices/DSR2P-FE/commit/e7cd111e49ca8d31dc4877b2c45763dca22aeeaa))
+* session timeout ([d5c5b7d](https://github.com/Apiit-SE-Principles-AND-Practices/DSR2P-FE/commit/d5c5b7d2c10fa3adc293611ca62e1533f355890a))
+* skelton on restuarant page and rebrand ([6857b8d](https://github.com/Apiit-SE-Principles-AND-Practices/DSR2P-FE/commit/6857b8de5f1adb22e03c3e0fa29667806628dbe4))
+
 ## [1.2.0](https://github.com/Apiit-SE-Principles-AND-Practices/DSR2P-FE/compare/dsr2p-fe-v1.1.0...dsr2p-fe-v1.2.0) (2026-10-06)
 
 
