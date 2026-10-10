@@ -8,5 +8,5 @@ export const NAV_ITEMS: readonly NavItem[] = [
   { path: '/', label: 'Home' },
   { path: '/search', label: 'Search' },
   { path: '/login', label: 'Login' },
-  { path: '/account', label: 'Account' },
+ 
 ];

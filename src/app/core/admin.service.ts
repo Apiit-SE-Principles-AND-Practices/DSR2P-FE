@@ -1,8 +1,9 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpContext } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { forkJoin, map, type Observable } from 'rxjs';
+import { EMPTY, expand, forkJoin, map, reduce, type Observable } from 'rxjs';
 import type { z } from 'zod/mini';
 import type { menuItemSchema } from '../shared/validation/restaurant.schema';
+import { ALL_CITIES } from './api.interceptor';
 import type { Category } from './category.service';
 import type { MenuItem } from './menu';
 import type { ModerationKind, ModerationQueue } from './moderation';
@@ -58,18 +59,17 @@ const multipart = (item: MenuItemInput, image: File | null): FormData => {
 export class AdminService {
   private readonly http = inject(HttpClient);
 
-  /** Every restaurant, all three cities (the API lists one city at a time), A to Z. */
+  /** Every restaurant in every city, A to Z: one request (more only if there are over 100). */
   list(): Observable<AdminRestaurant[]> {
-    return forkJoin(
-      CITIES.map((city) =>
-        this.http.get<{ data: AdminRestaurant[] }>('/restaurants', {
-          params: { city, pageSize: 100 },
-        }),
-      ),
-    ).pipe(
-      map((pages) =>
-        pages.flatMap(({ data }) => data).sort((a, b) => a.name.localeCompare(b.name)),
-      ),
+    const page = (number: number) =>
+      this.http.get<{ data: AdminRestaurant[]; page: number; totalPages: number }>('/restaurants', {
+        params: { page: number, pageSize: 100 },
+        context: new HttpContext().set(ALL_CITIES, true),
+      });
+    return page(1).pipe(
+      expand((last) => (last.page < last.totalPages ? page(last.page + 1) : EMPTY)),
+      reduce((all, { data }) => [...all, ...data], [] as AdminRestaurant[]),
+      map((all) => all.sort((a, b) => a.name.localeCompare(b.name))),
     );
   }
 

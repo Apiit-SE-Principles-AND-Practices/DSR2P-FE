@@ -1,4 +1,4 @@
-import { HttpClient, provideHttpClient, withInterceptors } from '@angular/common/http';
+import { HttpClient, HttpContext, provideHttpClient, withInterceptors } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { environment } from '../../environments/environment';
@@ -6,7 +6,7 @@ import { provideRouter, Router } from '@angular/router';
 import { ToastService } from '../shared/toast.service';
 import { AppStore } from './app.store';
 import { SessionStore } from './session.store';
-import { apiInterceptor, REQUEST_TIMEOUT_MS, type ApiError } from './api.interceptor';
+import { ALL_CITIES, apiInterceptor, REQUEST_TIMEOUT_MS, type ApiError } from './api.interceptor';
 
 describe('apiInterceptor', () => {
   let http: HttpClient;
@@ -173,6 +173,11 @@ describe('apiInterceptor', () => {
       http.get('/restaurants/search').subscribe();
       backend.expectOne(`${environment.apiBaseUrl}/restaurants?city=Kandy`);
       backend.expectOne(`${environment.apiBaseUrl}/restaurants/search?city=Kandy`);
+    });
+
+    it('does not add a city to a request that asks for every city', () => {
+      http.get('/restaurants', { context: new HttpContext().set(ALL_CITIES, true) }).subscribe();
+      backend.expectOne(`${environment.apiBaseUrl}/restaurants`);
     });
 
     it('keeps an explicit city and leaves other endpoints alone', () => {

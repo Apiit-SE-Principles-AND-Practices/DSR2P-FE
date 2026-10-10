@@ -26,16 +26,13 @@ async function setup() {
   const el = fixture.nativeElement as HTMLElement;
   fixture.detectChanges();
   await tick();
-  const cities: Record<string, ReturnType<typeof restaurant>[]> = {
-    Colombo: [restaurant('r-1', 'Lanka Kitchen', 'Colombo')],
-    Kandy: [restaurant('r-2', 'Hill Cafe', 'Kandy')],
-    Galle: [],
-  };
-  backend
-    .match((req) => req.url === '/restaurants')
-    .forEach((req) => {
-      req.flush({ data: cities[req.request.params.get('city') ?? ''] });
-    });
+  const all = backend.expectOne((req) => req.url === '/restaurants');
+  expect(all.request.params.has('city')).toBeFalse(); // one request for every city
+  all.flush({
+    data: [restaurant('r-1', 'Lanka Kitchen', 'Colombo'), restaurant('r-2', 'Hill Cafe', 'Kandy')],
+    page: 1,
+    totalPages: 1,
+  });
   fixture.detectChanges();
   await tick();
   fixture.detectChanges();
