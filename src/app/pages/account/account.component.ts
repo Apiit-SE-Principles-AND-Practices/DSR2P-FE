@@ -120,7 +120,7 @@ import { profileSchema } from '../../shared/validation/profile.schema';
 
         <section class="account-card" aria-labelledby="language-heading">
           <h2 id="language-heading" class="card-title">Language</h2>
-          <p class="card-desc">Choose your preferred language across the Ruchi platform.</p>
+          <p class="card-desc">Choose your preferred language across the Dine Score platform.</p>
           <app-language-switcher />
         </section>
 

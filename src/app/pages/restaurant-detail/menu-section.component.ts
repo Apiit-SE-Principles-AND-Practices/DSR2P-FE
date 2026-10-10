@@ -5,13 +5,13 @@ import { CategoryService } from '../../core/category.service';
 import { groupMenu } from '../../core/menu';
 import { RestaurantService } from '../../core/restaurant.service';
 import { InlineErrorComponent } from '../../shared/inline-error.component';
-import { SkeletonComponent } from '../../shared/skeleton.component';
+import { SkeletonStackComponent } from '../../shared/skeleton-stack.component';
 import { MenuItemRowComponent } from './menu-item-row.component';
 
 /** The menu grouped by category with chip filters. Loads on its own and is re-fetched whenever the tab regains focus. */
 @Component({
   selector: 'app-menu-section',
-  imports: [InlineErrorComponent, MenuItemRowComponent, SkeletonComponent],
+  imports: [InlineErrorComponent, MenuItemRowComponent, SkeletonStackComponent],
   styleUrl: './menu-section.component.css',
   template: `
     <section aria-labelledby="menu-title">
@@ -51,7 +51,7 @@ import { MenuItemRowComponent } from './menu-item-row.component';
           <p>Menu not available yet.</p>
         }
       } @else {
-        <app-skeleton height="var(--space-12)" />
+        <app-skeleton-stack [rows]="5" height="var(--space-10)" />
       }
     </section>
   `,

@@ -207,7 +207,7 @@ const ERRORS: Record<number, string> = {
         </form>
 
         <div class="auth-divider">
-          <span>New to Ruchi?</span>
+          <span>New to Dine Score?</span>
         </div>
 
         <div class="register-section">

@@ -23,7 +23,7 @@ import { NAV_ITEMS } from './nav-items';
   template: `
     <nav class="top-bar app-bar" aria-label="Primary">
       <div class="brand-section">
-        <a class="logo logo-text" routerLink="/">Ruchi</a>
+        <a class="logo logo-text" routerLink="/">Dine Score</a>
         <app-city-selector />
       </div>
       <div class="search-section">

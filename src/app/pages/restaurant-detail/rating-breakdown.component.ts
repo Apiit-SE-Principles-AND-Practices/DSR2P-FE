@@ -3,12 +3,12 @@ import { ratingBreakdown } from '../../core/rating-breakdown';
 import type { Review } from '../../core/restaurant.service';
 import { InlineErrorComponent } from '../../shared/inline-error.component';
 import { RatingBarComponent } from '../../shared/rating-bar.component';
-import { SkeletonComponent } from '../../shared/skeleton.component';
+import { SkeletonStackComponent } from '../../shared/skeleton-stack.component';
 
 /** Food, service and other ratings from the approved reviews (shared with the reviews list, so one request). */
 @Component({
   selector: 'app-rating-breakdown',
-  imports: [InlineErrorComponent, RatingBarComponent, SkeletonComponent],
+  imports: [InlineErrorComponent, RatingBarComponent, SkeletonStackComponent],
   styles: `
     :host {
       display: block;
@@ -56,7 +56,7 @@ import { SkeletonComponent } from '../../shared/skeleton.component';
           <app-rating-bar label="Other" [value]="b.misc" />
         }
       } @else {
-        <app-skeleton height="var(--space-12)" />
+        <app-skeleton-stack [rows]="4" height="var(--space-4)" />
       }
     </section>
   `,

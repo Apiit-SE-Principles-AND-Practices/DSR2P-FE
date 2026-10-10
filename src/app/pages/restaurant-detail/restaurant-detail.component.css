@@ -16,3 +16,22 @@
   display: grid;
   gap: var(--space-6);
 }
+
+.header-skeleton {
+  display: grid;
+  gap: var(--space-3);
+  margin-bottom: var(--space-5);
+}
+
+.hero-skeleton {
+  aspect-ratio: 21 / 9;
+  border-radius: var(--radius-lg);
+}
+
+.title-skeleton {
+  width: 50%;
+}
+
+.meta-skeleton {
+  width: 30%;
+}

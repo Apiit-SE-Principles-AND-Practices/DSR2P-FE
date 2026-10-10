@@ -9,7 +9,7 @@ import { SearchInputComponent } from '../shared/search-input.component';
   imports: [RouterLink, CitySelectorComponent, SearchInputComponent],
   template: `
     <header class="app-bar">
-      <a class="logo" routerLink="/">Ruchi</a>
+      <a class="logo" routerLink="/">Dine Score</a>
       <app-city-selector />
       <app-search-input />
     </header>
