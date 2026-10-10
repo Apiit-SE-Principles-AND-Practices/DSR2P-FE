@@ -101,12 +101,12 @@ describe('RestaurantFormComponent', () => {
     fillAndSave(s, 2);
 
     const create = one(s.backend, '/admin/restaurants');
-    expect(create.request.body).toEqual({
-      name: 'Lanka Kitchen',
-      city: 'Colombo',
-      categoryIds: [1],
-      address: '1 Galle Rd',
-    });
+    const body = create.request.body as FormData;
+    expect(body.get('name')).toBe('Lanka Kitchen');
+    expect(body.get('city')).toBe('Colombo');
+    expect(body.getAll('categoryIds')).toEqual(['1']);
+    expect(body.get('address')).toBe('1 Galle Rd');
+    expect(body.has('image')).toBeFalse();
     create.flush({ id: 'r-9' });
     const first = one(s.backend, '/admin/restaurants/r-9/menu-items');
     expect(dishName(first)).toBe('Dish 1');
@@ -204,24 +204,6 @@ describe('RestaurantFormComponent', () => {
 
     const update = one(s.backend, '/admin/restaurants/r-1');
     expect(update.request.method).toBe('PUT');
-    expect((update.request.body as { name: string }).name).toBe('New Name');
-  });
-
-  it('rejects an address that is not https, and one that does not open as an image', async () => {
-    const s = await setup();
-    set(s.el, '#image-url', 'http://example.lk/a.png');
-    s.el.querySelector<HTMLButtonElement>('button[type=submit]')?.click();
-    s.harness.detectChanges();
-    expect(s.el.textContent).toContain('Enter a full address starting with https://');
-
-    fillAndSave(s, 0);
-    set(s.el, '#image-url', 'https://example.lk/missing.png');
-    s.harness.detectChanges();
-    s.el.querySelector('img')?.dispatchEvent(new Event('error'));
-    s.el.querySelector<HTMLButtonElement>('button[type=submit]')?.click();
-    s.harness.detectChanges();
-
-    expect(s.el.textContent).toContain('does not open as an image');
-    s.backend.expectNone((r) => r.url.endsWith('/admin/restaurants'));
+    expect((update.request.body as FormData).get('name')).toBe('New Name');
   });
 });

@@ -102,3 +102,12 @@ h1 {
 .actions .btn {
   margin: 0;
 }
+
+.current-image {
+  display: block;
+  max-width: 100%;
+  max-height: 12rem;
+  margin-bottom: var(--space-3);
+  border-radius: var(--radius-md);
+  object-fit: cover;
+}

@@ -41,8 +41,23 @@ export interface RestaurantBody {
   city: (typeof CITIES)[number];
   categoryIds: number[];
   address: string;
+  /** The current image's address, kept when no new photo is chosen. */
   imageUrl?: string;
 }
+
+/** Restaurants are sent as multipart form data like dishes, with an optional `image` file the API stores. */
+const restaurantForm = (body: RestaurantBody, image: File | null): FormData => {
+  const form = new FormData();
+  form.append('name', body.name);
+  form.append('city', body.city);
+  form.append('address', body.address);
+  body.categoryIds.forEach((id) => {
+    form.append('categoryIds', String(id));
+  });
+  if (image) form.append('image', image, image.name);
+  else if (body.imageUrl) form.append('imageUrl', body.imageUrl);
+  return form;
+};
 
 /** The API takes menu items as multipart form data (with an optional `image` file). */
 const multipart = (item: MenuItemInput, image: File | null): FormData => {
@@ -94,12 +109,12 @@ export class AdminService {
     return this.http.patch(`/admin/${kind}/${String(id)}/reject`, { reason });
   }
 
-  create(body: RestaurantBody): Observable<AdminRestaurant> {
-    return this.http.post<AdminRestaurant>('/admin/restaurants', body);
+  create(body: RestaurantBody, image: File | null = null): Observable<AdminRestaurant> {
+    return this.http.post<AdminRestaurant>('/admin/restaurants', restaurantForm(body, image));
   }
 
-  update(id: string, body: RestaurantBody): Observable<AdminRestaurant> {
-    return this.http.put<AdminRestaurant>(`/admin/restaurants/${id}`, body);
+  update(id: string, body: RestaurantBody, image: File | null = null): Observable<AdminRestaurant> {
+    return this.http.put<AdminRestaurant>(`/admin/restaurants/${id}`, restaurantForm(body, image));
   }
 
   remove(id: string): Observable<unknown> {

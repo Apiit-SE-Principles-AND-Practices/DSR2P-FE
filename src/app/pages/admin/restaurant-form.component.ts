@@ -18,7 +18,7 @@ import { RestaurantService } from '../../core/restaurant.service';
 import { CITIES } from '../../core/search-params.service';
 import { AdminTableComponent, type AdminColumn } from '../../shared/admin-table.component';
 import { FormErrorComponent } from '../../shared/form-error.component';
-import { ImageUrlFieldComponent } from '../../shared/image-url-field.component';
+import { PhotoPickerComponent } from '../../shared/photo-picker.component';
 import { ToastService } from '../../shared/toast.service';
 import { restaurantSchema } from '../../shared/validation/restaurant.schema';
 import { fieldPath, zodValidator } from '../../shared/validation/zod-validator';
@@ -64,9 +64,9 @@ const dishMessage = (errors: Record<string, string>, index: number): string | un
   imports: [
     AdminTableComponent,
     FormErrorComponent,
-    ImageUrlFieldComponent,
     MenuItemDialogComponent,
     MenuItemsPanelComponent,
+    PhotoPickerComponent,
     ReactiveFormsModule,
     RouterLink,
   ],
@@ -106,7 +106,14 @@ const dishMessage = (errors: Record<string, string>, index: number): string | un
           }
         </div>
 
-        <app-image-url-field [control]="form.controls.imageUrl" [error]="errors()['imageUrl']" />
+        @if (currentImage(); as src) {
+          <img class="current-image" alt="Current restaurant photo" [src]="src" />
+        }
+        <app-photo-picker
+          [label]="currentImage() ? 'Replace photo (optional)' : 'Restaurant photo (optional)'"
+          [confirmRights]="false"
+          [(photo)]="photo"
+        />
       </section>
 
       <section class="card">
@@ -189,6 +196,8 @@ export class RestaurantFormComponent implements HasUnsavedChanges {
   protected readonly textFields = TEXT_FIELDS;
   protected readonly cities = CITIES;
   protected readonly adding = signal(false);
+  protected readonly photo = signal<File | null>(null);
+  protected readonly currentImage = computed(() => this.existing.value()?.imageUrl ?? null);
   protected readonly dishes = signal<DishRow[]>([]);
   protected readonly dishId = (row: DishRow): number => row.key;
   protected readonly dishColumns = computed<AdminColumn<DishRow>[]>(() => [
@@ -265,7 +274,7 @@ export class RestaurantFormComponent implements HasUnsavedChanges {
 
   /** The unsaved-changes guard asks this before leaving the page. */
   hasUnsavedChanges(): boolean {
-    return (this.form.dirty || this.dishes().length > 0) && !this.saved;
+    return (this.form.dirty || this.photo() !== null || this.dishes().length > 0) && !this.saved;
   }
 
   protected toggleCategory(categoryId: number): void {
@@ -294,19 +303,15 @@ export class RestaurantFormComponent implements HasUnsavedChanges {
       menuItems: this.dishes().map((d) => d.input),
     });
     if (!parsed.success || this.busy()) return;
-    if (this.form.controls.imageUrl.hasError('unloadable')) {
-      this.error.set('The image address does not open as an image. Fix it or leave it empty.');
-      return;
-    }
     const { name, city, categoryIds, address, imageUrl } = parsed.data;
     const body = { name, city, categoryIds, address, ...(imageUrl && { imageUrl }) };
     this.busy.set(true);
     this.error.set('');
     const restaurantId$ = this.id
-      ? this.admin.update(this.id, body).pipe(map((r) => r.id))
+      ? this.admin.update(this.id, body, this.photo()).pipe(map((r) => r.id))
       : this.createdId
         ? of(this.createdId)
-        : this.admin.create(body).pipe(
+        : this.admin.create(body, this.photo()).pipe(
             map((r) => r.id),
             tap((id) => {
               this.createdId = id;
