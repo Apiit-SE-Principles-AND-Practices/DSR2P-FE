@@ -45,3 +45,43 @@
   padding: 0;
   list-style: none;
 }
+
+.user-menu {
+  position: relative;
+}
+
+.user-button {
+  border: 0;
+  background: transparent;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.user-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  z-index: 10;
+  min-width: 8rem;
+  padding: var(--space-1);
+  background: var(--ds-surface-raised);
+  border: 1px solid var(--ds-border);
+  border-radius: var(--radius-md, 8px);
+  box-shadow: var(--ds-shadow-sm);
+}
+
+.logout-button {
+  width: 100%;
+  min-height: var(--hit-area-min);
+  padding: 0 var(--space-3);
+  border: 0;
+  background: transparent;
+  color: var(--ds-ink);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.logout-button:hover {
+  background: var(--ds-surface-100);
+}

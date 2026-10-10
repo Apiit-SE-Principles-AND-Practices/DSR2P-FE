@@ -1,0 +1,113 @@
+:host {
+  display: block;
+  max-width: 720px;
+  margin: 0 auto;
+  padding: var(--space-4) 0 var(--space-7);
+}
+
+.back {
+  display: inline-block;
+  margin-bottom: var(--space-2);
+  color: var(--ds-ink-muted);
+  font-size: var(--font-size-body-sm);
+  text-decoration: none;
+}
+
+.back:hover {
+  color: var(--ds-brand-600);
+}
+
+h1 {
+  margin: 0 0 var(--space-4);
+  font-size: var(--font-size-h1);
+  font-weight: var(--font-weight-medium);
+  color: var(--ds-ink);
+}
+
+.card {
+  margin-bottom: var(--space-4);
+  padding: var(--space-5);
+  border: 1px solid var(--ds-border);
+  border-radius: var(--radius-lg);
+  background: var(--ds-surface-raised);
+  box-shadow: var(--ds-shadow-sm);
+}
+
+.card h2 {
+  margin: 0 0 var(--space-4);
+  font-size: var(--font-size-h3);
+  font-weight: var(--font-weight-medium);
+  color: var(--ds-ink);
+}
+
+.card .field {
+  max-width: none;
+}
+
+.card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+}
+
+.card-head h2 {
+  margin: 0;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.chips legend {
+  width: 100%;
+  margin-bottom: var(--space-2);
+  padding: 0;
+  font-size: var(--font-size-h3);
+  font-weight: var(--font-weight-medium);
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-1) var(--space-3);
+  border: 1px solid var(--ds-border);
+  border-radius: var(--radius-full);
+  background: var(--ds-surface-50);
+  cursor: pointer;
+}
+
+.chip:has(input:checked) {
+  border-color: var(--ds-brand-600);
+  background: var(--ds-brand-100);
+}
+
+.chips .field-error {
+  width: 100%;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.actions .btn {
+  margin: 0;
+}
+
+.current-image {
+  display: block;
+  max-width: 100%;
+  max-height: 12rem;
+  margin-bottom: var(--space-3);
+  border-radius: var(--radius-md);
+  object-fit: cover;
+}

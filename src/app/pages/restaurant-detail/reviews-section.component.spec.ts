@@ -139,7 +139,7 @@ describe('ReviewsSectionComponent', () => {
   });
 
   it('shows a skeleton while loading', async () => {
-    expect((await open(undefined)).el.querySelectorAll('app-skeleton').length).toBe(1);
+    expect((await open(undefined)).el.querySelectorAll('app-skeleton').length).toBeGreaterThan(0);
   });
 
   describe('replying', () => {

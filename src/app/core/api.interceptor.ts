@@ -1,4 +1,4 @@
-import { HttpErrorResponse, type HttpInterceptorFn } from '@angular/common/http';
+import { HttpContextToken, HttpErrorResponse, type HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { catchError, throwError, timeout, TimeoutError } from 'rxjs';
@@ -26,6 +26,9 @@ interface ErrorEnvelope {
 }
 
 export const REQUEST_TIMEOUT_MS = 15_000;
+
+/** Set on a request that wants every city (e.g. the Admin restaurant list) instead of the selected one. */
+export const ALL_CITIES = new HttpContextToken(() => false);
 
 /** Listing and search endpoints are always scoped to the selected city (an explicit `city` wins). */
 const CITY_SCOPED = /^\/restaurants(\/search)?$/;
@@ -61,7 +64,8 @@ export const apiInterceptor: HttpInterceptorFn = (req, next) => {
   const toast = inject(ToastService);
   const router = inject(Router);
   const token = session.token();
-  const scoped = CITY_SCOPED.test(req.url) && !req.params.has('city');
+  const scoped =
+    CITY_SCOPED.test(req.url) && !req.params.has('city') && !req.context.get(ALL_CITIES);
   const request = req.clone({
     url: environment.apiBaseUrl + req.url,
     params: scoped ? req.params.set('city', inject(AppStore).city()) : req.params,

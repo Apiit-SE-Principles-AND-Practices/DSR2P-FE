@@ -56,7 +56,7 @@ test('shows the restaurant, the three rating bars and the page title', async ({ 
   await mockApi(page);
   await page.goto('/restaurants/r-1');
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Ceylon Spice House');
-  await expect(page).toHaveTitle('Ceylon Spice House · Ruchi');
+  await expect(page).toHaveTitle('Ceylon Spice House · Dine Score');
   await expect(page.getByRole('meter')).toHaveCount(3);
   await expect(page.getByRole('meter', { name: 'Service: 4.0 out of 5' })).toBeVisible();
 });

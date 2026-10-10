@@ -11,7 +11,7 @@ import { ConfirmDeleteDialogComponent } from '../../shared/confirm-delete-dialog
 import { InlineErrorComponent } from '../../shared/inline-error.component';
 import { SkeletonComponent } from '../../shared/skeleton.component';
 import { ToastService } from '../../shared/toast.service';
-import { MenuItemFormComponent } from './menu-item-form.component';
+import { MenuItemDialogComponent } from './menu-item-dialog.component';
 
 const dietary = (item: MenuItem): string =>
   [item.isVegetarian && 'Vegetarian', item.isVegan && 'Vegan', item.isHalal && 'Halal']
@@ -25,20 +25,33 @@ const dietary = (item: MenuItem): string =>
     AdminTableComponent,
     ConfirmDeleteDialogComponent,
     InlineErrorComponent,
-    MenuItemFormComponent,
+    MenuItemDialogComponent,
     SkeletonComponent,
   ],
+  styles: `
+    .panel-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-3);
+      margin-bottom: var(--space-3);
+    }
+    .panel-head h2 {
+      margin: 0;
+    }
+  `,
   template: `
-    <h2>Menu</h2>
-    @if (editing() === null) {
-      <button type="button" class="btn secondary" (click)="editing.set('new')">Add a dish</button>
-    } @else {
-      <app-menu-item-form
+    <header class="panel-head">
+      <h2>Menu</h2>
+      <button type="button" class="btn" (click)="editing.set('new')">Add a dish</button>
+    </header>
+    @if (editing() !== null) {
+      <app-menu-item-dialog
         [restaurantId]="restaurantId()"
         [item]="editItem()"
         [categories]="categories.value() ?? []"
         (saved)="onSaved($event)"
-        (cancelled)="editing.set(null)"
+        (closed)="editing.set(null)"
       />
     }
 

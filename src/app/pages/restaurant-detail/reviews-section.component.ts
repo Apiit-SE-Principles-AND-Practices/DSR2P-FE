@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import type { Review } from '../../core/restaurant.service';
 import { REVIEW_SORTS, sortReviews, type ReviewSort } from '../../core/reviews';
 import { InlineErrorComponent } from '../../shared/inline-error.component';
-import { SkeletonComponent } from '../../shared/skeleton.component';
+import { SkeletonStackComponent } from '../../shared/skeleton-stack.component';
 import { ReviewCardComponent } from './review-card.component';
 import { WriteReviewButtonComponent } from './write-review-button.component';
 
@@ -22,7 +22,7 @@ const LABELS: Record<ReviewSort, string> = {
   imports: [
     InlineErrorComponent,
     ReviewCardComponent,
-    SkeletonComponent,
+    SkeletonStackComponent,
     WriteReviewButtonComponent,
   ],
   template: `
@@ -67,7 +67,7 @@ const LABELS: Record<ReviewSort, string> = {
           }
         }
       } @else {
-        <app-skeleton height="var(--space-12)" />
+        <app-skeleton-stack [rows]="3" height="var(--space-12)" />
       }
     </section>
   `,

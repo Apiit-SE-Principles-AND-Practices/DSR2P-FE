@@ -89,7 +89,7 @@ describe('RestaurantDetailComponent', () => {
       'Service',
       'Other',
     ]);
-    expect(TestBed.inject(Title).getTitle()).toBe('Ceylon Spice House · Ruchi');
+    expect(TestBed.inject(Title).getTitle()).toBe('Ceylon Spice House · Dine Score');
   });
 
   it('shows the zero-review state instead of empty bars', async () => {

@@ -38,9 +38,9 @@ describe('RatingDisplayComponent', () => {
 
 describe('PriceBandComponent', () => {
   const cases: [PriceBand, string][] = [
-    ['Budget', 'Rs'],
-    ['Moderate', 'Rs Rs'],
-    ['Premium', 'Rs Rs Rs'],
+    ['Budget', '💰'],
+    ['Moderate', '💰💰'],
+    ['Premium', '💰💰💰'],
   ];
 
   cases.forEach(([band, symbols]) => {

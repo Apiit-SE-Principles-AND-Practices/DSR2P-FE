@@ -81,9 +81,11 @@ function fillAndSave({ harness, el }: Setup, dishes: number) {
   for (let i = 0; i < dishes; i++) {
     [...el.querySelectorAll('button')].find((b) => b.textContent?.includes('Add a dish'))?.click();
     harness.detectChanges();
-    set(el, `#dish-${String(i)}-name`, `Dish ${String(i + 1)}`);
-    set(el, `#dish-${String(i)}-price`, String(500 + i));
-    pick(el, `#dish-${String(i)}-category`, 1);
+    set(el, '#dish-0-name', `Dish ${String(i + 1)}`);
+    set(el, '#dish-0-price', String(500 + i));
+    pick(el, '#dish-0-category', 1);
+    [...el.querySelectorAll('button')].find((b) => b.textContent?.includes('Add dish'))?.click();
+    harness.detectChanges();
   }
   harness.detectChanges();
   el.querySelector<HTMLButtonElement>('button[type=submit]')?.click();
@@ -99,12 +101,12 @@ describe('RestaurantFormComponent', () => {
     fillAndSave(s, 2);
 
     const create = one(s.backend, '/admin/restaurants');
-    expect(create.request.body).toEqual({
-      name: 'Lanka Kitchen',
-      city: 'Colombo',
-      categoryIds: [1],
-      address: '1 Galle Rd',
-    });
+    const body = create.request.body as FormData;
+    expect(body.get('name')).toBe('Lanka Kitchen');
+    expect(body.get('city')).toBe('Colombo');
+    expect(body.getAll('categoryIds')).toEqual(['1']);
+    expect(body.get('address')).toBe('1 Galle Rd');
+    expect(body.has('image')).toBeFalse();
     create.flush({ id: 'r-9' });
     const first = one(s.backend, '/admin/restaurants/r-9/menu-items');
     expect(dishName(first)).toBe('Dish 1');
@@ -115,6 +117,23 @@ describe('RestaurantFormComponent', () => {
     await s.harness.fixture.whenStable();
 
     expect(TestBed.inject(Router).url).toBe('/admin/restaurants');
+  });
+
+  it('lists a dish in the table once it is added in the popup', async () => {
+    const s = await setup();
+    [...s.el.querySelectorAll('button')]
+      .find((b) => b.textContent?.includes('Add a dish'))
+      ?.click();
+    s.harness.detectChanges();
+    expect(s.el.querySelector('dialog')).not.toBeNull();
+    set(s.el, '#dish-0-name', 'Kottu');
+    set(s.el, '#dish-0-price', '900');
+    pick(s.el, '#dish-0-category', 1);
+    [...s.el.querySelectorAll('button')].find((b) => b.textContent?.includes('Add dish'))?.click();
+    s.harness.detectChanges();
+
+    expect(s.el.querySelector('dialog')).toBeNull();
+    expect(s.el.querySelector('tbody')?.textContent).toContain('Kottu');
   });
 
   it('shows the schema messages and sends nothing while the form is invalid', async () => {
@@ -142,9 +161,9 @@ describe('RestaurantFormComponent', () => {
     );
     s.harness.detectChanges();
 
-    const dishes = s.el.querySelectorAll('app-menu-item-fieldset');
-    expect(dishes[0].textContent).not.toContain('Too expensive');
-    expect(dishes[1].textContent).toContain('Too expensive');
+    const rows = s.el.querySelectorAll('tbody tr');
+    expect(rows[0].textContent).not.toContain('Too expensive');
+    expect(rows[1].textContent).toContain('Too expensive');
   });
 
   it('keeps only the failed dish and retries just that one, without creating the restaurant again', async () => {
@@ -164,7 +183,7 @@ describe('RestaurantFormComponent', () => {
     );
     s.harness.detectChanges();
 
-    expect(s.el.querySelectorAll('app-menu-item-fieldset').length).toBe(1);
+    expect(s.el.querySelectorAll('tbody tr').length).toBe(1);
     expect(s.el.textContent).toContain('Too high');
 
     s.el.querySelector<HTMLButtonElement>('button[type=submit]')?.click();
@@ -185,24 +204,6 @@ describe('RestaurantFormComponent', () => {
 
     const update = one(s.backend, '/admin/restaurants/r-1');
     expect(update.request.method).toBe('PUT');
-    expect((update.request.body as { name: string }).name).toBe('New Name');
-  });
-
-  it('rejects an address that is not https, and one that does not open as an image', async () => {
-    const s = await setup();
-    set(s.el, '#image-url', 'http://example.lk/a.png');
-    s.el.querySelector<HTMLButtonElement>('button[type=submit]')?.click();
-    s.harness.detectChanges();
-    expect(s.el.textContent).toContain('Enter a full address starting with https://');
-
-    fillAndSave(s, 0);
-    set(s.el, '#image-url', 'https://example.lk/missing.png');
-    s.harness.detectChanges();
-    s.el.querySelector('img')?.dispatchEvent(new Event('error'));
-    s.el.querySelector<HTMLButtonElement>('button[type=submit]')?.click();
-    s.harness.detectChanges();
-
-    expect(s.el.textContent).toContain('does not open as an image');
-    s.backend.expectNone((r) => r.url.endsWith('/admin/restaurants'));
+    expect((update.request.body as FormData).get('name')).toBe('New Name');
   });
 });

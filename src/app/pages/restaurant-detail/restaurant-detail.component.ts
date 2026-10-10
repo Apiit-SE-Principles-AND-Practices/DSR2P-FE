@@ -50,7 +50,11 @@ import { ReviewsSectionComponent } from './reviews-section.component';
       @if (r) {
         <app-restaurant-header [restaurant]="r" />
       } @else {
-        <app-skeleton height="var(--space-12)" />
+        <div class="header-skeleton" aria-hidden="true">
+          <app-skeleton height="auto" class="hero-skeleton" />
+          <app-skeleton height="var(--space-6)" class="title-skeleton" />
+          <app-skeleton height="var(--space-3)" class="meta-skeleton" />
+        </div>
       }
       <div class="sections">
         <app-menu-section [restaurantId]="id()" />
@@ -96,7 +100,7 @@ export class RestaurantDetailComponent {
     const previous = title.getTitle();
     effect(() => {
       const name = this.restaurant.value()?.name;
-      if (name) title.setTitle(`${name} · Ruchi`);
+      if (name) title.setTitle(`${name} · Dine Score`);
     });
     inject(DestroyRef).onDestroy(() => {
       title.setTitle(previous);

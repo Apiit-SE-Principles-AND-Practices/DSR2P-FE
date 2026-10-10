@@ -1,8 +1,9 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpContext } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { forkJoin, map, type Observable } from 'rxjs';
+import { EMPTY, expand, forkJoin, map, reduce, type Observable } from 'rxjs';
 import type { z } from 'zod/mini';
 import type { menuItemSchema } from '../shared/validation/restaurant.schema';
+import { ALL_CITIES } from './api.interceptor';
 import type { Category } from './category.service';
 import type { MenuItem } from './menu';
 import type { ModerationKind, ModerationQueue } from './moderation';
@@ -40,8 +41,23 @@ export interface RestaurantBody {
   city: (typeof CITIES)[number];
   categoryIds: number[];
   address: string;
+  /** The current image's address, kept when no new photo is chosen. */
   imageUrl?: string;
 }
+
+/** Restaurants are sent as multipart form data like dishes, with an optional `image` file the API stores. */
+const restaurantForm = (body: RestaurantBody, image: File | null): FormData => {
+  const form = new FormData();
+  form.append('name', body.name);
+  form.append('city', body.city);
+  form.append('address', body.address);
+  body.categoryIds.forEach((id) => {
+    form.append('categoryIds', String(id));
+  });
+  if (image) form.append('image', image, image.name);
+  else if (body.imageUrl) form.append('imageUrl', body.imageUrl);
+  return form;
+};
 
 /** The API takes menu items as multipart form data (with an optional `image` file). */
 const multipart = (item: MenuItemInput, image: File | null): FormData => {
@@ -58,18 +74,17 @@ const multipart = (item: MenuItemInput, image: File | null): FormData => {
 export class AdminService {
   private readonly http = inject(HttpClient);
 
-  /** Every restaurant, all three cities (the API lists one city at a time), A to Z. */
+  /** Every restaurant in every city, A to Z: one request (more only if there are over 100). */
   list(): Observable<AdminRestaurant[]> {
-    return forkJoin(
-      CITIES.map((city) =>
-        this.http.get<{ data: AdminRestaurant[] }>('/restaurants', {
-          params: { city, pageSize: 100 },
-        }),
-      ),
-    ).pipe(
-      map((pages) =>
-        pages.flatMap(({ data }) => data).sort((a, b) => a.name.localeCompare(b.name)),
-      ),
+    const page = (number: number) =>
+      this.http.get<{ data: AdminRestaurant[]; page: number; totalPages: number }>('/restaurants', {
+        params: { page: number, pageSize: 100 },
+        context: new HttpContext().set(ALL_CITIES, true),
+      });
+    return page(1).pipe(
+      expand((last) => (last.page < last.totalPages ? page(last.page + 1) : EMPTY)),
+      reduce((all, { data }) => [...all, ...data], [] as AdminRestaurant[]),
+      map((all) => all.sort((a, b) => a.name.localeCompare(b.name))),
     );
   }
 
@@ -94,12 +109,12 @@ export class AdminService {
     return this.http.patch(`/admin/${kind}/${String(id)}/reject`, { reason });
   }
 
-  create(body: RestaurantBody): Observable<AdminRestaurant> {
-    return this.http.post<AdminRestaurant>('/admin/restaurants', body);
+  create(body: RestaurantBody, image: File | null = null): Observable<AdminRestaurant> {
+    return this.http.post<AdminRestaurant>('/admin/restaurants', restaurantForm(body, image));
   }
 
-  update(id: string, body: RestaurantBody): Observable<AdminRestaurant> {
-    return this.http.put<AdminRestaurant>(`/admin/restaurants/${id}`, body);
+  update(id: string, body: RestaurantBody, image: File | null = null): Observable<AdminRestaurant> {
+    return this.http.put<AdminRestaurant>(`/admin/restaurants/${id}`, restaurantForm(body, image));
   }
 
   remove(id: string): Observable<unknown> {
